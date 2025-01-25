@@ -14,6 +14,9 @@ fun Available(
     insertSteps: () -> Unit,
     readStepsForLast24Hours: () -> Unit,
     aggregateStepsForLast24Hours: () -> Unit,
+    insertSexualActivity: () -> Unit,
+    readSexualActivityForLast30Days: () -> Unit,
+    readSexualActivityForLast365Days: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -29,6 +32,15 @@ fun Available(
         Button(onClick = aggregateStepsForLast24Hours) {
             Text(text = "Aggregate steps for last 24 hours")
         }
+        Button(onClick = insertSexualActivity) {
+            Text(text = "Insert sexual activity")
+        }
+        Button(onClick = readSexualActivityForLast30Days) {
+            Text(text = "Read sexual activity for last 30 days")
+        }
+        Button(onClick = readSexualActivityForLast365Days) {
+            Text(text = "Read sexual activity for last 365 days")
+        }
     }
 }
 
@@ -36,6 +48,6 @@ fun Available(
 @Composable
 fun AvailablePreview() {
     HealthConnectTheme {
-        Available({}, {}, {})
+        Available({}, {}, {}, {}, {}, {})
     }
 }

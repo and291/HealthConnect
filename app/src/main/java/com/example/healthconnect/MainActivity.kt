@@ -17,7 +17,7 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILA
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.HeartRateRecord
+import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 
 class MainActivity : ComponentActivity() {
 
@@ -56,10 +57,10 @@ class MainActivity : ComponentActivity() {
             private val activity: ComponentActivity,
             private val healthConnectClient: HealthConnectClient,
             private val permissions: Set<String> = setOf(
-                HealthPermission.getReadPermission(HeartRateRecord::class),
-                HealthPermission.getWritePermission(HeartRateRecord::class),
                 HealthPermission.getReadPermission(StepsRecord::class),
-                HealthPermission.getWritePermission(StepsRecord::class)
+                HealthPermission.getWritePermission(StepsRecord::class),
+                HealthPermission.getReadPermission(SexualActivityRecord::class),
+                HealthPermission.getWritePermission(SexualActivityRecord::class),
             )
         ) : State() {
 
@@ -112,6 +113,23 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            suspend fun insertSexualActivity() {
+                val result = try {
+                    val sexualActivityRecord = SexualActivityRecord(
+                        time = Instant.now(),
+                        zoneOffset = ZoneOffset.UTC,
+                    )
+                    healthConnectClient.insertRecords(listOf(sexualActivityRecord))
+                    "Inserted successfully"
+                } catch (e: Exception) {
+                    e.toString()
+                }
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(activity, result, Toast.LENGTH_LONG).show()
+                }
+            }
+
             suspend fun readStepsByTimeRange(
                 startTime: Instant,
                 endTime: Instant
@@ -124,6 +142,28 @@ class MainActivity : ComponentActivity() {
                                 timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
                             )
                         )
+
+                    "read ${response.records.count()} records"
+                } catch (e: Exception) {
+                    e.toString()
+                }
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(activity, result, Toast.LENGTH_LONG).show()
+                }
+            }
+
+            suspend fun readSexualActivity(
+                startTime: Instant,
+                endTime: Instant
+            ) {
+                val result = try {
+                    val response = healthConnectClient.readRecords(
+                        ReadRecordsRequest(
+                            SexualActivityRecord::class,
+                            timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+                        )
+                    )
 
                     "read ${response.records.count()} records"
                 } catch (e: Exception) {
@@ -201,6 +241,33 @@ class MainActivity : ComponentActivity() {
                                     currentState.checkPermissionsAndRun {
                                         currentState.aggregateSteps(
                                             startTime = Instant.now().minusSeconds(24 * 60 * 60),
+                                            endTime = Instant.now(),
+                                        )
+                                    }
+                                }
+                            },
+                            insertSexualActivity = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    currentState.checkPermissionsAndRun {
+                                        currentState.insertSexualActivity()
+                                    }
+                                }
+                            },
+                            readSexualActivityForLast30Days = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    currentState.checkPermissionsAndRun {
+                                        currentState.readSexualActivity(
+                                            startTime = Instant.now().minus(30, ChronoUnit.DAYS),
+                                            endTime = Instant.now(),
+                                        )
+                                    }
+                                }
+                            },
+                            readSexualActivityForLast365Days = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    currentState.checkPermissionsAndRun {
+                                        currentState.readSexualActivity(
+                                            startTime = Instant.now().minus(365, ChronoUnit.DAYS),
                                             endTime = Instant.now(),
                                         )
                                     }
