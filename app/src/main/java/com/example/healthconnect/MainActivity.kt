@@ -17,7 +17,6 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILA
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.request.AggregateRequest
@@ -58,8 +57,6 @@ class MainActivity : ComponentActivity() {
             private val activity: ComponentActivity,
             private val healthConnectClient: HealthConnectClient,
             private val permissions: Set<String> = setOf(
-                HealthPermission.getReadPermission(HeartRateRecord::class),
-                HealthPermission.getWritePermission(HeartRateRecord::class),
                 HealthPermission.getReadPermission(StepsRecord::class),
                 HealthPermission.getWritePermission(StepsRecord::class)
             )
