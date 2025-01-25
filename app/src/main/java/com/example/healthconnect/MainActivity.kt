@@ -58,7 +58,9 @@ class MainActivity : ComponentActivity() {
             private val healthConnectClient: HealthConnectClient,
             private val permissions: Set<String> = setOf(
                 HealthPermission.getReadPermission(StepsRecord::class),
-                HealthPermission.getWritePermission(StepsRecord::class)
+                HealthPermission.getWritePermission(StepsRecord::class),
+                HealthPermission.getReadPermission(SexualActivityRecord::class),
+                HealthPermission.getWritePermission(SexualActivityRecord::class),
             )
         ) : State() {
 
