@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
             private val requestPermissionActivityContract =
                 PermissionController.createRequestPermissionResultContract()
 
-            val requestPermissions =
+            private val requestPermissions =
                 activity.registerForActivityResult(requestPermissionActivityContract) { granted ->
                     if (granted.containsAll(permissions)) {
                         Toast.makeText(
