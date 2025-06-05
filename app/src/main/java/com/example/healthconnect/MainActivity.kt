@@ -19,6 +19,7 @@ import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.StepsRecord
+import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
@@ -101,6 +102,7 @@ class MainActivity : ComponentActivity() {
                         endTime = Instant.now(),
                         startZoneOffset = ZoneOffset.UTC,
                         endZoneOffset = ZoneOffset.UTC,
+                        metadata = Metadata.unknownRecordingMethod(),
                     )
                     healthConnectClient.insertRecords(listOf(stepsRecord))
                     "Inserted successfully"
@@ -118,6 +120,7 @@ class MainActivity : ComponentActivity() {
                     val sexualActivityRecord = SexualActivityRecord(
                         time = Instant.now(),
                         zoneOffset = ZoneOffset.UTC,
+                        metadata = Metadata.unknownRecordingMethod(),
                     )
                     healthConnectClient.insertRecords(listOf(sexualActivityRecord))
                     "Inserted successfully"
