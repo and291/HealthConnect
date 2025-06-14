@@ -53,4 +53,8 @@ dependencies {
     implementation(libs.androidx.connect.client)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    //viewmodel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    //coroutines viewmodel scope
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 }

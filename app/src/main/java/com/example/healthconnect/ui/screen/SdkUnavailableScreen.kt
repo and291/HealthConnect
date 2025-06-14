@@ -1,7 +1,6 @@
-package com.example.healthconnect
+package com.example.healthconnect.ui.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,24 +9,21 @@ import com.example.healthconnect.ui.theme.HealthConnectTheme
 
 
 @Composable
-fun UpdateRequired(
-    onUpdateClick: () -> Unit,
-    modifier: Modifier = Modifier
+fun SdkUnavailableScreen(
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
     ) {
-        Text(text = "Health Connect SDK update required")
-        Button(onClick = onUpdateClick) {
-            Text(text = "Update")
-        }
+        Text(text = "Health Connect SDK is Unavailable")
+        Text(text = "Looks like there is nothing we can do about it")
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun UpdateRequiredPreview() {
+@Preview(widthDp = 480, heightDp = 720, showBackground = true)
+fun SdkUnavailableScreenPreview() {
     HealthConnectTheme {
-        UpdateRequired({})
+        SdkUnavailableScreen()
     }
 }
