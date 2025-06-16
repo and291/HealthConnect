@@ -36,6 +36,10 @@ fun RecordsScreen(
 
     val effect by viewModel.effect.collectAsState(null)
 
+    LaunchedEffect("") {
+        viewModel.init()
+    }
+
     LaunchedEffect(effect) {
         effect?.let { modification ->
             when (modification) {

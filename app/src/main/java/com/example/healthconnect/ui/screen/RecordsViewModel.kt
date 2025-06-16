@@ -35,7 +35,8 @@ class RecordsViewModel(
         }
     }
 
-    init {
+    //TODO move to Event
+    fun init() {
         viewModelScope.launch {
             when (val result = read(recordType)) {
                 is Result.IoException -> TODO()
