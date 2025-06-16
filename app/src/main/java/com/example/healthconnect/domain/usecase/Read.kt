@@ -27,7 +27,7 @@ class Read(
 
         val request = ReadRecordsRequest(
             recordType = recordType,
-            timeRangeFilter = TimeRangeFilter.after(Instant.now())
+            timeRangeFilter = TimeRangeFilter.before(Instant.now())
         )
         return try {
             val response = libraryRepository.readRecords(request)
