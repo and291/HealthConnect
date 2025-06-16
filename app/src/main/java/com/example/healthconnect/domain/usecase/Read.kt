@@ -20,7 +20,7 @@ class Read(
     suspend operator fun invoke(
         recordType: KClass<Record>
     ): Result {
-        val requiredPermission = HealthPermission.getWritePermission(recordType)
+        val requiredPermission = HealthPermission.getReadPermission(recordType)
         if (!libraryRepository.getGrantedPermissions().contains(requiredPermission)) {
             return Result.PermissionRequired(requiredPermission)
         }
