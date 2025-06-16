@@ -10,7 +10,7 @@ sealed class Result {
     ) : Result()
 
     data class Success(
-        val string: String,
+        val payload: Payload,
     ) : Result()
 
     data class IpcFailure(
