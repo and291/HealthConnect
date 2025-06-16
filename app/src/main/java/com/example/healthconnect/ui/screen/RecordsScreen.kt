@@ -25,6 +25,7 @@ fun RecordsScreen(
     recordType: KClass<Record>,
     modifier: Modifier = Modifier,
     viewModel: RecordsViewModel = viewModel(
+        key = RecordsViewModel::class.qualifiedName + recordType,
         modelClass = RecordsViewModel::class.java,
         factory = Di.recordsViewModelFactory,
         extras = MutableCreationExtras().apply {
