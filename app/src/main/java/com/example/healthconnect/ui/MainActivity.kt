@@ -8,17 +8,32 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.records.Record
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.ui.NavDisplay
 import com.example.healthconnect.di.Di
+import com.example.healthconnect.ui.screen.RecordsScreen
 import com.example.healthconnect.ui.screen.SdkAvailableScreen
 import com.example.healthconnect.ui.screen.SdkUnavailableScreen
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredScreen
 import com.example.healthconnect.ui.theme.HealthConnectTheme
+import kotlin.reflect.KClass
+
+// Define keys that will identify content
+data object Splash
+data object Available
+data object Unavailable
+data object ProviderUpdateRequired
+data class Records(val recordType: KClass<Record>)
 
 class MainActivity : ComponentActivity() {
 
@@ -28,6 +43,9 @@ class MainActivity : ComponentActivity() {
         PermissionController.createRequestPermissionResultContract()
     private val permissionResult = registerForActivityResult(requestPermissionActivityContract) {
 
+    }
+    private val requestPermission: (String) -> Unit = { sdkPermission ->
+        permissionResult.launch(setOf(sdkPermission))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,34 +58,70 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            // Create a back stack, specifying the key the app should start with
+            val backStack = remember { mutableStateListOf<Any>(Splash) }
+
             HealthConnectTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val status by activityViewModel.sdkStatus
-                    when (status) {
-                        SDK_AVAILABLE -> SdkAvailableScreen(
-                            requestPermission = { sdkPermission ->
-                                permissionResult.launch(setOf(sdkPermission))
-                            },
-                            modifier = Modifier.padding(innerPadding)
-                        )
-
-                        SDK_UNAVAILABLE -> SdkUnavailableScreen(
-                            modifier = Modifier.padding(innerPadding)
-                        )
-
-                        SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> SdkUpdateRequiredScreen(
-                            startUpdateActivity = { intent ->
-                                startActivity(
-                                    Intent.createChooser(
-                                        intent,
-                                        "Chose app to update Health Connect library"
-                                    )
+                    NavDisplay(
+                        backStack = backStack,
+                        onBack = { backStack.removeLastOrNull() },
+                    ) { key ->
+                        when (key) {
+                            is Available -> NavEntry(key) {
+                                SdkAvailableScreen(
+                                    requestPermission = requestPermission,
+                                    onTypeClick = { type ->
+                                        backStack.add(Records(type))
+                                    },
+                                    modifier = Modifier.padding(innerPadding)
                                 )
-                            },
-                            modifier = Modifier.padding(innerPadding)
-                        )
+                            }
+
+                            is Unavailable -> NavEntry(key) {
+                                SdkUnavailableScreen(
+                                    modifier = Modifier.padding(innerPadding)
+                                )
+                            }
+
+                            is ProviderUpdateRequired -> NavEntry(key) {
+                                SdkUpdateRequiredScreen(
+                                    startUpdateActivity = { intent ->
+                                        startActivity(
+                                            Intent.createChooser(
+                                                intent,
+                                                "Choose app to update Health Connect library"
+                                            )
+                                        )
+                                    },
+                                    modifier = Modifier.padding(innerPadding)
+                                )
+                            }
+
+                            is Records -> NavEntry(key) {
+                                RecordsScreen(
+                                    requestPermission = requestPermission,
+                                    recordType = key.recordType,
+                                    modifier = Modifier.padding(innerPadding)
+                                )
+                            }
+
+                            else -> NavEntry(Unit) { Text("Unknown route") }
+                        }
                     }
                 }
+            }
+
+            val status by activityViewModel.sdkStatus
+            val destination = when (status) {
+                SDK_AVAILABLE -> Available
+                SDK_UNAVAILABLE -> Unavailable
+                SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> ProviderUpdateRequired
+                else -> TODO()
+            }
+            backStack.apply {
+                clear()
+                add(destination)
             }
         }
     }

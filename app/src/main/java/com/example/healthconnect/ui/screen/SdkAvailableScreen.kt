@@ -19,15 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.health.connect.client.records.Record
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.component.SdkPermissionsComponent
 import com.example.healthconnect.ui.screen.SdkAvailableViewModel.Effect.RequestSinglePermission
 import com.example.healthconnect.ui.theme.HealthConnectTheme
+import kotlin.reflect.KClass
 
 @Composable
 fun SdkAvailableScreen(
     requestPermission: (String) -> Unit,
+    onTypeClick: (KClass<Record>) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SdkAvailableViewModel = viewModel(
         modelClass = SdkAvailableViewModel::class.java,
@@ -76,7 +79,7 @@ fun SdkAvailableScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 2.dp)
                                 .clickable {
-
+                                    onTypeClick(type as KClass<Record>)
                                 }
                         )
                     }
@@ -93,7 +96,8 @@ fun SdkAvailableScreenPreview() {
 
     HealthConnectTheme {
         SdkAvailableScreen(
-            requestPermission = {}
+            requestPermission = {},
+            onTypeClick = {}
         )
     }
 }
