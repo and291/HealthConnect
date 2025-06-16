@@ -9,6 +9,7 @@ import com.example.healthconnect.domain.PayloadMapper
 import com.example.healthconnect.domain.ResultMapper
 import com.example.healthconnect.domain.model.Result
 import java.time.Instant
+import kotlin.reflect.KClass
 
 class Read(
     private val libraryRepository: LibraryRepository,
@@ -17,15 +18,15 @@ class Read(
 ) {
 
     suspend operator fun invoke(
-        recordType: Record
+        recordType: KClass<Record>
     ): Result {
-        val requiredPermission = HealthPermission.getWritePermission(recordType::class)
+        val requiredPermission = HealthPermission.getWritePermission(recordType)
         if (!libraryRepository.getGrantedPermissions().contains(requiredPermission)) {
             return Result.PermissionRequired(requiredPermission)
         }
 
         val request = ReadRecordsRequest(
-            recordType = recordType::class,
+            recordType = recordType,
             timeRangeFilter = TimeRangeFilter.after(Instant.now())
         )
         return try {

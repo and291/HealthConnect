@@ -11,7 +11,9 @@ import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.domain.PayloadMapper
 import com.example.healthconnect.domain.ResultMapper
 import com.example.healthconnect.domain.usecase.Insert
+import com.example.healthconnect.domain.usecase.Read
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
+import com.example.healthconnect.ui.RecordsViewModelFactory
 
 object Di { //move to dagger. keep all features
     var isPreview = true
@@ -42,12 +44,22 @@ object Di { //move to dagger. keep all features
         }
     }
 
+    private val payloadMapper = PayloadMapper()
+    private val resultMapper = ResultMapper()
+
     private val insert by lazy {
-        Insert(libraryRepository, ResultMapper(), PayloadMapper())
+        Insert(libraryRepository, resultMapper, payloadMapper)
+    }
+
+    private val read by lazy {
+        Read(libraryRepository, resultMapper, payloadMapper)
     }
 
     val parameterlessViewModelFactory by lazy {
         ParameterlessViewModelFactory(applicationContext, libraryRepository, insert)
     }
 
+    val recordsViewModelFactory by lazy {
+        RecordsViewModelFactory(read)
+    }
 }
