@@ -3,7 +3,9 @@ package com.example.healthconnect.data.repository
 import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
+import androidx.health.connect.client.response.ReadRecordsResponse
 import com.example.healthconnect.domain.LibraryRepository
 
 class LibraryRepositoryImpl(
@@ -22,5 +24,9 @@ class LibraryRepositoryImpl(
 
     override suspend fun insertRecords(records: List<Record>): InsertRecordsResponse {
         return healthConnectClient.insertRecords(records)
+    }
+
+    override suspend fun <T : Record> readRecords(request: ReadRecordsRequest<T>): ReadRecordsResponse<T> {
+        return healthConnectClient.readRecords(request)
     }
 }
