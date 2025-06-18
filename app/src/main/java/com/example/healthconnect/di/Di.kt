@@ -10,10 +10,12 @@ import com.example.healthconnect.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.domain.PayloadMapper
 import com.example.healthconnect.domain.ResultMapper
+import com.example.healthconnect.domain.usecase.Delete
 import com.example.healthconnect.domain.usecase.Insert
 import com.example.healthconnect.domain.usecase.Read
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.RecordsViewModelFactory
+import kotlin.reflect.KClass
 
 object Di { //move to dagger. keep all features
     var isPreview = true
@@ -38,6 +40,13 @@ object Di { //move to dagger. keep all features
                 override suspend fun <T : Record> readRecords(request: ReadRecordsRequest<T>): ReadRecordsResponse<T> {
                     TODO("Not yet implemented")
                 }
+
+                override suspend fun removeRecord(
+                    recordType: KClass<out Record>,
+                    metadataId: String
+                ) {
+                    TODO("Not yet implemented")
+                }
             }
         } else {
             LibraryRepositoryImpl(applicationContext)
@@ -55,11 +64,15 @@ object Di { //move to dagger. keep all features
         Read(libraryRepository, resultMapper, payloadMapper)
     }
 
+    private val delete by lazy {
+        Delete(libraryRepository, resultMapper, payloadMapper)
+    }
+
     val parameterlessViewModelFactory by lazy {
         ParameterlessViewModelFactory(applicationContext, libraryRepository, insert)
     }
 
     val recordsViewModelFactory by lazy {
-        RecordsViewModelFactory(read)
+        RecordsViewModelFactory(read, delete)
     }
 }

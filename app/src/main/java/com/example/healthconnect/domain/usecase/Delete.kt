@@ -2,37 +2,34 @@ package com.example.healthconnect.domain.usecase
 
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
-import androidx.health.connect.client.request.ReadRecordsRequest
-import androidx.health.connect.client.time.TimeRangeFilter
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.domain.PayloadMapper
 import com.example.healthconnect.domain.ResultMapper
 import com.example.healthconnect.domain.model.Result
-import java.time.Instant
 import kotlin.reflect.KClass
 
-class Read(
+class Delete(
     private val libraryRepository: LibraryRepository,
     private val resultMapper: ResultMapper,
     private val payloadMapper: PayloadMapper,
 ) {
 
     suspend operator fun invoke(
-        recordType: KClass<out Record>
+        recordType: KClass<out Record>,
+        metadataId: String,
     ): Result {
-        val requiredPermission = HealthPermission.getReadPermission(recordType)
+        val requiredPermission = HealthPermission.getWritePermission(recordType)
         if (!libraryRepository.getGrantedPermissions().contains(requiredPermission)) {
             return Result.PermissionRequired(requiredPermission)
         }
 
-        val request = ReadRecordsRequest(
-            recordType = recordType,
-            timeRangeFilter = TimeRangeFilter.before(Instant.now())
-        )
         return try {
-            val response = libraryRepository.readRecords(request)
+            libraryRepository.removeRecord(
+                recordType = recordType,
+                metadataId = metadataId,
+            )
             Result.Success(
-                payload = payloadMapper.mapReadList(response)
+                payload = payloadMapper.mapDeletedRecord()
             )
         } catch (e: Exception) {
             resultMapper.mapException(e)

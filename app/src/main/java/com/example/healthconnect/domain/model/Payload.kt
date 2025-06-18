@@ -12,4 +12,6 @@ sealed class Payload {
         val list: List<T>,
         val pageToken: String?
     ) : Payload()
+
+    data object Removed : Payload()
 }

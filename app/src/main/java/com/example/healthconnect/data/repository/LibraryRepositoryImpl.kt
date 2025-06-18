@@ -7,6 +7,7 @@ import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
 import com.example.healthconnect.domain.LibraryRepository
+import kotlin.reflect.KClass
 
 class LibraryRepositoryImpl(
     private val applicationContext: Context
@@ -28,5 +29,13 @@ class LibraryRepositoryImpl(
 
     override suspend fun <T : Record> readRecords(request: ReadRecordsRequest<T>): ReadRecordsResponse<T> {
         return healthConnectClient.readRecords(request)
+    }
+
+    override suspend fun removeRecord(recordType: KClass<out Record>, metadataId: String) {
+        return healthConnectClient.deleteRecords(
+            recordType = recordType,
+            recordIdsList = listOf(metadataId),
+            clientRecordIdsList = emptyList(),
+        )
     }
 }
