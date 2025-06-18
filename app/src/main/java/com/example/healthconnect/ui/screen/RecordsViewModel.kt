@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.domain.model.Payload
 import com.example.healthconnect.domain.model.Result
+import com.example.healthconnect.domain.usecase.Delete
 import com.example.healthconnect.domain.usecase.Read
 import com.example.healthconnect.ui.screen.RecordsViewModel.Effect.RequestSinglePermission
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +19,9 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class RecordsViewModel(
-    private val recordType: KClass<Record>,
+    private val recordType: KClass<out Record>,
     private val read: Read,
+    private val delete: Delete,
 ) : ViewModel() {
 
     private var _state by mutableStateOf<State>(State.Loading)
@@ -35,27 +37,41 @@ class RecordsViewModel(
         }
     }
 
-    //TODO move to Event
-    fun init() {
-        viewModelScope.launch {
-            when (val result = read(recordType)) {
-                is Result.IoException -> TODO()
-                is Result.IpcFailure -> TODO()
-                is Result.PermissionRequired -> {
-                    _effect.emit(RequestSinglePermission(result.sdkPermission))
-                }
+    fun onEvent(event: Event) {
+        when (event) {
+            is Event.DeleteRecord -> viewModelScope.launch {
+                delete(recordType = event.recordType, metadataId = event.metadataId)
+                //just send event to update content. Will fix later
+                onEvent(Event.Refresh)
+            }
 
-                is Result.Success -> {
-                    when (result.payload) {
-                        is Payload.InsertList -> TODO()
-                        is Payload.ReadList<*> -> {
-                            _state = State.Data(result.payload.list.map { it.toString() })
+            Event.Refresh -> viewModelScope.launch {
+                when (val result = read(recordType)) {
+                    is Result.IoException -> TODO()
+                    is Result.IpcFailure -> TODO()
+                    is Result.PermissionRequired -> {
+                        _effect.emit(RequestSinglePermission(result.sdkPermission))
+                    }
+
+                    is Result.Success -> {
+                        when (result.payload) {
+                            is Payload.InsertList -> TODO()
+                            is Payload.ReadList<*> -> {
+                                _state = State.Data(result.payload.list.map {
+                                    DisplayRecord(
+                                        description = it.toString(),
+                                        metadataId = it.metadata.id
+                                    )
+                                })
+                            }
+
+                            is Payload.Removed -> TODO()
                         }
                     }
-                }
 
-                is Result.UnhandledException -> TODO()
-                is Result.UnpermittedAccess -> TODO()
+                    is Result.UnhandledException -> TODO()
+                    is Result.UnpermittedAccess -> TODO()
+                }
             }
         }
     }
@@ -65,7 +81,7 @@ class RecordsViewModel(
         data object Loading : State()
 
         data class Data(
-            val records: List<String>
+            val records: List<DisplayRecord>
         ) : State()
     }
 
@@ -76,7 +92,22 @@ class RecordsViewModel(
         ) : Effect()
     }
 
+    sealed class Event {
+
+        data class DeleteRecord(
+            val recordType: KClass<out Record>,
+            val metadataId: String,
+        ) : Event()
+
+        data object Refresh : Event()
+    }
+
     companion object {
-        val RECORD_TYPE_KEY: CreationExtras.Key<KClass<Record>> = CreationExtras.Key()
+        val RECORD_TYPE_KEY: CreationExtras.Key<KClass<out Record>> = CreationExtras.Key()
     }
 }
+
+data class DisplayRecord(
+    val description: String,
+    val metadataId: String,
+)

@@ -19,4 +19,6 @@ class PayloadMapper {
         list = response.records,
         pageToken = response.pageToken
     )
+
+    fun mapDeletedRecord(): Payload = Payload.Removed
 }
