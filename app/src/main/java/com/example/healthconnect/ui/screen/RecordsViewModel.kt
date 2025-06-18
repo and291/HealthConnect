@@ -11,6 +11,7 @@ import com.example.healthconnect.domain.model.Payload
 import com.example.healthconnect.domain.model.Result
 import com.example.healthconnect.domain.usecase.Delete
 import com.example.healthconnect.domain.usecase.Read
+import com.example.healthconnect.ui.model.DisplayRecord
 import com.example.healthconnect.ui.screen.RecordsViewModel.Effect.RequestSinglePermission
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -106,8 +107,3 @@ class RecordsViewModel(
         val RECORD_TYPE_KEY: CreationExtras.Key<KClass<out Record>> = CreationExtras.Key()
     }
 }
-
-data class DisplayRecord(
-    val description: String,
-    val metadataId: String,
-)
