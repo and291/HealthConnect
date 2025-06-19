@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
                         when (key) {
                             is Available -> NavEntry(key) {
                                 SdkAvailableScreen(
-                                    requestPermission = requestPermission,
                                     onTypeClick = { type ->
                                         backStack.add(Records(type))
                                     },
