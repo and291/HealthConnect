@@ -2,7 +2,6 @@ package com.example.healthconnect.ui.screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.health.connect.client.feature.ExperimentalMindfulnessSessionApi
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodPressureRecord
@@ -39,7 +38,6 @@ class SdkAvailableViewModel(
 
     sealed class State {
 
-        @OptIn(ExperimentalMindfulnessSessionApi::class)
         data class RecordTypes(
             val availableTypes: List<KClass<*>> = listOf<KClass<*>>(
                 ActiveCaloriesBurnedRecord::class,
