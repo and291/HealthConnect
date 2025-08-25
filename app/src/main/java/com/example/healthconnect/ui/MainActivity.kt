@@ -21,6 +21,7 @@ import androidx.health.connect.client.records.Record
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.example.healthconnect.di.Di
+import com.example.healthconnect.ui.screen.InsertRecordScreen
 import com.example.healthconnect.ui.screen.RecordsScreen
 import com.example.healthconnect.ui.screen.SdkAvailableScreen
 import com.example.healthconnect.ui.screen.SdkUnavailableScreen
@@ -34,6 +35,7 @@ data object Available
 data object Unavailable
 data object ProviderUpdateRequired
 data class Records(val recordType: KClass<Record>)
+data class Insert(val recordType: KClass<Record>)
 
 class MainActivity : ComponentActivity() {
 
@@ -70,7 +72,6 @@ class MainActivity : ComponentActivity() {
                         when (key) {
                             is Available -> NavEntry(key) {
                                 SdkAvailableScreen(
-                                    requestPermission = requestPermission,
                                     onTypeClick = { type ->
                                         backStack.add(Records(type))
                                     },
@@ -101,8 +102,16 @@ class MainActivity : ComponentActivity() {
                             is Records -> NavEntry(key) {
                                 RecordsScreen(
                                     requestPermission = requestPermission,
+                                    onInsertRecordClick = { backStack.add(Insert(key.recordType)) },
                                     recordType = key.recordType,
                                     modifier = Modifier.padding(innerPadding)
+                                )
+                            }
+
+                            is Insert -> NavEntry(key) {
+                                InsertRecordScreen(
+                                    recordType = key.recordType,
+                                    modifier = Modifier.padding(innerPadding),
                                 )
                             }
 

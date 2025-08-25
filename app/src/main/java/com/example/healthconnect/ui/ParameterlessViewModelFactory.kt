@@ -21,7 +21,7 @@ class ParameterlessViewModelFactory(
         return when (modelClass) {
             ActivityViewModel::class.java -> ActivityViewModel(libraryRepository)
             SdkPermissionsViewModel::class.java -> SdkPermissionsViewModel(libraryRepository)
-            SdkAvailableViewModel::class.java -> SdkAvailableViewModel(insert)
+            SdkAvailableViewModel::class.java -> SdkAvailableViewModel()
             SdkUpdateRequiredViewModel::class.java -> SdkUpdateRequiredViewModel(applicationContext)
             else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.canonicalName)
         } as T

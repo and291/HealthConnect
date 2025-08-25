@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,12 +22,15 @@ import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.component.RecordItem
+import com.example.healthconnect.ui.screen.RecordsViewModel.Effect
+import com.example.healthconnect.ui.screen.RecordsViewModel.Event
 import kotlin.reflect.KClass
 
 
 @Composable
 fun RecordsScreen(
     requestPermission: (String) -> Unit,
+    onInsertRecordClick: () -> Unit,
     recordType: KClass<out Record>,
     modifier: Modifier = Modifier,
     viewModel: RecordsViewModel = viewModel(
@@ -41,13 +46,13 @@ fun RecordsScreen(
     val effect by viewModel.effect.collectAsState(null)
 
     LaunchedEffect("") {
-        viewModel.onEvent(RecordsViewModel.Event.Refresh)
+        viewModel.onEvent(Event.Refresh)
     }
 
     LaunchedEffect(effect) {
         effect?.let { modification ->
             when (modification) {
-                is RecordsViewModel.Effect.RequestSinglePermission -> requestPermission(modification.sdkPermission)
+                is Effect.RequestSinglePermission -> requestPermission(modification.sdkPermission)
             }
             viewModel.effectConsumed(modification)
         }
@@ -61,11 +66,16 @@ fun RecordsScreen(
 
         when (val state = viewModel.state) {
             is RecordsViewModel.State.Data -> {
+                item {
+                    Button(onClick = onInsertRecordClick) {
+                        Text("+")
+                    }
+                }
                 items(state.records) { record ->
                     RecordItem(
                         text = record.description,
                         onDelete = {
-                            val event = RecordsViewModel.Event.DeleteRecord(
+                            val event = Event.DeleteRecord(
                                 recordType = recordType,
                                 metadataId = record.metadataId,
                             )
@@ -91,6 +101,7 @@ fun RecordsScreenPreview() {
     @Suppress("UNCHECKED_CAST")
     RecordsScreen(
         requestPermission = {},
+        onInsertRecordClick = {},
         recordType = StepsRecord::class as KClass<Record>
     )
 }
