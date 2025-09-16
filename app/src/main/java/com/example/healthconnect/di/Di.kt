@@ -15,6 +15,9 @@ import com.example.healthconnect.domain.usecase.Insert
 import com.example.healthconnect.domain.usecase.Read
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.RecordsViewModelFactory
+import com.example.healthconnect.ui.screen.record.metadata.EditorViewModelFactory
+import com.example.healthconnect.ui.screen.record.metadata.DeviceMapper
+import com.example.healthconnect.ui.screen.record.metadata.DeviceTypeMapper
 import kotlin.reflect.KClass
 
 object Di { //move to dagger. keep all features
@@ -75,4 +78,11 @@ object Di { //move to dagger. keep all features
     val recordsViewModelFactory by lazy {
         RecordsViewModelFactory(read, delete)
     }
+
+    val editorViewModelFactory by lazy {
+        EditorViewModelFactory()
+    }
+
+    val deviceTypeMapper = DeviceTypeMapper()
+    val deviceMapper = DeviceMapper()
 }
