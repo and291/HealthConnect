@@ -4,15 +4,15 @@ import androidx.health.connect.client.records.metadata.Device
 
 class DeviceMapper {
 
-    fun toState(device: Device): DeviceEditorViewModel.State = DeviceEditorViewModel.State(
+    fun toUiModel(device: Device): DeviceEditorViewModel.DeviceModel = DeviceEditorViewModel.DeviceModel(
         type = device.type,
         manufacturer = device.manufacturer ?: "",
         model = device.model ?: "",
     )
 
-    fun toDevice(state: DeviceEditorViewModel.State): Device = Device(
-        type = state.type,
-        manufacturer = state.manufacturer.ifBlank { null },
-        model = state.model.ifBlank { null }
+    fun toDevice(deviceModel: DeviceEditorViewModel.DeviceModel): Device = Device(
+        type = deviceModel.type,
+        manufacturer = deviceModel.manufacturer.ifBlank { null },
+        model = deviceModel.model.ifBlank { null }
     )
 }

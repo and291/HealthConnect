@@ -8,16 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
 
 class DeviceEditorViewModel(
-    initialState: State
+    initialDeviceModel: DeviceModel
 ) : ViewModel() {
 
-    private var _state by mutableStateOf(initialState)
+    private var _state by mutableStateOf(initialDeviceModel)
 
-    val state: State
+    val deviceModel: DeviceModel
         get() = _state
 
     fun onEvent(event: Event) {
-        _state = when(event) {
+        _state = when (event) {
             is Event.OnTypeSelected -> {
                 _state.copy(type = event.type)
             }
@@ -30,29 +30,28 @@ class DeviceEditorViewModel(
         }
     }
 
-    data class State(
-        val type: Int = Device.TYPE_UNKNOWN,
-        val manufacturer: String= "",
-        val model: String = "",
-    )
-
     sealed class Event {
 
         data class OnTypeSelected(
             val type: Int,
-            val name: String,
-        ): Event()
+        ) : Event()
 
         data class OnManufacturerChanged(
             val manufacturer: String
-        ): Event()
+        ) : Event()
 
         data class OnModelChanged(
             val model: String
-        ): Event()
+        ) : Event()
     }
 
+    data class DeviceModel(
+        val type: Int = Device.TYPE_UNKNOWN,
+        val manufacturer: String = "",
+        val model: String = "",
+    )
+
     companion object {
-        val DEVICE_KEY: CreationExtras.Key<State> = CreationExtras.Key()
+        val DEVICE_KEY: CreationExtras.Key<DeviceModel> = CreationExtras.Key()
     }
 }

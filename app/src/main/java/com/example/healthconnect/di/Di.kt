@@ -15,6 +15,8 @@ import com.example.healthconnect.domain.usecase.Insert
 import com.example.healthconnect.domain.usecase.Read
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.RecordsViewModelFactory
+import com.example.healthconnect.ui.screen.record.metadata.MetadataMapper
+import com.example.healthconnect.ui.screen.record.metadata.RecordingMethodMapper
 import com.example.healthconnect.ui.screen.record.metadata.EditorViewModelFactory
 import com.example.healthconnect.ui.screen.record.metadata.DeviceMapper
 import com.example.healthconnect.ui.screen.record.metadata.DeviceTypeMapper
@@ -85,4 +87,6 @@ object Di { //move to dagger. keep all features
 
     val deviceTypeMapper = DeviceTypeMapper()
     val deviceMapper = DeviceMapper()
+    val recordingMethodMapper = RecordingMethodMapper()
+    val metadataMapper = MetadataMapper()
 }

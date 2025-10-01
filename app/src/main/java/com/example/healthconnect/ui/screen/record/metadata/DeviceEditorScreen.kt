@@ -13,27 +13,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.metadata.Device
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
-import com.example.healthconnect.ui.screen.record.metadata.DeviceEditorViewModel.Event
 import com.example.healthconnect.ui.screen.record.component.SelectorComponent
+import com.example.healthconnect.ui.screen.record.metadata.DeviceEditorViewModel.DeviceModel
+import com.example.healthconnect.ui.screen.record.metadata.DeviceEditorViewModel.Event
 
 @Composable
 fun DeviceEditorScreen(
-    device: Device,
-    onDeviceChange: (Device) -> Unit,
+    deviceModel: DeviceModel,
+    onDeviceModelChange: (DeviceModel) -> Unit,
     modifier: Modifier = Modifier,
-    deviceMapper: DeviceMapper = Di.deviceMapper,
+    deviceTypeMapper: DeviceTypeMapper = Di.deviceTypeMapper,
     viewModel: DeviceEditorViewModel = viewModel(
         modelClass = DeviceEditorViewModel::class.java,
         factory = Di.editorViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(DeviceEditorViewModel.DEVICE_KEY, deviceMapper.toState(device))
+            set(DeviceEditorViewModel.DEVICE_KEY, deviceModel)
         }
     ),
-    deviceTypeMapper: DeviceTypeMapper = Di.deviceTypeMapper,
 ) {
 
     Column(
@@ -47,22 +46,18 @@ fun DeviceEditorScreen(
         SelectorComponent(
             title = "Type",
             supportText = "Client supplied type of the device",
-            selectedText = deviceTypeMapper.map(viewModel.state.type),
+            selectedText = deviceTypeMapper.map(viewModel.deviceModel.type),
             items = deviceTypeMapper.deviceTypes,
             itemComposable = { (_, name) ->
                 Text(text = name)
             },
-            onItemSelected = { (type, name) ->
-                viewModel.onEvent(
-                    Event.OnTypeSelected(
-                    type = type,
-                    name = name,
-                ))
+            onItemSelected = { (type, _) ->
+                viewModel.onEvent(Event.OnTypeSelected(type))
             }
         )
 
         OutlinedTextField(
-            value = viewModel.state.manufacturer,
+            value = viewModel.deviceModel.manufacturer,
             enabled = true,
             singleLine = true,
             onValueChange = { value ->
@@ -78,7 +73,7 @@ fun DeviceEditorScreen(
         )
 
         OutlinedTextField(
-            value = viewModel.state.model,
+            value = viewModel.deviceModel.model,
             enabled = true,
             singleLine = true,
             onValueChange = { value ->
@@ -94,7 +89,7 @@ fun DeviceEditorScreen(
         )
 
         Button(onClick = {
-            onDeviceChange(deviceMapper.toDevice(viewModel.state))
+            onDeviceModelChange(viewModel.deviceModel)
         }) {
             Text("Save")
         }
@@ -104,27 +99,27 @@ fun DeviceEditorScreen(
 @Composable
 @Preview(showBackground = true)
 fun DeviceEditorScreenPreview() {
-    val sampleDevice = Device(
-        type = Device.TYPE_PHONE,
+    val sampleDevice = DeviceModel(
+        type = 2,
         manufacturer = "Sample Manufacturer",
         model = "Sample Model"
     )
 
     DeviceEditorScreen(
-        device = sampleDevice,
-        onDeviceChange = {}
+        deviceModel = sampleDevice,
+        onDeviceModelChange = {}
     )
 }
 
 @Composable
 @Preview(showBackground = true)
 fun EmptyDeviceEditorScreenPreview() {
-    val sampleDevice = Device(
-        type = Device.TYPE_UNKNOWN,
+    val sampleDevice = DeviceModel(
+        type = 0,
     )
 
     DeviceEditorScreen(
-        device = sampleDevice,
-        onDeviceChange = {}
+        deviceModel = sampleDevice,
+        onDeviceModelChange = {}
     )
 }

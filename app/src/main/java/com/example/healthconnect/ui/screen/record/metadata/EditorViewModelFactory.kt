@@ -11,7 +11,10 @@ class EditorViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
         return when (modelClass) {
             DeviceEditorViewModel::class -> DeviceEditorViewModel(
-                initialState = checkNotNull(extras[DeviceEditorViewModel.DEVICE_KEY])
+                initialDeviceModel = checkNotNull(extras[DeviceEditorViewModel.DEVICE_KEY])
+            )
+            MetadataEditorViewModel::class -> MetadataEditorViewModel (
+                initialMetadataModel = checkNotNull(extras[MetadataEditorViewModel.METADATA_MODEL_KEY])
             )
             else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.simpleName)
         } as T
