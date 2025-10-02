@@ -3,17 +3,16 @@ package com.example.healthconnect.ui.screen.record.metadata
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.health.connect.client.records.metadata.Device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
 
 class DeviceEditorViewModel(
-    initialDeviceModel: DeviceModel
+    initialDeviceModel: DeviceComponentViewModel.DeviceModel.Specified
 ) : ViewModel() {
 
     private var _state by mutableStateOf(initialDeviceModel)
 
-    val deviceModel: DeviceModel
+    val specifiedDeviceModel: DeviceComponentViewModel.DeviceModel.Specified
         get() = _state
 
     fun onEvent(event: Event) {
@@ -45,13 +44,8 @@ class DeviceEditorViewModel(
         ) : Event()
     }
 
-    data class DeviceModel(
-        val type: Int = Device.TYPE_UNKNOWN,
-        val manufacturer: String = "",
-        val model: String = "",
-    )
-
     companion object {
-        val DEVICE_KEY: CreationExtras.Key<DeviceModel> = CreationExtras.Key()
+
+        val SPECIFIED_DEVICE_KEY: CreationExtras.Key<DeviceComponentViewModel.DeviceModel.Specified> = CreationExtras.Key()
     }
 }

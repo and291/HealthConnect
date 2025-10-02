@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +19,7 @@ import com.example.healthconnect.ui.screen.record.component.SelectorComponent
 import java.time.Instant
 
 @Composable
-fun MetadataEditorScreen(
+fun MetadataEditorComponent(
     metadataModel: MetadataModel,
     onMetaModelChange: (MetadataModel) -> Unit,
     modifier: Modifier = Modifier,
@@ -38,7 +36,6 @@ fun MetadataEditorScreen(
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
-            .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(16.dp)
     ) {
@@ -133,22 +130,12 @@ fun MetadataEditorScreen(
             },
             modifier = Modifier.fillMaxWidth()
         )
-
-        Text(text = "Device")
-        OutlinedTextField(
-            value = "type=${viewModel.state.deviceType}\n" +
-                    "manufacturer=${viewModel.state.deviceManufacturer}\n" +
-                    "model=${viewModel.state.deviceModel}",
-            onValueChange = { newValue: String ->
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
 
 @Composable
 @Preview(showBackground = true, heightDp = 1500)
-fun MetadataEditorPreview() {
+fun MetadataEditorComponentPreview() {
     val sampleMetadataModel = MetadataModel(
         recordingMethod = 1, // Example value
         id = "sample-id",
@@ -156,12 +143,9 @@ fun MetadataEditorPreview() {
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
         clientRecordVersion = 1L,
-        deviceType = 1, // Example value
-        deviceManufacturer = "Example Manufacturer",
-        deviceModel = "Example Model"
     )
 
-    MetadataEditorScreen(
+    MetadataEditorComponent(
         metadataModel = sampleMetadataModel,
         onMetaModelChange = { updatedMetadataModel ->
             // Handle metadata changes here

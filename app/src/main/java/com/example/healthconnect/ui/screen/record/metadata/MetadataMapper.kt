@@ -13,9 +13,6 @@ class MetadataMapper {
             lastModifiedTime = metadata.lastModifiedTime,
             clientRecordId = metadata.clientRecordId ?: "",
             clientRecordVersion = metadata.clientRecordVersion,
-            deviceType = metadata.device?.type,
-            deviceManufacturer = metadata.device?.manufacturer,
-            deviceModel = metadata.device?.model,
         )
 
     fun toMetadata(

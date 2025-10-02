@@ -62,7 +62,8 @@ class RecordsViewModel(
                                 _state = State.Data(result.payload.list.map {
                                     DisplayRecord(
                                         description = it.toString(),
-                                        metadataId = it.metadata.id
+                                        metadataId = it.metadata.id,
+                                        record = it,
                                     )
                                 })
                             }
@@ -77,7 +78,7 @@ class RecordsViewModel(
             }
 
             is Event.OnRecordClick -> viewModelScope.launch {
-                _effect.emit(Effect.OpenRecordScreen(event.recordType, event.metadataId))
+                _effect.emit(Effect.OpenRecordScreen(event.record))
             }
         }
     }
@@ -94,8 +95,7 @@ class RecordsViewModel(
     sealed class Effect {
 
         data class OpenRecordScreen(
-            val recordType: KClass<out Record>,
-            val metadataId: String,
+            val record: Record,
         ) : Effect()
 
         data class RequestSinglePermission(
@@ -106,8 +106,7 @@ class RecordsViewModel(
     sealed class Event {
 
         data class OnRecordClick(
-            val recordType: KClass<out Record>,
-            val metadataId: String,
+            val record: Record,
         ) : Event()
 
         data class DeleteRecord(

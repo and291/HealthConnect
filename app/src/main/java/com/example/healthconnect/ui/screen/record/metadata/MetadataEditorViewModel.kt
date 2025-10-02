@@ -55,13 +55,10 @@ class MetadataEditorViewModel(
         val lastModifiedTime: Instant = Instant.EPOCH,
         val clientRecordId: String = "",
         val clientRecordVersion: Long = 0,
-
-        val deviceType: Int? = null,
-        val deviceManufacturer: String? = null,
-        val deviceModel: String? = null,
     )
 
     companion object {
+
         val METADATA_MODEL_KEY: CreationExtras.Key<MetadataModel> = CreationExtras.Key()
     }
 }

@@ -31,7 +31,7 @@ import kotlin.reflect.KClass
 @Composable
 fun RecordsScreen(
     requestPermission: (String) -> Unit,
-    onRecordClick: () -> Unit,
+    onRecordClick: (Record) -> Unit,
     onInsertRecordClick: () -> Unit,
     recordType: KClass<out Record>,
     modifier: Modifier = Modifier,
@@ -55,7 +55,7 @@ fun RecordsScreen(
         effect?.let { modification ->
             when (modification) {
                 is Effect.RequestSinglePermission -> requestPermission(modification.sdkPermission)
-                is Effect.OpenRecordScreen -> onRecordClick()
+                is Effect.OpenRecordScreen -> onRecordClick(modification.record)
             }
             viewModel.effectConsumed(modification)
         }
@@ -89,8 +89,7 @@ fun RecordsScreen(
                             .clickable {
                                 //Do you really need to route this event thru view model? What for?
                                 val event = Event.OnRecordClick(
-                                    recordType = recordType,
-                                    metadataId = record.metadataId
+                                    record = record.record,
                                 )
                                 viewModel.onEvent(event)
                             }

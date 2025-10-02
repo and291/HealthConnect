@@ -1,18 +1,28 @@
 package com.example.healthconnect.ui.screen.record.metadata
 
 import androidx.health.connect.client.records.metadata.Device
+import com.example.healthconnect.ui.screen.record.metadata.DeviceComponentViewModel.DeviceModel
 
 class DeviceMapper {
 
-    fun toUiModel(device: Device): DeviceEditorViewModel.DeviceModel = DeviceEditorViewModel.DeviceModel(
-        type = device.type,
-        manufacturer = device.manufacturer ?: "",
-        model = device.model ?: "",
-    )
+    fun toUiModel(device: Device?): DeviceModel =
+        if (device != null) {
+            DeviceModel.Specified(
+                type = device.type,
+                manufacturer = device.manufacturer ?: "",
+                model = device.model ?: "",
+            )
+        } else {
+            DeviceModel.Empty
+        }
 
-    fun toDevice(deviceModel: DeviceEditorViewModel.DeviceModel): Device = Device(
-        type = deviceModel.type,
-        manufacturer = deviceModel.manufacturer.ifBlank { null },
-        model = deviceModel.model.ifBlank { null }
-    )
+    fun toDevice(deviceModel: DeviceModel): Device? =
+        when (deviceModel) {
+            DeviceModel.Empty -> null
+            is DeviceModel.Specified -> Device(
+                type = deviceModel.type,
+                manufacturer = deviceModel.manufacturer.ifBlank { null },
+                model = deviceModel.model.ifBlank { null }
+            )
+        }
 }

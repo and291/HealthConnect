@@ -1,52 +1,41 @@
 package com.example.healthconnect.ui.screen.record.metadata
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.screen.record.component.SelectorComponent
-import com.example.healthconnect.ui.screen.record.metadata.DeviceEditorViewModel.DeviceModel
 import com.example.healthconnect.ui.screen.record.metadata.DeviceEditorViewModel.Event
 
 @Composable
-fun DeviceEditorScreen(
-    deviceModel: DeviceModel,
-    onDeviceModelChange: (DeviceModel) -> Unit,
+fun DeviceEditorComponent(
+    specifiedDeviceModel: DeviceComponentViewModel.DeviceModel.Specified,
+    onDeviceModelChange: (DeviceComponentViewModel.DeviceModel) -> Unit,
     modifier: Modifier = Modifier,
     deviceTypeMapper: DeviceTypeMapper = Di.deviceTypeMapper,
     viewModel: DeviceEditorViewModel = viewModel(
         modelClass = DeviceEditorViewModel::class.java,
         factory = Di.editorViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(DeviceEditorViewModel.DEVICE_KEY, deviceModel)
+            set(DeviceEditorViewModel.SPECIFIED_DEVICE_KEY, specifiedDeviceModel)
         }
     ),
 ) {
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxWidth()
-            .padding(16.dp)
     ) {
 
         SelectorComponent(
             title = "Type",
             supportText = "Client supplied type of the device",
-            selectedText = deviceTypeMapper.map(viewModel.deviceModel.type),
+            selectedText = deviceTypeMapper.map(viewModel.specifiedDeviceModel.type),
             items = deviceTypeMapper.deviceTypes,
             itemComposable = { (_, name) ->
                 Text(text = name)
@@ -57,7 +46,7 @@ fun DeviceEditorScreen(
         )
 
         OutlinedTextField(
-            value = viewModel.deviceModel.manufacturer,
+            value = viewModel.specifiedDeviceModel.manufacturer,
             enabled = true,
             singleLine = true,
             onValueChange = { value ->
@@ -73,7 +62,7 @@ fun DeviceEditorScreen(
         )
 
         OutlinedTextField(
-            value = viewModel.deviceModel.model,
+            value = viewModel.specifiedDeviceModel.model,
             enabled = true,
             singleLine = true,
             onValueChange = { value ->
@@ -87,26 +76,20 @@ fun DeviceEditorScreen(
             },
             modifier = Modifier.fillMaxWidth()
         )
-
-        Button(onClick = {
-            onDeviceModelChange(viewModel.deviceModel)
-        }) {
-            Text("Save")
-        }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun DeviceEditorScreenPreview() {
-    val sampleDevice = DeviceModel(
+    val sampleDevice = DeviceComponentViewModel.DeviceModel.Specified(
         type = 2,
         manufacturer = "Sample Manufacturer",
         model = "Sample Model"
     )
 
-    DeviceEditorScreen(
-        deviceModel = sampleDevice,
+    DeviceEditorComponent(
+        specifiedDeviceModel = sampleDevice,
         onDeviceModelChange = {}
     )
 }
@@ -114,12 +97,14 @@ fun DeviceEditorScreenPreview() {
 @Composable
 @Preview(showBackground = true)
 fun EmptyDeviceEditorScreenPreview() {
-    val sampleDevice = DeviceModel(
+    val sampleDevice = DeviceComponentViewModel.DeviceModel.Specified(
         type = 0,
+        manufacturer = "",
+        model = ""
     )
 
-    DeviceEditorScreen(
-        deviceModel = sampleDevice,
+    DeviceEditorComponent(
+        specifiedDeviceModel = sampleDevice,
         onDeviceModelChange = {}
     )
 }

@@ -19,6 +19,8 @@ import com.example.healthconnect.ui.screen.SdkAvailableScreen
 import com.example.healthconnect.ui.screen.SdkUnavailableScreen
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredScreen
 import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureScreen
+import com.example.healthconnect.ui.screen.record.metadata.MetadataEditorComponent
+import com.example.healthconnect.ui.screen.record.metadata.MetadataEditorViewModel
 import kotlin.reflect.KClass
 
 // Define keys that will identify content
@@ -29,7 +31,8 @@ sealed class NavDestination {
     data object ProviderUpdateRequired : NavDestination()
     data class Records(val recordType: KClass<Record>) : NavDestination()
     data class Insert(val recordType: KClass<Record>) : NavDestination()
-    data class RecordScreen(val recordType: KClass<out Record>, val metadataId: String) :
+    data class RecordScreen(val record: Record) : NavDestination()
+    data class MetadataScreen(val metadataModel: MetadataEditorViewModel.MetadataModel) :
         NavDestination()
 }
 
@@ -81,8 +84,7 @@ fun CreateNavDisplay(
                     onRecordClick = {
                         backStack.add(
                             NavDestination.RecordScreen(
-                                key.recordType,
-                                ""
+                                record = it
                             )
                         )
                     },
@@ -100,10 +102,25 @@ fun CreateNavDisplay(
             }
 
             is NavDestination.RecordScreen -> NavEntry(key) {
-                BasalBodyTemperatureScreen()
+                BasalBodyTemperatureScreen(
+                    record = key.record,
+                    onMetadataClick = {
+                        backStack.add(NavDestination.MetadataScreen(it))
+                    },
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
 
             is NavDestination.Splash -> NavEntry(key) { Text("Unknown route") }
+            is NavDestination.MetadataScreen -> NavEntry(key) {
+                MetadataEditorComponent(
+                    metadataModel = key.metadataModel,
+                    onMetaModelChange = {
+
+                    },
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
         }
     }
 }
