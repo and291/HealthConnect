@@ -1,6 +1,6 @@
 package com.example.healthconnect.ui.screen.record
 
-import androidx.compose.foundation.clickable
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -14,13 +14,11 @@ import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.screen.record.metadata.DeviceComponent
 import com.example.healthconnect.ui.screen.record.metadata.DeviceMapper
 import com.example.healthconnect.ui.screen.record.metadata.MetadataEditorComponent
-import com.example.healthconnect.ui.screen.record.metadata.MetadataEditorViewModel
 import com.example.healthconnect.ui.screen.record.metadata.MetadataMapper
 
 @Composable
 fun BasalBodyTemperatureScreen(
     record: Record,
-    onMetadataClick: (MetadataEditorViewModel.MetadataModel) -> Unit,
     modifier: Modifier = Modifier,
     metadataMapper: MetadataMapper = Di.metadataMapper,
     deviceMapper: DeviceMapper = Di.deviceMapper,
@@ -30,23 +28,19 @@ fun BasalBodyTemperatureScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        Text(
-            text = "FFFFuuuuuuuu",
-            modifier = Modifier
-                .clickable {
-                    val metadataUiModel =
-                        metadataMapper.toUiModel(record.metadata)
-                    onMetadataClick(metadataUiModel)
-                }
-        )
+        Text("Metadata:")
         MetadataEditorComponent(
             metadataModel = metadataMapper.toUiModel(record.metadata),
-            onMetaModelChange = {},
+            onMetaModelChange = {
+                Log.d(this::class.simpleName, "Metadata: $it")
+            },
         )
 
         DeviceComponent(
             deviceModel = deviceMapper.toUiModel(record.metadata.device),
-            //onDeviceModelChange = {},
+            onDeviceModelChange = {
+                Log.d(this::class.simpleName, "Device: $it")
+            },
         )
     }
 }

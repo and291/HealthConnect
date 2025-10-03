@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.MutableCreationExtras
@@ -16,7 +17,7 @@ import com.example.healthconnect.ui.screen.record.metadata.DeviceEditorViewModel
 @Composable
 fun DeviceEditorComponent(
     specifiedDeviceModel: DeviceComponentViewModel.DeviceModel.Specified,
-    onDeviceModelChange: (DeviceComponentViewModel.DeviceModel) -> Unit,
+    onDeviceModelChange: (DeviceComponentViewModel.DeviceModel.Specified) -> Unit,
     modifier: Modifier = Modifier,
     deviceTypeMapper: DeviceTypeMapper = Di.deviceTypeMapper,
     viewModel: DeviceEditorViewModel = viewModel(
@@ -27,6 +28,10 @@ fun DeviceEditorComponent(
         }
     ),
 ) {
+
+    LaunchedEffect(viewModel.specifiedDeviceModel) {
+        onDeviceModelChange(viewModel.specifiedDeviceModel)
+    }
 
     Column(
         modifier = modifier

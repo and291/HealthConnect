@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +20,7 @@ import com.example.healthconnect.ui.screen.record.metadata.DeviceComponentViewMo
 @Composable
 fun DeviceComponent(
     deviceModel: DeviceModel,
+    onDeviceModelChange: (DeviceModel) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DeviceComponentViewModel = viewModel(
         modelClass = DeviceComponentViewModel::class,
@@ -28,6 +30,10 @@ fun DeviceComponent(
         }
     )
 ) {
+
+    LaunchedEffect(viewModel.deviceModel) {
+        onDeviceModelChange(viewModel.deviceModel)
+    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -48,7 +54,7 @@ fun DeviceComponent(
             is DeviceModel.Specified -> {
                 DeviceEditorComponent(
                     specifiedDeviceModel = device,
-                    onDeviceModelChange = {},
+                    onDeviceModelChange = onDeviceModelChange,
                     modifier = modifier
                 )
                 Button(onClick = {
@@ -69,6 +75,7 @@ fun DeviceComponentPreview() {
 
     DeviceComponent(
         deviceModel = emptyDeviceModel,
+        onDeviceModelChange = {},
         modifier = Modifier
     )
 }
@@ -85,6 +92,7 @@ fun SpecifiedDeviceComponentPreview() {
 
     DeviceComponent(
         deviceModel = specifiedDeviceModel,
+        onDeviceModelChange = {},
         modifier = Modifier
     )
 }

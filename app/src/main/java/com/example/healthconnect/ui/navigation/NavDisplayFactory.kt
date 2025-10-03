@@ -104,9 +104,6 @@ fun CreateNavDisplay(
             is NavDestination.RecordScreen -> NavEntry(key) {
                 BasalBodyTemperatureScreen(
                     record = key.record,
-                    onMetadataClick = {
-                        backStack.add(NavDestination.MetadataScreen(it))
-                    },
                     modifier = Modifier.padding(innerPadding)
                 )
             }
