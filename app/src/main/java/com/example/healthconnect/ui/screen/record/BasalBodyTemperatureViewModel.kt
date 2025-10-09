@@ -1,6 +1,10 @@
 package com.example.healthconnect.ui.screen.record
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
+import androidx.health.connect.client.units.Temperature
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -8,19 +12,23 @@ import com.example.healthconnect.domain.model.Result
 import com.example.healthconnect.domain.usecase.Update
 import com.example.healthconnect.ui.screen.component.metadata.mapper.MetadataMapper
 import com.example.healthconnect.ui.screen.component.metadata.model.MetadataModel
+import com.example.healthconnect.ui.screen.record.model.BasalBodyTemperatureModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BasalBodyTemperatureViewModel(
-    private val record: BasalBodyTemperatureRecord,
+    record: BasalBodyTemperatureModel,
     private val metadataMapper: MetadataMapper,
     private val update: Update,
 ) : ViewModel() {
 
-    private var metadataModel: MetadataModel =
-        metadataMapper.toUiModel(record.metadata)
+    private var _state by mutableStateOf(record)
+
+    val state: BasalBodyTemperatureModel
+        get() = _state
+
     private val _effect = MutableStateFlow<Effect?>(null)
 
     val effect: StateFlow<Effect?> = _effect.asStateFlow()
@@ -34,7 +42,9 @@ class BasalBodyTemperatureViewModel(
     fun onEvent(event: Event) {
         when (event) {
             is Event.OnMetaModelChanged -> {
-                metadataModel = event.metaModel
+                _state = _state.copy(
+                    metadataModel = event.metaModel
+                )
             }
 
             Event.OnSave -> viewModelScope.launch {
@@ -43,11 +53,11 @@ class BasalBodyTemperatureViewModel(
                     //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
                 } else {
                     val modifiedRecord = BasalBodyTemperatureRecord(
-                        time = record.time,
-                        zoneOffset = record.zoneOffset,
-                        temperature = record.temperature,
-                        measurementLocation = record.measurementLocation,
-                        metadata = metadataMapper.toMetadata(metadataModel)
+                        time = _state.time,
+                        zoneOffset = _state.zoneOffset,
+                        temperature = _state.temperature,
+                        measurementLocation = _state.measurementLocation,
+                        metadata = metadataMapper.toMetadata(_state.metadataModel)
                     )
                     when (update(modifiedRecord)) {
                         is Result.IoException -> TODO()
@@ -61,6 +71,17 @@ class BasalBodyTemperatureViewModel(
                     }
                 }
             }
+
+            is Event.OnMeasurementLocationSelected -> {
+                _state = _state.copy(
+                    measurementLocation = event.location //TODO check input
+                )
+            }
+            is Event.OnTemperatureChanged -> {
+                _state = _state.copy(
+                    temperature = Temperature.celsius(event.celsius.toDouble()) //TODO check input
+                )
+            }
         }
     }
 
@@ -71,6 +92,14 @@ class BasalBodyTemperatureViewModel(
 
     sealed class Event {
 
+        data class OnTemperatureChanged(
+            val celsius: String
+        ) : Event()
+
+        data class OnMeasurementLocationSelected(
+            val location: Int
+        ): Event()
+
         data class OnMetaModelChanged(
             val metaModel: MetadataModel
         ) : Event()
@@ -80,6 +109,6 @@ class BasalBodyTemperatureViewModel(
 
     companion object {
 
-        val RECORD_KEY: CreationExtras.Key<BasalBodyTemperatureRecord> = CreationExtras.Key()
+        val RECORD_KEY: CreationExtras.Key<BasalBodyTemperatureModel> = CreationExtras.Key()
     }
 }

@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.Record
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
@@ -20,6 +19,9 @@ import com.example.healthconnect.ui.screen.SdkAvailableScreen
 import com.example.healthconnect.ui.screen.SdkUnavailableScreen
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredScreen
 import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureScreen
+import com.example.healthconnect.ui.screen.record.mapper.RecordMapper
+import com.example.healthconnect.ui.screen.record.model.BasalBodyTemperatureModel
+import com.example.healthconnect.ui.screen.record.model.RecordModel
 import kotlin.reflect.KClass
 
 // Define keys that will identify content
@@ -30,7 +32,7 @@ sealed class NavDestination {
     data object ProviderUpdateRequired : NavDestination()
     data class Records(val recordType: KClass<Record>) : NavDestination()
     data class Insert(val recordType: KClass<Record>) : NavDestination()
-    data class RecordScreen(val record: Record) : NavDestination()
+    data class RecordScreen(val record: RecordModel) : NavDestination()
 }
 
 
@@ -40,6 +42,7 @@ fun CreateNavDisplay(
     innerPadding: PaddingValues,
     requestPermission: (String) -> Unit,
     activity: Activity,
+    recordMapper: RecordMapper,
 ) {
     NavDisplay(
         backStack = backStack,
@@ -81,7 +84,7 @@ fun CreateNavDisplay(
                     onRecordClick = {
                         backStack.add(
                             NavDestination.RecordScreen(
-                                record = it
+                                record = recordMapper.toUiModel(it)
                             )
                         )
                     },
@@ -100,7 +103,7 @@ fun CreateNavDisplay(
 
             is NavDestination.RecordScreen -> NavEntry(key) {
                 BasalBodyTemperatureScreen(
-                    record = key.record as BasalBodyTemperatureRecord, //TODO fix type conversion
+                    record = key.record as BasalBodyTemperatureModel, //TODO fix type conversion
                     modifier = Modifier.padding(innerPadding)
                 )
             }

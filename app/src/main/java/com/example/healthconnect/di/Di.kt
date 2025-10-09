@@ -22,6 +22,8 @@ import com.example.healthconnect.ui.screen.component.metadata.mapper.RecordingMe
 import com.example.healthconnect.ui.screen.component.metadata.mapper.DeviceMapper
 import com.example.healthconnect.ui.screen.component.metadata.mapper.DeviceTypeMapper
 import com.example.healthconnect.ui.screen.record.RecordViewModelFactory
+import com.example.healthconnect.ui.screen.record.mapper.MeasurementLocationMapper
+import com.example.healthconnect.ui.screen.record.mapper.RecordMapper
 import kotlin.getValue
 import kotlin.reflect.KClass
 
@@ -108,5 +110,10 @@ object Di { //move to dagger. keep all features
     val recordingMethodMapper = RecordingMethodMapper()
     val metadataMapper = MetadataMapper(
         deviceMapper = deviceMapper,
+    )
+
+    val measurementLocationMapper = MeasurementLocationMapper()
+    val recordMapper = RecordMapper(
+        metadataMapper = metadataMapper,
     )
 }

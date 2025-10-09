@@ -51,7 +51,8 @@ class MainActivity : ComponentActivity() {
                         backStack = backStack,
                         innerPadding = innerPadding,
                         requestPermission = requestPermission,
-                        activity = this
+                        activity = this,
+                        recordMapper = Di.recordMapper,
                     )
                 }
             }
