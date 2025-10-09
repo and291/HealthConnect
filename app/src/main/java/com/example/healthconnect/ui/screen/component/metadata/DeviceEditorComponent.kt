@@ -1,62 +1,52 @@
-package com.example.healthconnect.ui.screen.record.metadata
+package com.example.healthconnect.ui.screen.component.metadata
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.MutableCreationExtras
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.dp
 import com.example.healthconnect.di.Di
-import com.example.healthconnect.ui.screen.record.component.SelectorComponent
-import com.example.healthconnect.ui.screen.record.metadata.DeviceEditorViewModel.Event
+import com.example.healthconnect.ui.screen.component.metadata.model.DeviceModel
+import com.example.healthconnect.ui.screen.component.SelectorComponent
+import com.example.healthconnect.ui.screen.component.metadata.mapper.DeviceTypeMapper
 
 @Composable
 fun DeviceEditorComponent(
-    specifiedDeviceModel: DeviceComponentViewModel.DeviceModel.Specified,
-    onDeviceModelChange: (DeviceComponentViewModel.DeviceModel.Specified) -> Unit,
+    specifiedDeviceModel: DeviceModel.Specified,
+    onTypeItemSelected: (Pair<Int, String>) -> Unit,
+    onManufacturerValueChanged: (String) -> Unit,
+    onModelValueChanged: (String) -> Unit,
+    onRemoveDeviceClicked: () -> Unit,
     modifier: Modifier = Modifier,
     deviceTypeMapper: DeviceTypeMapper = Di.deviceTypeMapper,
-    viewModel: DeviceEditorViewModel = viewModel(
-        modelClass = DeviceEditorViewModel::class.java,
-        factory = Di.editorViewModelFactory,
-        extras = MutableCreationExtras().apply {
-            set(DeviceEditorViewModel.SPECIFIED_DEVICE_KEY, specifiedDeviceModel)
-        }
-    ),
 ) {
 
-    LaunchedEffect(viewModel.specifiedDeviceModel) {
-        onDeviceModelChange(viewModel.specifiedDeviceModel)
-    }
-
     Column(
-        modifier = modifier
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier,
     ) {
 
         SelectorComponent(
             title = "Type",
             supportText = "Client supplied type of the device",
-            selectedText = deviceTypeMapper.map(viewModel.specifiedDeviceModel.type),
+            selectedText = deviceTypeMapper.mapName(specifiedDeviceModel.type),
             items = deviceTypeMapper.deviceTypes,
             itemComposable = { (_, name) ->
                 Text(text = name)
             },
-            onItemSelected = { (type, _) ->
-                viewModel.onEvent(Event.OnTypeSelected(type))
-            }
+            onItemSelected = onTypeItemSelected,
         )
 
         OutlinedTextField(
-            value = viewModel.specifiedDeviceModel.manufacturer,
+            value = specifiedDeviceModel.manufacturer,
             enabled = true,
             singleLine = true,
-            onValueChange = { value ->
-                viewModel.onEvent(Event.OnManufacturerChanged(value))
-            },
+            onValueChange = onManufacturerValueChanged,
             label = {
                 Text("Manufacturer")
             },
@@ -67,12 +57,10 @@ fun DeviceEditorComponent(
         )
 
         OutlinedTextField(
-            value = viewModel.specifiedDeviceModel.model,
+            value = specifiedDeviceModel.model,
             enabled = true,
             singleLine = true,
-            onValueChange = { value ->
-                viewModel.onEvent(Event.OnModelChanged(value))
-            },
+            onValueChange = onModelValueChanged,
             label = {
                 Text("Model")
             },
@@ -81,13 +69,17 @@ fun DeviceEditorComponent(
             },
             modifier = Modifier.fillMaxWidth()
         )
+
+        Button(onClick = onRemoveDeviceClicked) {
+            Text("Remove device")
+        }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun DeviceEditorScreenPreview() {
-    val sampleDevice = DeviceComponentViewModel.DeviceModel.Specified(
+    val sampleDevice = DeviceModel.Specified(
         type = 2,
         manufacturer = "Sample Manufacturer",
         model = "Sample Model"
@@ -95,14 +87,17 @@ fun DeviceEditorScreenPreview() {
 
     DeviceEditorComponent(
         specifiedDeviceModel = sampleDevice,
-        onDeviceModelChange = {}
+        onTypeItemSelected = { },
+        onManufacturerValueChanged = { },
+        onModelValueChanged = { },
+        onRemoveDeviceClicked = { },
     )
 }
 
 @Composable
 @Preview(showBackground = true)
 fun EmptyDeviceEditorScreenPreview() {
-    val sampleDevice = DeviceComponentViewModel.DeviceModel.Specified(
+    val sampleDevice = DeviceModel.Specified(
         type = 0,
         manufacturer = "",
         model = ""
@@ -110,6 +105,9 @@ fun EmptyDeviceEditorScreenPreview() {
 
     DeviceEditorComponent(
         specifiedDeviceModel = sampleDevice,
-        onDeviceModelChange = {}
+        onTypeItemSelected = { },
+        onManufacturerValueChanged = { },
+        onModelValueChanged = { },
+        onRemoveDeviceClicked = { },
     )
 }

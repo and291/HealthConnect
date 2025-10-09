@@ -1,7 +1,7 @@
-package com.example.healthconnect.ui.screen.record.metadata
+package com.example.healthconnect.ui.screen.component.metadata.mapper
 
 import androidx.health.connect.client.records.metadata.Device
-import com.example.healthconnect.ui.screen.record.metadata.DeviceComponentViewModel.DeviceModel
+import com.example.healthconnect.ui.screen.component.metadata.model.DeviceModel
 
 class DeviceMapper {
 

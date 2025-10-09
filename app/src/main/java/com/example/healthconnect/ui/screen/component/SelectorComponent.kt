@@ -1,4 +1,4 @@
-package com.example.healthconnect.ui.screen.record.component
+package com.example.healthconnect.ui.screen.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

@@ -12,6 +12,7 @@ interface LibraryRepository {
 
     fun getSdkStatus(): Int
     suspend fun getGrantedPermissions(): Set<String>
+    suspend fun updateRecords(records: List<Record>)
     suspend fun insertRecords(records: List<Record>): InsertRecordsResponse
     suspend fun <T : Record> readRecords(request: ReadRecordsRequest<T>): ReadRecordsResponse<T>
     suspend fun removeRecord(recordType: KClass<out Record>, metadataId: String)

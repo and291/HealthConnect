@@ -69,6 +69,7 @@ class RecordsViewModel(
                             }
 
                             is Payload.Removed -> TODO()
+                            Payload.Updated -> TODO()
                         }
                     }
 

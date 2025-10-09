@@ -2,6 +2,7 @@ package com.example.healthconnect.domain.model
 
 import androidx.health.connect.client.records.Record
 
+//TODO тут как будто бы надо переделать. Сюда летят варианты ответов для всех типов запросов и вставки, и удадения и апдейта. Это странно
 sealed class Payload {
 
     data class InsertList(
@@ -14,4 +15,6 @@ sealed class Payload {
     ) : Payload()
 
     data object Removed : Payload()
+
+    data object Updated : Payload()
 }
