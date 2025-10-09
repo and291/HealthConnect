@@ -40,6 +40,7 @@ class RecordsViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
+
             is Event.DeleteRecord -> viewModelScope.launch {
                 delete(recordType = event.recordType, metadataId = event.metadataId)
                 //just send event to update content. Will fix later
@@ -61,18 +62,24 @@ class RecordsViewModel(
                                 _state = State.Data(result.payload.list.map {
                                     DisplayRecord(
                                         description = it.toString(),
-                                        metadataId = it.metadata.id
+                                        metadataId = it.metadata.id,
+                                        record = it,
                                     )
                                 })
                             }
 
                             is Payload.Removed -> TODO()
+                            Payload.Updated -> TODO()
                         }
                     }
 
                     is Result.UnhandledException -> TODO()
                     is Result.UnpermittedAccess -> TODO()
                 }
+            }
+
+            is Event.OnRecordClick -> viewModelScope.launch {
+                _effect.emit(Effect.OpenRecordScreen(event.record))
             }
         }
     }
@@ -88,12 +95,20 @@ class RecordsViewModel(
 
     sealed class Effect {
 
+        data class OpenRecordScreen(
+            val record: Record,
+        ) : Effect()
+
         data class RequestSinglePermission(
             val sdkPermission: String
         ) : Effect()
     }
 
     sealed class Event {
+
+        data class OnRecordClick(
+            val record: Record,
+        ) : Event()
 
         data class DeleteRecord(
             val recordType: KClass<out Record>,

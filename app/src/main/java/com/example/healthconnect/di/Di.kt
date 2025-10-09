@@ -13,8 +13,18 @@ import com.example.healthconnect.domain.ResultMapper
 import com.example.healthconnect.domain.usecase.Delete
 import com.example.healthconnect.domain.usecase.Insert
 import com.example.healthconnect.domain.usecase.Read
+import com.example.healthconnect.domain.usecase.Update
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.RecordsViewModelFactory
+import com.example.healthconnect.ui.screen.component.metadata.MetadataComponentViewModelFactory
+import com.example.healthconnect.ui.screen.component.metadata.mapper.MetadataMapper
+import com.example.healthconnect.ui.screen.component.metadata.mapper.RecordingMethodMapper
+import com.example.healthconnect.ui.screen.component.metadata.mapper.DeviceMapper
+import com.example.healthconnect.ui.screen.component.metadata.mapper.DeviceTypeMapper
+import com.example.healthconnect.ui.screen.record.RecordViewModelFactory
+import com.example.healthconnect.ui.screen.record.mapper.MeasurementLocationMapper
+import com.example.healthconnect.ui.screen.record.mapper.RecordMapper
+import kotlin.getValue
 import kotlin.reflect.KClass
 
 object Di { //move to dagger. keep all features
@@ -31,6 +41,10 @@ object Di { //move to dagger. keep all features
 
                 override suspend fun getGrantedPermissions(): Set<String> {
                     return setOf("sdk:permission")
+                }
+
+                override suspend fun updateRecords(records: List<Record>) {
+                    TODO("Not yet implemented")
                 }
 
                 override suspend fun insertRecords(records: List<Record>): InsertRecordsResponse {
@@ -60,6 +74,10 @@ object Di { //move to dagger. keep all features
         Insert(libraryRepository, resultMapper, payloadMapper)
     }
 
+    private val update by lazy {
+        Update(libraryRepository, resultMapper, payloadMapper)
+    }
+
     private val read by lazy {
         Read(libraryRepository, resultMapper, payloadMapper)
     }
@@ -75,4 +93,27 @@ object Di { //move to dagger. keep all features
     val recordsViewModelFactory by lazy {
         RecordsViewModelFactory(read, delete)
     }
+
+    val metadataComponentViewModelFactory by lazy {
+        MetadataComponentViewModelFactory()
+    }
+
+    val recordViewModelFactory by lazy {
+        RecordViewModelFactory(
+            metadataMapper = metadataMapper,
+            update = update,
+        )
+    }
+
+    val deviceTypeMapper = DeviceTypeMapper()
+    val deviceMapper = DeviceMapper()
+    val recordingMethodMapper = RecordingMethodMapper()
+    val metadataMapper = MetadataMapper(
+        deviceMapper = deviceMapper,
+    )
+
+    val measurementLocationMapper = MeasurementLocationMapper()
+    val recordMapper = RecordMapper(
+        metadataMapper = metadataMapper,
+    )
 }

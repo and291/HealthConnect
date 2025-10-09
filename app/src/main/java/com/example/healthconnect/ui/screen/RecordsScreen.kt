@@ -1,5 +1,6 @@
 package com.example.healthconnect.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,7 @@ import kotlin.reflect.KClass
 @Composable
 fun RecordsScreen(
     requestPermission: (String) -> Unit,
+    onRecordClick: (Record) -> Unit,
     onInsertRecordClick: () -> Unit,
     recordType: KClass<out Record>,
     modifier: Modifier = Modifier,
@@ -53,6 +55,7 @@ fun RecordsScreen(
         effect?.let { modification ->
             when (modification) {
                 is Effect.RequestSinglePermission -> requestPermission(modification.sdkPermission)
+                is Effect.OpenRecordScreen -> onRecordClick(modification.record)
             }
             viewModel.effectConsumed(modification)
         }
@@ -81,7 +84,15 @@ fun RecordsScreen(
                             )
                             viewModel.onEvent(event)
                         },
-                        modifier = Modifier.padding(vertical = 2.dp)
+                        modifier = Modifier
+                            .padding(vertical = 2.dp)
+                            .clickable {
+                                //Do you really need to route this event thru view model? What for?
+                                val event = Event.OnRecordClick(
+                                    record = record.record,
+                                )
+                                viewModel.onEvent(event)
+                            }
                     )
                 }
             }
@@ -101,6 +112,7 @@ fun RecordsScreenPreview() {
     @Suppress("UNCHECKED_CAST")
     RecordsScreen(
         requestPermission = {},
+        onRecordClick = {},
         onInsertRecordClick = {},
         recordType = StepsRecord::class as KClass<Record>
     )

@@ -21,4 +21,6 @@ class PayloadMapper {
     )
 
     fun mapDeletedRecord(): Payload = Payload.Removed
+
+    fun mapUpdateRecord(): Payload = Payload.Updated
 }

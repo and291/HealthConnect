@@ -23,6 +23,10 @@ class LibraryRepositoryImpl(
         return healthConnectClient.permissionController.getGrantedPermissions()
     }
 
+    override suspend fun updateRecords(records: List<Record>) {
+        return healthConnectClient.updateRecords(records)
+    }
+
     override suspend fun insertRecords(records: List<Record>): InsertRecordsResponse {
         return healthConnectClient.insertRecords(records)
     }
