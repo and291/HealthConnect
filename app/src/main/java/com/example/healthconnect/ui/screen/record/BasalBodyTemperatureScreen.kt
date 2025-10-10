@@ -130,7 +130,7 @@ fun BasalBodyTemperatureScreen(
         val metadataViewModel: MetadataEditorViewModel = viewModel(
             modelClass = MetadataEditorViewModel::class,
             key = record.metadataModel.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
-            factory = Di.metadataComponentViewModelFactory,
+            factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
                 set(MetadataEditorViewModel.METADATA_MODEL_KEY, record.metadataModel)
             }

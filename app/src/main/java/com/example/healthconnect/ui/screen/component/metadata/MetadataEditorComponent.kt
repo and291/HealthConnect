@@ -28,7 +28,7 @@ fun MetadataEditorComponent(
     recordingMethodMapper: RecordingMethodMapper = Di.recordingMethodMapper,
     viewModel: MetadataEditorViewModel = viewModel(
         modelClass = MetadataEditorViewModel::class,
-        factory = Di.metadataComponentViewModelFactory,
+        factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
             set(MetadataEditorViewModel.Companion.METADATA_MODEL_KEY, metadataModel)
         }
