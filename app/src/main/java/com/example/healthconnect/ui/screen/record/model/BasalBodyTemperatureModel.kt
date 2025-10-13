@@ -4,7 +4,7 @@ import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocations
 import androidx.health.connect.client.units.Temperature
 import com.example.healthconnect.domain.entity.metadata.MetadataEntity
-import com.example.healthconnect.ui.screen.component.model.InstantModel
+import com.example.healthconnect.components.api.ui.model.InstantModel
 
 data class BasalBodyTemperatureModel(
     val instantModel: InstantModel,

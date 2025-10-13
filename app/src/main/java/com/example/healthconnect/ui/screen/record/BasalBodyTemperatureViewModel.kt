@@ -12,7 +12,7 @@ import com.example.healthconnect.domain.entity.Result
 import com.example.healthconnect.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.domain.usecase.Update
 import com.example.healthconnect.ui.screen.component.metadata.mapper.MetadataMapper
-import com.example.healthconnect.ui.screen.component.model.InstantModel
+import com.example.healthconnect.components.api.ui.model.InstantModel
 import com.example.healthconnect.ui.screen.record.model.BasalBodyTemperatureModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

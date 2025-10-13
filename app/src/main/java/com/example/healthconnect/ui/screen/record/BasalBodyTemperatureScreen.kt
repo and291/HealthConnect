@@ -30,7 +30,7 @@ import com.example.healthconnect.ui.screen.component.TimeComponentViewModel
 import com.example.healthconnect.ui.screen.component.TimeComponentViewModel.Companion.TIME_MODEL_KEY
 import com.example.healthconnect.ui.screen.component.metadata.MetadataEditorComponent
 import com.example.healthconnect.ui.screen.component.metadata.MetadataEditorViewModel
-import com.example.healthconnect.ui.screen.component.model.InstantModel
+import com.example.healthconnect.components.api.ui.model.InstantModel
 import com.example.healthconnect.ui.screen.component.model.TimeComponentModel
 import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureViewModel.Effect
 import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureViewModel.Event
