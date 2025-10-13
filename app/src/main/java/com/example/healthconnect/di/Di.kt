@@ -16,7 +16,7 @@ import com.example.healthconnect.domain.usecase.Read
 import com.example.healthconnect.domain.usecase.Update
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.RecordsViewModelFactory
-import com.example.healthconnect.ui.screen.component.metadata.MetadataComponentViewModelFactory
+import com.example.healthconnect.ui.screen.component.metadata.ComponentViewModelFactory
 import com.example.healthconnect.ui.screen.component.metadata.mapper.MetadataMapper
 import com.example.healthconnect.ui.screen.component.metadata.mapper.RecordingMethodMapper
 import com.example.healthconnect.ui.screen.component.metadata.mapper.DeviceMapper
@@ -94,8 +94,8 @@ object Di { //move to dagger. keep all features
         RecordsViewModelFactory(read, delete)
     }
 
-    val metadataComponentViewModelFactory by lazy {
-        MetadataComponentViewModelFactory()
+    val componentViewModelFactory by lazy {
+        ComponentViewModelFactory()
     }
 
     val recordViewModelFactory by lazy {

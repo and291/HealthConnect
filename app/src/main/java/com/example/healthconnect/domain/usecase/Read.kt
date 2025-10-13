@@ -7,7 +7,7 @@ import androidx.health.connect.client.time.TimeRangeFilter
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.domain.PayloadMapper
 import com.example.healthconnect.domain.ResultMapper
-import com.example.healthconnect.domain.model.Result
+import com.example.healthconnect.domain.entity.Result
 import java.time.Instant
 import kotlin.reflect.KClass
 

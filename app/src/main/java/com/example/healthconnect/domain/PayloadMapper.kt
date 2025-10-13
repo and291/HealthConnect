@@ -3,7 +3,7 @@ package com.example.healthconnect.domain
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.domain.model.Payload
+import com.example.healthconnect.domain.entity.Payload
 
 class PayloadMapper {
 

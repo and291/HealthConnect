@@ -7,8 +7,8 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.domain.model.Payload
-import com.example.healthconnect.domain.model.Result
+import com.example.healthconnect.domain.entity.Payload
+import com.example.healthconnect.domain.entity.Result
 import com.example.healthconnect.domain.usecase.Delete
 import com.example.healthconnect.domain.usecase.Read
 import com.example.healthconnect.ui.model.DisplayRecord
@@ -26,10 +26,10 @@ class RecordsViewModel(
 ) : ViewModel() {
 
     private var _state by mutableStateOf<State>(State.Loading)
-    private val _effect = MutableStateFlow<Effect?>(null)
-
     val state: State
         get() = _state
+
+    private val _effect = MutableStateFlow<Effect?>(null)
     val effect: StateFlow<Effect?> = _effect.asStateFlow()
 
     fun effectConsumed(effect: Effect) {

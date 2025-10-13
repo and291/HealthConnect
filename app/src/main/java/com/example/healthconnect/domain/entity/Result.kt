@@ -1,4 +1,4 @@
-package com.example.healthconnect.domain.model
+package com.example.healthconnect.domain.entity
 
 import android.os.RemoteException
 import java.io.IOException
