@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.material3)
     // Use to implement health connects
     implementation(libs.androidx.connect.client)
+    implementation(project(":app:components:api"))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //viewmodel

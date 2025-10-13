@@ -29,3 +29,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Health Connect"
 include(":app")
+include(":app:components:api")
+include(":app:components:impl")
