@@ -9,9 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.domain.entity.Result
+import com.example.healthconnect.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.domain.usecase.Update
 import com.example.healthconnect.ui.screen.component.metadata.mapper.MetadataMapper
-import com.example.healthconnect.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.ui.screen.component.model.InstantModel
 import com.example.healthconnect.ui.screen.record.model.BasalBodyTemperatureModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,9 +53,10 @@ class BasalBodyTemperatureViewModel(
                     //upsert here
                     //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
                 } else {
+                    val instantModel = _state.instantModel as InstantModel.Valid
                     val modifiedRecord = BasalBodyTemperatureRecord(
-                        time = _state.time,
-                        zoneOffset = _state.zoneOffset,
+                        time = instantModel.instant,
+                        zoneOffset = instantModel.zoneOffset,
                         temperature = _state.temperature,
                         measurementLocation = _state.measurementLocation,
                         metadata = metadataMapper.toLibMetadata(_state.metadataEntity)
@@ -82,6 +84,12 @@ class BasalBodyTemperatureViewModel(
                     temperature = Temperature.celsius(event.celsius.toDouble()) //TODO check input
                 )
             }
+
+            is Event.OnTimeChanged -> {
+                _state = _state.copy(
+                    instantModel = event.instantModel
+                )
+            }
         }
     }
 
@@ -91,6 +99,10 @@ class BasalBodyTemperatureViewModel(
     }
 
     sealed class Event {
+
+        data class OnTimeChanged(
+            val instantModel: InstantModel,
+        ): Event()
 
         data class OnTemperatureChanged(
             val celsius: String

@@ -4,12 +4,10 @@ import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocations
 import androidx.health.connect.client.units.Temperature
 import com.example.healthconnect.domain.entity.metadata.MetadataEntity
-import java.time.Instant
-import java.time.ZoneOffset
+import com.example.healthconnect.ui.screen.component.model.InstantModel
 
 data class BasalBodyTemperatureModel(
-    val time: Instant,
-    val zoneOffset: ZoneOffset?,
+    val instantModel: InstantModel,
     override val metadataEntity: MetadataEntity,
     val temperature: Temperature,
     @property:BodyTemperatureMeasurementLocations

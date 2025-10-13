@@ -1,10 +1,10 @@
 package com.example.healthconnect.ui.screen.component
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -12,67 +12,78 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
-import com.example.healthconnect.ui.screen.component.TimeComponentViewModel.Event.OnTimeValueChanged
-import com.example.healthconnect.ui.screen.component.TimeComponentViewModel.Event.OnZoneSelected
+import com.example.healthconnect.ui.screen.component.TimeComponentViewModel.Companion.TIME_MODEL_KEY
+import com.example.healthconnect.ui.screen.component.TimeComponentViewModel.Event.OnTimeChanged
+import com.example.healthconnect.ui.screen.component.model.TimeComponentModel
+import com.example.healthconnect.ui.screen.component.model.TimeComponentModel.TimeModel
 import java.time.Instant
-import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.util.Locale
 import java.util.TimeZone
 
 @Composable
 fun TimeComponent(
-    time: Instant,
+    instant: Instant,
     modifier: Modifier = Modifier,
     zoneOffset: ZoneOffset? = null,
-    viewModel: TimeComponentViewModel = viewModel(
+): Unit = TimeComponent(
+    modifier = modifier,
+    viewModel = viewModel(
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(TimeComponentViewModel.INSTANT_KEY, time)
-            set(TimeComponentViewModel.ZONE_OFFSET_KEY, zoneOffset)
+            set(TIME_MODEL_KEY, TimeComponentModel.create(instant, zoneOffset))
         }
     )
+)
+
+@Composable
+fun TimeComponent(
+    viewModel: TimeComponentViewModel,
+    modifier: Modifier = Modifier
 ) {
 
-    //Добавить сюда вьюмодель которая будет валидировать инпут даты и обрабатывать выбор таймзоны
-
     Row(
-        modifier = modifier
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier,
     ) {
-        Column {
-            Text(text = "time")
-            // Использую формат ISO, потому что среди всех форматов, которые я успел попробовать,
-            // он оказался самым удобным для редактирования через клавиатуру —
-            // отображает все компоненты даты и времени в одном месте.
-            TextField(
-                value = LocalDateTime
-                    .ofInstant(viewModel.state.first, viewModel.state.second ?: ZoneOffset.systemDefault())
-                    .format(DateTimeFormatter.ISO_DATE_TIME),
-                onValueChange = {
-                    viewModel.onEvent(OnTimeValueChanged(it))
-                }
-            )
+        val timeModel = viewModel.state.timeModel
+        val timeInputValue: String = viewModel.state.getTimeInputValue()
+        val zoneIdValue: ZoneId? = viewModel.state.zoneId
 
-            //TODO отобразить старое и новое значение в локали юзера, чтобы ему легче было оринетироваться в формате ISO_DATE_TIME если он с ним не знаком
-            val localizedDateTimeFormatter = DateTimeFormatter
-                .ofLocalizedDateTime(FormatStyle.LONG)
-                .withLocale(Locale.getDefault())
-            val zonedDateTime = viewModel.state.first.atZone(viewModel.state.second ?: ZoneOffset.systemDefault())
-            Text(text = zonedDateTime.format(localizedDateTimeFormatter))
-        }
+        OutlinedTextField(
+            value = timeInputValue,
+            isError = timeModel is TimeModel.Invalid,
+            label = { Text("Time") },
+            supportingText = {
+                //TODO отобразить старое и новое значение в локали юзера, чтобы ему легче было оринетироваться в формате ISO_DATE_TIME если он с ним не знаком
+                viewModel.state.getZonedLocalizedTime()?.let {
+                    Text(it)
+                }
+            },
+            onValueChange = {
+                val event = OnTimeChanged(
+                    value = it,
+                    zoneId = zoneIdValue?.id
+                )
+                viewModel.onEvent(event)
+            },
+        )
 
         SelectorComponent(
-            title = "timezone",
-            supportText = "ffff",
-            selectedText = viewModel.state.second?.toString() ?: "not set",
+            title = "Zone",
+            //TODO teach selector to display errors
+            supportText = viewModel.state.setZoneAttemptErrorMessage ?: "",
+            selectedText = zoneIdValue?.id ?: "set",
             items = TimeZone.getAvailableIDs().toList(),
             itemComposable = {
                 Text(it)
             },
             onItemSelected = {
-                viewModel.onEvent(OnZoneSelected(it))
+                val event = OnTimeChanged(
+                    value = timeInputValue,
+                    zoneId = it
+                )
+                viewModel.onEvent(event)
             }
         )
     }
@@ -83,7 +94,8 @@ fun TimeComponent(
 fun TimeComponentPreview() {
 
     TimeComponent(
-        time = Instant.now(),
-        modifier = Modifier.padding(24.dp)
+        instant = Instant.now(),
+        modifier = Modifier.padding(24.dp),
+        zoneOffset = null,
     )
 }

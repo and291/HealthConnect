@@ -18,8 +18,7 @@ class ComponentViewModelFactory : ViewModelProvider.Factory {
         )
 
         TimeComponentViewModel::class -> TimeComponentViewModel(
-            time = checkNotNull(extras[TimeComponentViewModel.INSTANT_KEY]),
-            zoneOffset = extras[TimeComponentViewModel.ZONE_OFFSET_KEY],
+            timeComponentModel = checkNotNull(extras[TimeComponentViewModel.TIME_MODEL_KEY]),
         )
 
         else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.simpleName)

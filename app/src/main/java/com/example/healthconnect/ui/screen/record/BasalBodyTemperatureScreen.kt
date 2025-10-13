@@ -17,32 +17,39 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
+import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.screen.component.SelectorComponent
-import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureViewModel.Effect
+import com.example.healthconnect.ui.screen.component.TimeComponent
+import com.example.healthconnect.ui.screen.component.TimeComponentViewModel
+import com.example.healthconnect.ui.screen.component.TimeComponentViewModel.Companion.TIME_MODEL_KEY
 import com.example.healthconnect.ui.screen.component.metadata.MetadataEditorComponent
 import com.example.healthconnect.ui.screen.component.metadata.MetadataEditorViewModel
-import com.example.healthconnect.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.ui.screen.component.model.InstantModel
+import com.example.healthconnect.ui.screen.component.model.TimeComponentModel
+import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureViewModel.Effect
 import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureViewModel.Event
 import com.example.healthconnect.ui.screen.record.mapper.MeasurementLocationMapper
-import com.example.healthconnect.ui.screen.record.model.BasalBodyTemperatureModel
+import com.example.healthconnect.ui.screen.record.mapper.RecordMapper
 import java.time.Instant
 import java.time.ZoneOffset
 
 @Composable
 fun BasalBodyTemperatureScreen(
-    record: BasalBodyTemperatureModel,
+    record: BasalBodyTemperatureRecord,
     modifier: Modifier = Modifier,
+    recordMapper: RecordMapper = Di.recordMapper,
     measurementLocationMapper: MeasurementLocationMapper = Di.measurementLocationMapper,
     viewModel: BasalBodyTemperatureViewModel = viewModel(
         modelClass = BasalBodyTemperatureViewModel::class,
         factory = Di.recordViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(BasalBodyTemperatureViewModel.RECORD_KEY, record)
+            set(BasalBodyTemperatureViewModel.RECORD_KEY, recordMapper.toUiModel(record))
         }
     )
 ) {
@@ -66,36 +73,33 @@ fun BasalBodyTemperatureScreen(
             .padding(16.dp)
     ) {
 
-        OutlinedTextField(
-            value = viewModel.state.time.toString(),
-            enabled = true,
-            singleLine = true,
-            onValueChange = {
-                //TODO impl req
-            },
-            label = {
-                Text("Time")
-            },
-            supportingText = {
-                Text("Time")
-            },
-            modifier = Modifier.fillMaxWidth()
+        val timeComponentViewModel: TimeComponentViewModel = viewModel(
+            factory = Di.componentViewModelFactory,
+            extras = MutableCreationExtras().apply {
+                set(TIME_MODEL_KEY, TimeComponentModel.create(
+                    instant = record.time,
+                    zoneOffset = record.zoneOffset,
+                ))
+            }
         )
 
-        OutlinedTextField(
-            value = viewModel.state.zoneOffset?.toString() ?: "",
-            enabled = true,
-            singleLine = true,
-            onValueChange = {
-                //TODO impl req
-            },
-            label = {
-                Text("Timezone Offset")
-            },
-            supportingText = {
-                Text("Timezone Offset")
-            },
-            modifier = Modifier.fillMaxWidth()
+        LaunchedEffect(timeComponentViewModel.state) {
+            Log.d(this::class.simpleName, "Metadata: ${timeComponentViewModel.state}")
+            val instantModel = when (val t  = timeComponentViewModel.state.timeModel) {
+                is TimeComponentModel.TimeModel.Invalid -> InstantModel.Invalid
+                is TimeComponentModel.TimeModel.Valid -> InstantModel.Valid(
+                    instant = t.instant,
+                    zoneOffset = timeComponentViewModel.state.zoneId?.rules?.getOffset(t.instant)
+                )
+            }
+
+            val event = Event.OnTimeChanged(instantModel)
+            viewModel.onEvent(event)
+        }
+
+        TimeComponent(
+            modifier = Modifier.fillMaxWidth(),
+            viewModel =  timeComponentViewModel,
         )
 
         OutlinedTextField(
@@ -129,10 +133,10 @@ fun BasalBodyTemperatureScreen(
 
         val metadataViewModel: MetadataEditorViewModel = viewModel(
             modelClass = MetadataEditorViewModel::class,
-            key = record.metadataEntity.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
+            key = record.metadata.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
-                set(MetadataEditorViewModel.METADATA_ENTITY_KEY, record.metadataEntity)
+                set(MetadataEditorViewModel.METADATA_ENTITY_KEY, viewModel.state.metadataEntity)
             }
         )
 
@@ -147,7 +151,7 @@ fun BasalBodyTemperatureScreen(
 
         Text("Metadata:")
         MetadataEditorComponent(
-            metadataEntity = record.metadataEntity,
+            metadataEntity = viewModel.state.metadataEntity,
             viewModel = metadataViewModel
         )
 
@@ -165,14 +169,12 @@ fun BasalBodyTemperatureScreen(
 fun BasalBodyTemperatureScreenPreview() {
 
     BasalBodyTemperatureScreen(
-        record = BasalBodyTemperatureModel(
+        record = BasalBodyTemperatureRecord(
             time = Instant.EPOCH,
             zoneOffset = ZoneOffset.UTC,
             temperature = 36.celsius,
             measurementLocation = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
-            metadataEntity = MetadataEntity(
-                recordingMethod = 0
-            ),
+            metadata = Metadata.unknownRecordingMethod(),
         )
     )
 }

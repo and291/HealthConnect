@@ -52,7 +52,6 @@ class MainActivity : ComponentActivity() {
                         innerPadding = innerPadding,
                         requestPermission = requestPermission,
                         activity = this,
-                        recordMapper = Di.recordMapper,
                     )
                 }
             }
