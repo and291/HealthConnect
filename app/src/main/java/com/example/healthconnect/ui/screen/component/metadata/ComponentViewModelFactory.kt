@@ -14,7 +14,7 @@ class ComponentViewModelFactory : ViewModelProvider.Factory {
         extras: CreationExtras
     ): T = when (modelClass) {
         MetadataEditorViewModel::class -> MetadataEditorViewModel(
-            initialMetadataModel = checkNotNull(extras[MetadataEditorViewModel.METADATA_MODEL_KEY])
+            initialEntity = checkNotNull(extras[MetadataEditorViewModel.METADATA_ENTITY_KEY])
         )
 
         TimeComponentViewModel::class -> TimeComponentViewModel(
