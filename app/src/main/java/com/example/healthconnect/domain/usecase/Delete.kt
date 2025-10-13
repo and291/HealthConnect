@@ -5,7 +5,7 @@ import androidx.health.connect.client.records.Record
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.domain.PayloadMapper
 import com.example.healthconnect.domain.ResultMapper
-import com.example.healthconnect.domain.model.Result
+import com.example.healthconnect.domain.entity.Result
 import kotlin.reflect.KClass
 
 class Delete(

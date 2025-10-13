@@ -8,10 +8,10 @@ import androidx.health.connect.client.units.Temperature
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.domain.model.Result
+import com.example.healthconnect.domain.entity.Result
 import com.example.healthconnect.domain.usecase.Update
 import com.example.healthconnect.ui.screen.component.metadata.mapper.MetadataMapper
-import com.example.healthconnect.ui.screen.component.metadata.model.MetadataModel
+import com.example.healthconnect.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.ui.screen.record.model.BasalBodyTemperatureModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +43,7 @@ class BasalBodyTemperatureViewModel(
         when (event) {
             is Event.OnMetaModelChanged -> {
                 _state = _state.copy(
-                    metadataModel = event.metaModel
+                    metadataEntity = event.metaModel
                 )
             }
 
@@ -57,7 +57,7 @@ class BasalBodyTemperatureViewModel(
                         zoneOffset = _state.zoneOffset,
                         temperature = _state.temperature,
                         measurementLocation = _state.measurementLocation,
-                        metadata = metadataMapper.toMetadata(_state.metadataModel)
+                        metadata = metadataMapper.toLibMetadata(_state.metadataEntity)
                     )
                     when (update(modifiedRecord)) {
                         is Result.IoException -> TODO()
@@ -101,7 +101,7 @@ class BasalBodyTemperatureViewModel(
         ): Event()
 
         data class OnMetaModelChanged(
-            val metaModel: MetadataModel
+            val metaModel: MetadataEntity
         ) : Event()
 
         data object OnSave : Event()

@@ -13,7 +13,7 @@ class RecordMapper(
         is BasalBodyTemperatureRecord -> BasalBodyTemperatureModel(
             time = record.time,
             zoneOffset = record.zoneOffset,
-            metadataModel = metadataMapper.toUiModel(record.metadata),
+            metadataEntity = metadataMapper.toEntity(record.metadata),
             temperature = record.temperature,
             measurementLocation = record.measurementLocation
         )

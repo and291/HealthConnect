@@ -1,7 +1,7 @@
 package com.example.healthconnect.ui.screen.record.model
 
-import com.example.healthconnect.ui.screen.component.metadata.model.MetadataModel
+import com.example.healthconnect.domain.entity.metadata.MetadataEntity
 
 interface RecordModel {
-    val metadataModel: MetadataModel
+    val metadataEntity: MetadataEntity
 }

@@ -26,7 +26,7 @@ import com.example.healthconnect.ui.screen.component.SelectorComponent
 import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureViewModel.Effect
 import com.example.healthconnect.ui.screen.component.metadata.MetadataEditorComponent
 import com.example.healthconnect.ui.screen.component.metadata.MetadataEditorViewModel
-import com.example.healthconnect.ui.screen.component.metadata.model.MetadataModel
+import com.example.healthconnect.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.ui.screen.record.BasalBodyTemperatureViewModel.Event
 import com.example.healthconnect.ui.screen.record.mapper.MeasurementLocationMapper
 import com.example.healthconnect.ui.screen.record.model.BasalBodyTemperatureModel
@@ -129,10 +129,10 @@ fun BasalBodyTemperatureScreen(
 
         val metadataViewModel: MetadataEditorViewModel = viewModel(
             modelClass = MetadataEditorViewModel::class,
-            key = record.metadataModel.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
+            key = record.metadataEntity.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
-                set(MetadataEditorViewModel.METADATA_MODEL_KEY, record.metadataModel)
+                set(MetadataEditorViewModel.METADATA_ENTITY_KEY, record.metadataEntity)
             }
         )
 
@@ -147,7 +147,7 @@ fun BasalBodyTemperatureScreen(
 
         Text("Metadata:")
         MetadataEditorComponent(
-            metadataModel = record.metadataModel,
+            metadataEntity = record.metadataEntity,
             viewModel = metadataViewModel
         )
 
@@ -170,7 +170,7 @@ fun BasalBodyTemperatureScreenPreview() {
             zoneOffset = ZoneOffset.UTC,
             temperature = 36.celsius,
             measurementLocation = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
-            metadataModel = MetadataModel(
+            metadataEntity = MetadataEntity(
                 recordingMethod = 0
             ),
         )

@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
-import com.example.healthconnect.ui.screen.component.metadata.model.DeviceModel
-import com.example.healthconnect.ui.screen.component.metadata.model.MetadataModel
+import com.example.healthconnect.domain.entity.metadata.DeviceEntity
+import com.example.healthconnect.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.ui.screen.component.metadata.MetadataEditorViewModel.Event
 import com.example.healthconnect.ui.screen.component.SelectorComponent
 import com.example.healthconnect.ui.screen.component.metadata.mapper.RecordingMethodMapper
@@ -23,14 +23,14 @@ import java.time.Instant
 
 @Composable
 fun MetadataEditorComponent(
-    metadataModel: MetadataModel,
+    metadataEntity: MetadataEntity,
     modifier: Modifier = Modifier,
     recordingMethodMapper: RecordingMethodMapper = Di.recordingMethodMapper,
     viewModel: MetadataEditorViewModel = viewModel(
         modelClass = MetadataEditorViewModel::class,
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(MetadataEditorViewModel.Companion.METADATA_MODEL_KEY, metadataModel)
+            set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, metadataEntity)
         }
     ),
 ) {
@@ -137,9 +137,9 @@ fun MetadataEditorComponent(
             .fillMaxWidth()
             .padding(16.dp)
 
-        when (val model = viewModel.state.deviceModel) {
+        when (val model = viewModel.state.deviceEntity) {
             //TODO create animation between these states changes
-            DeviceModel.Empty -> Column(
+            DeviceEntity.Empty -> Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = commonModifier
             ) {
@@ -151,8 +151,8 @@ fun MetadataEditorComponent(
                 }
             }
 
-            is DeviceModel.Specified -> DeviceEditorComponent(
-                specifiedDeviceModel = model,
+            is DeviceEntity.Specified -> DeviceEditorComponent(
+                specifiedDeviceEntity = model,
                 modifier = commonModifier,
                 onTypeItemSelected = { (type, _) -> viewModel.onEvent(Event.OnTypeSelected(type)) },
                 onManufacturerValueChanged = { viewModel.onEvent(Event.OnManufacturerChanged(it)) },
@@ -166,32 +166,32 @@ fun MetadataEditorComponent(
 @Composable
 @Preview(showBackground = true, heightDp = 1050)
 fun MetadataEditorComponentEmptyDevicePreview() {
-    val sampleMetadataModel = MetadataModel(
+    val sampleMetadataEntity = MetadataEntity(
         recordingMethod = 1, // Example value
         id = "sample-id",
         dataOriginPackageName = "com.example.app",
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
         clientRecordVersion = 1L,
-        deviceModel = DeviceModel.Empty
+        deviceEntity = DeviceEntity.Empty
     )
 
     MetadataEditorComponent(
-        metadataModel = sampleMetadataModel,
+        metadataEntity = sampleMetadataEntity,
     )
 }
 
 @Composable
 @Preview(showBackground = true, heightDp = 1300)
 fun MetadataEditorComponentSpecifiedDevicePreview() {
-    val sampleMetadataModel = MetadataModel(
+    val sampleMetadataEntity = MetadataEntity(
         recordingMethod = 1, // Example value
         id = "sample-id",
         dataOriginPackageName = "com.example.app",
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
         clientRecordVersion = 1L,
-        deviceModel = DeviceModel.Specified(
+        deviceEntity = DeviceEntity.Specified(
             type = 1, // Example device type
             manufacturer = "Example Manufacturer",
             model = "Example Model"
@@ -199,6 +199,6 @@ fun MetadataEditorComponentSpecifiedDevicePreview() {
     )
 
     MetadataEditorComponent(
-        metadataModel = sampleMetadataModel,
+        metadataEntity = sampleMetadataEntity,
     )
 }
