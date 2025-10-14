@@ -5,6 +5,7 @@ import androidx.health.connect.client.HealthConnectClient
 import com.example.healthconnect.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
+import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 
 object Di { //move to dagger. keep all features
     var isPreview = true
@@ -30,4 +31,6 @@ object Di { //move to dagger. keep all features
     val parameterlessViewModelFactory by lazy {
         ParameterlessViewModelFactory(applicationContext, libraryRepository)
     }
+
+    val utilityNavigationEntryProvider: UtilityNavigationEntryProvider = TODO()
 }

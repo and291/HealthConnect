@@ -43,6 +43,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //internal module dependencies
+    implementation(project(":app:utility:api"))
     implementation(project(":app:components:api"))
 
     // Use to implement health connects
@@ -56,4 +57,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     //coroutines viewmodel scope
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    //compose navigation v3
+    implementation(libs.androidx.navigation3.runtime)
 }

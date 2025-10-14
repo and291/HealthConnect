@@ -40,4 +40,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Use to implement health connect
+    implementation(libs.androidx.connect.client) //you may get rid of this dependency if you will exclude lib classes from navigation arguments
+
+    //compose
+    implementation(libs.androidx.compose.foundation.layout)
+
+    //compose navigation v3
+    implementation(libs.androidx.navigation3.runtime)
 }
