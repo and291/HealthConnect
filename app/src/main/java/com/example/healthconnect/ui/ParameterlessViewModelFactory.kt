@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.healthconnect.domain.LibraryRepository
-import com.example.healthconnect.ui.component.SdkPermissionsViewModel
+import com.example.healthconnect.ui.screen.SdkPermissionsViewModel
 import com.example.healthconnect.ui.screen.SdkAvailableViewModel
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredViewModel
 

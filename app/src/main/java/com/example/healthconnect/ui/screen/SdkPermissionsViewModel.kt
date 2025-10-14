@@ -1,4 +1,4 @@
-package com.example.healthconnect.ui.component
+package com.example.healthconnect.ui.screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

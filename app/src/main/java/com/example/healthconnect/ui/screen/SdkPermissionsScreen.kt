@@ -1,4 +1,4 @@
-package com.example.healthconnect.ui.component
+package com.example.healthconnect.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +16,7 @@ import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.theme.HealthConnectTheme
 
 @Composable
-fun SdkPermissionsComponent(
+fun SdkPermissionsScreen(
     modifier: Modifier = Modifier,
     viewModel: SdkPermissionsViewModel = viewModel(
         modelClass = SdkPermissionsViewModel::class.java,
@@ -46,10 +46,10 @@ fun SdkPermissionsComponent(
 
 @Composable
 @Preview(widthDp = 480, heightDp = 720, showBackground = true)
-fun SdkPermissionsComponentPreview() {
+fun SdkPermissionsScreenPreview() {
     Di.applicationContext = LocalContext.current.applicationContext
 
     HealthConnectTheme {
-        SdkPermissionsComponent()
+        SdkPermissionsScreen()
     }
 }

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.Record
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.di.Di
-import com.example.healthconnect.ui.component.SdkPermissionsComponent
 import com.example.healthconnect.ui.theme.HealthConnectTheme
 import kotlin.reflect.KClass
 
@@ -37,7 +36,7 @@ fun SdkAvailableScreen(
     ) {
         Text(text = "Health Connect SDK is Available")
 
-        SdkPermissionsComponent()
+        SdkPermissionsScreen()
 
         when (val s = viewModel.state) {
             is SdkAvailableViewModel.State.RecordTypes -> {
