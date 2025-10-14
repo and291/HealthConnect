@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.connect.client)
     implementation(project(":app:components:api"))
     implementation(project(":app:utility:api"))
+    implementation(project(":app:utility:impl"))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //viewmodel

@@ -75,7 +75,7 @@ fun CreateNavDisplay(
                 Splash -> NavEntry(key) { Text("Splash route") }
             }
 
-            is UtilityNavigationEntry -> Di.utilityNavigationEntryProvider.getNavEntry(
+            is UtilityNavigationEntry -> Di.utilityNav.getNavEntry(
                 key = key,
                 backStack = backStack,
                 requestPermission = requestPermission,

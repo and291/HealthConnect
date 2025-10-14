@@ -59,4 +59,5 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     //compose navigation v3
     implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.material3.adaptive.navigation3)
 }

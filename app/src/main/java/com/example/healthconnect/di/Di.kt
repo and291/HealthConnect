@@ -6,6 +6,7 @@ import com.example.healthconnect.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
+import com.example.healthconnect.utilty.impl.navigation.UtilityNavigationEntryProviderImpl
 
 object Di { //move to dagger. keep all features
     var isPreview = true
@@ -32,5 +33,5 @@ object Di { //move to dagger. keep all features
         ParameterlessViewModelFactory(applicationContext, libraryRepository)
     }
 
-    val utilityNavigationEntryProvider: UtilityNavigationEntryProvider = TODO()
+    val utilityNav: UtilityNavigationEntryProvider = UtilityNavigationEntryProviderImpl()
 }
