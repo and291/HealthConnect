@@ -15,9 +15,9 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILA
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.PermissionController
 import com.example.healthconnect.di.Di
+import com.example.healthconnect.ui.theme.HealthConnectTheme
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
 import com.example.healthconnect.ui.navigation.NavDestination
-import com.example.healthconnect.ui.theme.HealthConnectTheme
 
 class MainActivity : ComponentActivity() {
 

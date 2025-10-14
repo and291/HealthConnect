@@ -1,0 +1,15 @@
+package com.example.healthconnect.utilty.impl.ui.screen.record.model
+
+import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
+import androidx.health.connect.client.records.BodyTemperatureMeasurementLocations
+import androidx.health.connect.client.units.Temperature
+import com.example.healthconnect.utilty.impl.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.api.ui.model.InstantModel
+
+data class BasalBodyTemperatureModel(
+    val instantModel: InstantModel,
+    override val metadataEntity: MetadataEntity,
+    val temperature: Temperature,
+    @property:BodyTemperatureMeasurementLocations
+    val measurementLocation: Int = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
+) : RecordModel
