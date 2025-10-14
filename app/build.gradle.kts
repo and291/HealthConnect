@@ -54,6 +54,7 @@ dependencies {
     // Use to implement health connects
     implementation(libs.androidx.connect.client)
     implementation(project(":app:components:api"))
+    implementation(project(":app:utility:api"))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //viewmodel
