@@ -31,6 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
@@ -51,7 +54,8 @@ dependencies {
 
     //compose
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     //viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
