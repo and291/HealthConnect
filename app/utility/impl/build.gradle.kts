@@ -1,0 +1,63 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+}
+
+android {
+    namespace = "com.example.healthconnect.utilty.impl"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 28
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+dependencies {
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+
+    //internal module dependencies
+    implementation(project(":app:utility:api"))
+    implementation(project(":app:components:api"))
+
+    // Use to implement health connects
+    implementation(libs.androidx.connect.client)
+
+    //compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    //viewmodel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    //coroutines viewmodel scope
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    //compose navigation v3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+}

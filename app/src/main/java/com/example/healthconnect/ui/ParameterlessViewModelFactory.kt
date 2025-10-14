@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.healthconnect.domain.LibraryRepository
-import com.example.healthconnect.domain.usecase.Insert
-import com.example.healthconnect.ui.component.SdkPermissionsViewModel
+import com.example.healthconnect.ui.screen.SdkPermissionsViewModel
 import com.example.healthconnect.ui.screen.SdkAvailableViewModel
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredViewModel
 
@@ -13,7 +12,6 @@ import com.example.healthconnect.ui.screen.SdkUpdateRequiredViewModel
 class ParameterlessViewModelFactory(
     private val applicationContext: Context,
     private val libraryRepository: LibraryRepository,
-    private val insert: Insert,
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")

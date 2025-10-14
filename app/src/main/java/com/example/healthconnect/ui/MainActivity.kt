@@ -15,9 +15,10 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILA
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.PermissionController
 import com.example.healthconnect.di.Di
-import com.example.healthconnect.ui.navigation.CreateNavDisplay
-import com.example.healthconnect.ui.navigation.NavDestination
 import com.example.healthconnect.ui.theme.HealthConnectTheme
+import com.example.healthconnect.ui.navigation.CreateNavDisplay
+import com.example.healthconnect.ui.navigation.AppNavigationEntry
+import com.example.healthconnect.utilty.api.navigation.NavigationEntry
 
 class MainActivity : ComponentActivity() {
 
@@ -35,15 +36,22 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //TODO consider moving DI initialization into Application.onCreate() or other entry point
-        Di.isPreview = false
-        Di.applicationContext = this.application
+        Di.also {
+            it.isPreview = false
+            it.applicationContext = this.application
+        }
+        com.example.healthconnect.utilty.impl.di.Di.also {
+            it.isPreview = false
+            it.applicationContext = this.application
+        }
+
         //injects for current activity below
         activityViewModel = Di.parameterlessViewModelFactory.create(ActivityViewModel::class.java)
 
         enableEdgeToEdge()
         setContent {
             // Create a back stack, specifying the key the app should start with
-            val backStack = remember { mutableStateListOf<NavDestination>(NavDestination.Splash) }
+            val backStack = remember { mutableStateListOf<NavigationEntry>(AppNavigationEntry.Splash) }
 
             HealthConnectTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -58,9 +66,9 @@ class MainActivity : ComponentActivity() {
 
             val status by activityViewModel.sdkStatus
             val destination = when (status) {
-                SDK_AVAILABLE -> NavDestination.Available
-                SDK_UNAVAILABLE -> NavDestination.Unavailable
-                SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> NavDestination.ProviderUpdateRequired
+                SDK_AVAILABLE -> AppNavigationEntry.Available
+                SDK_UNAVAILABLE -> AppNavigationEntry.Unavailable
+                SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> AppNavigationEntry.ProviderUpdateRequired
                 else -> TODO()
             }
             backStack.apply {
