@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component
+package com.example.healthconnect.components.impl.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,11 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.utilty.impl.di.Di
-import com.example.healthconnect.utilty.impl.ui.screen.component.TimeComponentViewModel.Companion.TIME_MODEL_KEY
-import com.example.healthconnect.utilty.impl.ui.screen.component.TimeComponentViewModel.Event.OnTimeChanged
-import com.example.healthconnect.utilty.impl.ui.screen.component.model.TimeComponentModel
-import com.example.healthconnect.utilty.impl.ui.screen.component.model.TimeComponentModel.TimeModel
+import com.example.healthconnect.components.impl.di.Di
+import com.example.healthconnect.components.impl.ui.model.TimeComponentModel
+import com.example.healthconnect.components.impl.ui.TimeComponentViewModel.Event.OnTimeChanged
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -31,7 +29,7 @@ fun TimeComponent(
     viewModel = viewModel(
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(TIME_MODEL_KEY, TimeComponentModel.create(instant, zoneOffset))
+            set(TimeComponentViewModel.Companion.TIME_MODEL_KEY, TimeComponentModel.Companion.create(instant, zoneOffset))
         }
     )
 )
@@ -52,7 +50,7 @@ fun TimeComponent(
 
         OutlinedTextField(
             value = timeInputValue,
-            isError = timeModel is TimeModel.Invalid,
+            isError = timeModel is TimeComponentModel.TimeModel.Invalid,
             label = { Text("Time") },
             supportingText = {
                 //TODO отобразить старое и новое значение в локали юзера, чтобы ему легче было оринетироваться в формате ISO_DATE_TIME если он с ним не знаком

@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper
+package com.example.healthconnect.components.impl.ui.metadata.mapper
 
 import androidx.health.connect.client.records.metadata.Metadata
 

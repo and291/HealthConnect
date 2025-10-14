@@ -1,9 +1,9 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component.metadata
+package com.example.healthconnect.components.impl.ui.metadata
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.utilty.impl.ui.screen.component.TimeComponentViewModel
+import com.example.healthconnect.components.impl.ui.TimeComponentViewModel
 import kotlin.reflect.KClass
 
 class ComponentViewModelFactory : ViewModelProvider.Factory {

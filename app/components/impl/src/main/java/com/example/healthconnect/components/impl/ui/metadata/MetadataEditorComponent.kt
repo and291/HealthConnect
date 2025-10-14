@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component.metadata
+package com.example.healthconnect.components.impl.ui.metadata
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,12 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.utilty.impl.di.Di
-import com.example.healthconnect.utilty.impl.domain.entity.metadata.DeviceEntity
-import com.example.healthconnect.utilty.impl.domain.entity.metadata.MetadataEntity
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.MetadataEditorViewModel.Event
-import com.example.healthconnect.utilty.impl.ui.screen.component.SelectorComponent
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper.RecordingMethodMapper
+import com.example.healthconnect.components.impl.di.Di
+import com.example.healthconnect.components.api.domain.entity.metadata.DeviceEntity
+import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.impl.ui.SelectorComponent
+import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorViewModel.Event
+import com.example.healthconnect.components.impl.ui.metadata.mapper.RecordingMethodMapper
 import java.time.Instant
 
 @Composable

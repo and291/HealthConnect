@@ -6,6 +6,9 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
+import com.example.healthconnect.components.api.data.mapper.DeviceMapper
+import com.example.healthconnect.components.api.data.mapper.MetadataMapper
+import com.example.healthconnect.components.api.ui.model.ComponentProvider
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.PayloadMapper
@@ -15,13 +18,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.Insert
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.ComponentViewModelFactory
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper.DeviceMapper
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper.DeviceTypeMapper
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper.MetadataMapper
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper.RecordingMethodMapper
 import com.example.healthconnect.utilty.impl.ui.screen.record.RecordViewModelFactory
-import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.MeasurementLocationMapper
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
 import kotlin.reflect.KClass
 
@@ -88,10 +85,6 @@ object Di { //TODO move to dagger. keep all features
         RecordsViewModelFactory(read, delete)
     }
 
-    val componentViewModelFactory by lazy {
-        ComponentViewModelFactory()
-    }
-
     val recordViewModelFactory by lazy {
         RecordViewModelFactory(
             metadataMapper = metadataMapper,
@@ -99,14 +92,13 @@ object Di { //TODO move to dagger. keep all features
         )
     }
 
-    val deviceTypeMapper = DeviceTypeMapper()
+    val componentProvider: ComponentProvider = TODO()
+
     val deviceMapper = DeviceMapper()
-    val recordingMethodMapper = RecordingMethodMapper()
     val metadataMapper = MetadataMapper(
         deviceMapper = deviceMapper,
     )
 
-    val measurementLocationMapper = MeasurementLocationMapper()
     val recordMapper = RecordMapper(
         metadataMapper = metadataMapper,
     )

@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component.metadata
+package com.example.healthconnect.components.impl.ui.metadata
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.health.connect.client.records.metadata.Device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.utilty.impl.domain.entity.metadata.DeviceEntity
-import com.example.healthconnect.utilty.impl.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.api.domain.entity.metadata.DeviceEntity
+import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
 
 class MetadataEditorViewModel(
     initialEntity: MetadataEntity

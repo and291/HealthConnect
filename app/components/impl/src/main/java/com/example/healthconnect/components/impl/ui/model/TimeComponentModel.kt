@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component.model
+package com.example.healthconnect.components.impl.ui.model
 
 import java.time.Instant
 import java.time.ZoneId
