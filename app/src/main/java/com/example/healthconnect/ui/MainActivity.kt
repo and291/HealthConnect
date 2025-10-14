@@ -36,8 +36,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //TODO consider moving DI initialization into Application.onCreate() or other entry point
-        Di.isPreview = false
-        Di.applicationContext = this.application
+        Di.also {
+            it.isPreview = false
+            it.applicationContext = this.application
+        }
+        com.example.healthconnect.utilty.impl.di.Di.also {
+            it.isPreview = false
+            it.applicationContext = this.application
+        }
+
         //injects for current activity below
         activityViewModel = Di.parameterlessViewModelFactory.create(ActivityViewModel::class.java)
 
