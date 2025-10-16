@@ -66,9 +66,8 @@ fun BasalBodyTemperatureScreen(
         componentProvider.Time(
             time = record.time,
             zoneOffset = record.zoneOffset
-        ) { instantModel ->
-            val event = Event.OnTimeChanged(instantModel)
-            viewModel.onEvent(event)
+        ) {
+            viewModel.onEvent(Event.OnTimeChanged(it))
         }
 
         componentProvider.Temperature(
@@ -79,14 +78,14 @@ fun BasalBodyTemperatureScreen(
 
         componentProvider.MeasurementLocationSelector(
             viewModel.state.measurementLocation
-        ) { locationType ->
-            viewModel.onEvent(Event.OnMeasurementLocationSelected(locationType))
+        ) {
+            viewModel.onEvent(Event.OnMeasurementLocationSelected(it))
         }
 
         componentProvider.MetadataEditor(
             viewModel.state.metadataEntity
-        ) { metadataEntity ->
-            viewModel.onEvent(Event.OnMetaModelChanged(metadataEntity))
+        ) {
+            viewModel.onEvent(Event.OnMetaModelChanged(it))
         }
 
         //TODO show the button only if there are changes to save
