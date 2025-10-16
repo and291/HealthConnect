@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component
+package com.example.healthconnect.components.impl.ui
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.utilty.impl.ui.screen.component.model.TimeComponentModel
-import com.example.healthconnect.utilty.impl.ui.screen.component.model.TimeComponentModel.*
+import com.example.healthconnect.components.impl.ui.model.TimeComponentModel
+import com.example.healthconnect.components.impl.ui.model.TimeComponentModel.TimeModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive

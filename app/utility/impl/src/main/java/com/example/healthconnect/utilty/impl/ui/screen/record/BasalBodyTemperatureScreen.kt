@@ -23,16 +23,9 @@ import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.utilty.impl.di.Di
-import com.example.healthconnect.utilty.impl.ui.screen.component.SelectorComponent
-import com.example.healthconnect.utilty.impl.ui.screen.component.TimeComponent
-import com.example.healthconnect.utilty.impl.ui.screen.component.TimeComponentViewModel
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.MetadataEditorComponent
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.MetadataEditorViewModel
-import com.example.healthconnect.components.api.ui.model.InstantModel
-import com.example.healthconnect.utilty.impl.ui.screen.component.model.TimeComponentModel
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.Event
-import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.MeasurementLocationMapper
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
 import java.time.Instant
 import java.time.ZoneOffset
@@ -42,7 +35,7 @@ fun BasalBodyTemperatureScreen(
     record: BasalBodyTemperatureRecord,
     modifier: Modifier = Modifier,
     recordMapper: RecordMapper = Di.recordMapper,
-    measurementLocationMapper: MeasurementLocationMapper = Di.measurementLocationMapper,
+    componentProvider: ComponentProvider = Di.componentProvider,
     viewModel: BasalBodyTemperatureViewModel = viewModel(
         modelClass = BasalBodyTemperatureViewModel::class,
         factory = Di.recordViewModelFactory,
@@ -71,35 +64,13 @@ fun BasalBodyTemperatureScreen(
             .padding(16.dp)
     ) {
 
-        val timeComponentViewModel: TimeComponentViewModel = viewModel(
-            factory = Di.componentViewModelFactory,
-            extras = MutableCreationExtras().apply {
-                set(
-                    TimeComponentViewModel.Companion.TIME_MODEL_KEY, TimeComponentModel.create(
-                    instant = record.time,
-                    zoneOffset = record.zoneOffset,
-                ))
-            }
-        )
-
-        LaunchedEffect(timeComponentViewModel.state) {
-            Log.d(this::class.simpleName, "Metadata: ${timeComponentViewModel.state}")
-            val instantModel = when (val t  = timeComponentViewModel.state.timeModel) {
-                is TimeComponentModel.TimeModel.Invalid -> InstantModel.Invalid
-                is TimeComponentModel.TimeModel.Valid -> InstantModel.Valid(
-                    instant = t.instant,
-                    zoneOffset = timeComponentViewModel.state.zoneId?.rules?.getOffset(t.instant)
-                )
-            }
-
+        componentProvider.Time(
+            time = record.time,
+            zoneOffset = record.zoneOffset
+        ) { instantModel ->
             val event = Event.OnTimeChanged(instantModel)
             viewModel.onEvent(event)
         }
-
-        TimeComponent(
-            modifier = Modifier.fillMaxWidth(),
-            viewModel = timeComponentViewModel,
-        )
 
         OutlinedTextField(
             value = viewModel.state.temperature.inCelsius.toString(), //TODO create a temperature editor view
@@ -117,42 +88,15 @@ fun BasalBodyTemperatureScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        SelectorComponent(
-            title = "Measurement Location",
-            supportText = "Where on the user's basal body the temperature measurement was taken from. Optional field.",
-            selectedText = measurementLocationMapper.map(viewModel.state.measurementLocation),
-            items = measurementLocationMapper.locations,
-            itemComposable = { (_, name) ->
-                Text(text = name)
-            },
-            onItemSelected = { (locationType, _) ->
-                viewModel.onEvent(Event.OnMeasurementLocationSelected(locationType))
-            }
-        )
-
-        val metadataViewModel: MetadataEditorViewModel = viewModel(
-            modelClass = MetadataEditorViewModel::class,
-            key = record.metadata.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
-            factory = Di.componentViewModelFactory,
-            extras = MutableCreationExtras().apply {
-                set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, viewModel.state.metadataEntity)
-            }
-        )
-
-        LaunchedEffect(metadataViewModel.state) {
-            Log.d(this::class.simpleName, "Metadata: ${metadataViewModel.state}")
-            viewModel.onEvent(
-                Event.OnMetaModelChanged(
-                    metadataViewModel.state
-                )
-            )
+        componentProvider.MeasurementLocationSelector(
+            viewModel.state.measurementLocation
+        ) { locationType ->
+            viewModel.onEvent(Event.OnMeasurementLocationSelected(locationType))
         }
 
-        Text("Metadata:")
-        MetadataEditorComponent(
-            metadataEntity = viewModel.state.metadataEntity,
-            viewModel = metadataViewModel
-        )
+        componentProvider.MetadataEditor(
+            viewModel.state.metadataEntity
+        ) { metadataEntity -> viewModel.onEvent(Event.OnMetaModelChanged(metadataEntity)) }
 
         //TODO show the button only if there are changes to save
         Button(onClick = {

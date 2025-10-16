@@ -3,8 +3,8 @@ package com.example.healthconnect.utilty.impl.ui.screen.record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.healthconnect.components.api.data.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
-import com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper.MetadataMapper
 import kotlin.reflect.KClass
 
 class RecordViewModelFactory(

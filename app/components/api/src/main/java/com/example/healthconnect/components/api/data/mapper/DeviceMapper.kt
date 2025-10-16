@@ -1,8 +1,9 @@
-package com.example.healthconnect.utilty.impl.ui.screen.component.metadata.mapper
+package com.example.healthconnect.components.api.data.mapper
 
 import androidx.health.connect.client.records.metadata.Device
-import com.example.healthconnect.utilty.impl.domain.entity.metadata.DeviceEntity
+import com.example.healthconnect.components.api.domain.entity.metadata.DeviceEntity
 
+//TODO remove from API
 class DeviceMapper {
 
     fun toEntity(device: Device?): DeviceEntity =

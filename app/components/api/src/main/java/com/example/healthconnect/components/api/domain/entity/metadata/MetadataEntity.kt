@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.domain.entity.metadata
+package com.example.healthconnect.components.api.domain.entity.metadata
 
 import java.time.Instant
 
