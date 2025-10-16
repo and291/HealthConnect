@@ -8,7 +8,7 @@ import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
 import com.example.healthconnect.components.api.data.mapper.DeviceMapper
 import com.example.healthconnect.components.api.data.mapper.MetadataMapper
-import com.example.healthconnect.components.api.ui.model.ComponentProvider
+import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.PayloadMapper

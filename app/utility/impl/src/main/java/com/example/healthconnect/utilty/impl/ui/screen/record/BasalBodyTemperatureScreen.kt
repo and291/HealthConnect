@@ -23,7 +23,7 @@ import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.ComponentProvider
+import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.Event
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
