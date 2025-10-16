@@ -1,8 +1,7 @@
-package com.example.healthconnect.components.api.data.mapper
+package com.example.healthconnect.components.impl.data.mapper
 
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
 
-//TODO remove from API
 class MeasurementLocationMapper {
 
     val locations = listOf(

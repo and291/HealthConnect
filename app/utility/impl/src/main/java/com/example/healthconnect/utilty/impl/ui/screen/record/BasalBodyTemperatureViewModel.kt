@@ -10,9 +10,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.data.mapper.MetadataMapper
 import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.api.ui.model.InstantModel
+import com.example.healthconnect.components.api.ui.model.TemperatureModel
 import com.example.healthconnect.utilty.impl.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
-import com.example.healthconnect.components.api.ui.model.InstantModel
 import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,10 +55,11 @@ class BasalBodyTemperatureViewModel(
                     //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
                 } else {
                     val instantModel = _state.instantModel as InstantModel.Valid
+                    val temperatureModel = _state.temperatureModel as TemperatureModel.Valid
                     val modifiedRecord = BasalBodyTemperatureRecord(
                         time = instantModel.instant,
                         zoneOffset = instantModel.zoneOffset,
-                        temperature = _state.temperature,
+                        temperature = Temperature.celsius(temperatureModel.temperatureCelsius),
                         measurementLocation = _state.measurementLocation,
                         metadata = metadataMapper.toLibMetadata(_state.metadataEntity)
                     )
@@ -81,7 +83,7 @@ class BasalBodyTemperatureViewModel(
             }
             is Event.OnTemperatureChanged -> {
                 _state = _state.copy(
-                    temperature = Temperature.celsius(event.celsius.toDouble()) //TODO check input
+                    temperatureModel = event.temperatureModel
                 )
             }
 
@@ -105,7 +107,7 @@ class BasalBodyTemperatureViewModel(
         ): Event()
 
         data class OnTemperatureChanged(
-            val celsius: String
+            val temperatureModel: TemperatureModel,
         ) : Event()
 
         data class OnMeasurementLocationSelected(
