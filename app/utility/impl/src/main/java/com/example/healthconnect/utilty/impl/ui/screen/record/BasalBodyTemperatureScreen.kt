@@ -3,12 +3,10 @@ package com.example.healthconnect.utilty.impl.ui.screen.record
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +22,7 @@ import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
+import com.example.healthconnect.components.api.ui.model.TemperatureModel
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.Event
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
@@ -72,21 +71,11 @@ fun BasalBodyTemperatureScreen(
             viewModel.onEvent(event)
         }
 
-        OutlinedTextField(
-            value = viewModel.state.temperature.inCelsius.toString(), //TODO create a temperature editor view
-            enabled = true,
-            singleLine = true,
-            onValueChange = {
-                viewModel.onEvent(Event.OnTemperatureChanged(it))
-            },
-            label = {
-                Text("Temperature")
-            },
-            supportingText = {
-                Text("Temperature in \"Temperature\" unit. Required field. Valid range: 0-100 Celsius degrees")
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
+        componentProvider.Temperature(
+            TemperatureModel.Valid(record.temperature.inCelsius)
+        ) {
+            viewModel.onEvent(Event.OnTemperatureChanged(it))
+        }
 
         componentProvider.MeasurementLocationSelector(
             viewModel.state.measurementLocation
@@ -96,7 +85,9 @@ fun BasalBodyTemperatureScreen(
 
         componentProvider.MetadataEditor(
             viewModel.state.metadataEntity
-        ) { metadataEntity -> viewModel.onEvent(Event.OnMetaModelChanged(metadataEntity)) }
+        ) { metadataEntity ->
+            viewModel.onEvent(Event.OnMetaModelChanged(metadataEntity))
+        }
 
         //TODO show the button only if there are changes to save
         Button(onClick = {

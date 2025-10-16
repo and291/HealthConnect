@@ -12,6 +12,7 @@ import com.example.healthconnect.components.api.data.mapper.MeasurementLocationM
 import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.InstantModel
+import com.example.healthconnect.components.api.ui.model.TemperatureModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorViewModel
@@ -85,7 +86,6 @@ class ComponentProviderImpl : ComponentProvider {
     ) {
 
         val metadataViewModel: MetadataEditorViewModel = viewModel(
-            modelClass = MetadataEditorViewModel::class,
             key = metadataEntity.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
@@ -102,6 +102,28 @@ class ComponentProviderImpl : ComponentProvider {
         MetadataEditorComponent(
             metadataEntity = metadataEntity,
             viewModel = metadataViewModel
+        )
+    }
+
+    @Composable
+    override fun Temperature(
+        temperatureModel: TemperatureModel,
+        onTemperatureChanged: (TemperatureModel) -> Unit
+    ) {
+        val viewModel: TemperatureComponentViewModel = viewModel(
+            factory = Di.componentViewModelFactory,
+            extras = MutableCreationExtras().apply {
+                set(TemperatureComponentViewModel.TEMPERATURE_MODEL_KEY, temperatureModel)
+            }
+        )
+
+        LaunchedEffect(viewModel.state) {
+            Log.d(this::class.simpleName, "Temperature: ${viewModel.state}")
+            onTemperatureChanged(viewModel.state)
+        }
+        TemperatureComponent(
+            temperatureModel = temperatureModel,
+            viewModel = viewModel,
         )
     }
 }
