@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.data.mapper.MeasurementLocationMapper
+import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
 import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.InstantModel
