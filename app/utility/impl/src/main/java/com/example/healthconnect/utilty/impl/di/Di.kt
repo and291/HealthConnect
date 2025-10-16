@@ -26,6 +26,7 @@ object Di { //TODO move to dagger. keep all features
     var isPreview = true
 
     lateinit var applicationContext: Context
+    lateinit var componentProvider: ComponentProvider
 
     private val libraryRepository by lazy {
         if (isPreview) {
@@ -91,8 +92,6 @@ object Di { //TODO move to dagger. keep all features
             update = update,
         )
     }
-
-    val componentProvider: ComponentProvider = TODO()
 
     val deviceMapper = DeviceMapper()
     val metadataMapper = MetadataMapper(

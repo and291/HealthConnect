@@ -14,6 +14,7 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABL
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.PermissionController
+import com.example.healthconnect.components.impl.ui.ComponentProviderImpl
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.theme.HealthConnectTheme
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
         com.example.healthconnect.utilty.impl.di.Di.also {
             it.isPreview = false
             it.applicationContext = this.application
+            it.componentProvider = ComponentProviderImpl()
         }
 
         //injects for current activity below
