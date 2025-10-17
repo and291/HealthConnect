@@ -8,9 +8,9 @@ import androidx.health.connect.client.units.Temperature
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.api.ui.model.MetadataModel
-import com.example.healthconnect.components.api.ui.model.InstantModel
-import com.example.healthconnect.components.api.ui.model.TemperatureModel
+import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
+import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.utilty.impl.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
@@ -45,7 +45,7 @@ class BasalBodyTemperatureViewModel(
         when (event) {
             is Event.OnMetaModelChanged -> {
                 _state = _state.copy(
-                    metadataModel = event.metaModel
+                    metadataEditorModel = event.metaModel
                 )
             }
 
@@ -54,17 +54,17 @@ class BasalBodyTemperatureViewModel(
                     //upsert here
                     //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
                 } else {
-                    val instantModel = _state.instantModel as InstantModel.Valid
-                    val temperatureModel = _state.temperatureModel as TemperatureModel.Valid
-                    if (!_state.metadataModel.isValid()) {
+                    val timeEditorModel = _state.timeEditorModel as TimeEditorModel.Valid
+                    val temperatureEditorModel = _state.temperatureEditorModel as TemperatureEditorModel.Valid
+                    if (!_state.metadataEditorModel.isValid()) {
                         return@launch
                     }
                     val modifiedRecord = BasalBodyTemperatureRecord(
-                        time = instantModel.instant,
-                        zoneOffset = instantModel.zoneOffset,
-                        temperature = Temperature.celsius(temperatureModel.temperatureCelsius),
+                        time = timeEditorModel.instant,
+                        zoneOffset = timeEditorModel.zoneOffset,
+                        temperature = Temperature.celsius(temperatureEditorModel.temperatureCelsius),
                         measurementLocation = _state.measurementLocation,
-                        metadata = metadataMapper.toLibMetadata(_state.metadataModel)
+                        metadata = metadataMapper.toLibMetadata(_state.metadataEditorModel)
                     )
                     when (update(modifiedRecord)) {
                         is Result.IoException -> TODO()
@@ -88,13 +88,13 @@ class BasalBodyTemperatureViewModel(
 
             is Event.OnTemperatureChanged -> {
                 _state = _state.copy(
-                    temperatureModel = event.temperatureModel
+                    temperatureEditorModel = event.temperatureEditorModel
                 )
             }
 
             is Event.OnTimeChanged -> {
                 _state = _state.copy(
-                    instantModel = event.instantModel
+                    timeEditorModel = event.timeEditorModel
                 )
             }
         }
@@ -108,11 +108,11 @@ class BasalBodyTemperatureViewModel(
     sealed class Event {
 
         data class OnTimeChanged(
-            val instantModel: InstantModel,
+            val timeEditorModel: TimeEditorModel,
         ) : Event()
 
         data class OnTemperatureChanged(
-            val temperatureModel: TemperatureModel,
+            val temperatureEditorModel: TemperatureEditorModel,
         ) : Event()
 
         data class OnMeasurementLocationSelected(
@@ -120,7 +120,7 @@ class BasalBodyTemperatureViewModel(
         ) : Event()
 
         data class OnMetaModelChanged(
-            val metaModel: MetadataModel
+            val metaModel: MetadataEditorModel
         ) : Event()
 
         data object OnSave : Event()

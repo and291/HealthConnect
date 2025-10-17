@@ -8,19 +8,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.TemperatureModel
+import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.impl.ui.TemperatureComponentViewModel.Event
+import com.example.healthconnect.components.impl.ui.TemperatureEditorComponentViewModel.Event
 
 
 @Composable
-fun TemperatureComponent(
-    temperatureModel: TemperatureModel,
+fun TemperatureEditorComponent(
+    temperatureEditorModel: TemperatureEditorModel,
     modifier: Modifier = Modifier,
-    viewModel: TemperatureComponentViewModel = viewModel(
+    viewModel: TemperatureEditorComponentViewModel = viewModel(
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(TemperatureComponentViewModel.TEMPERATURE_MODEL_KEY, temperatureModel)
+            set(TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY, temperatureEditorModel)
         }
     )
 ) = OutlinedTextField(
@@ -30,7 +30,7 @@ fun TemperatureComponent(
     },
     enabled = true,
     singleLine = true,
-    isError = viewModel.state is TemperatureModel.Invalid,
+    isError = viewModel.state is TemperatureEditorModel.Invalid,
     onValueChange = {
         viewModel.onEvent(Event.OnTemperatureChanged(it))
     },
@@ -45,16 +45,16 @@ fun TemperatureComponent(
 
 @Composable
 @Preview(showBackground = true)
-fun TemperatureComponentValidPreview() {
-    TemperatureComponent(
-        temperatureModel = TemperatureModel.Valid(123.0)
+fun TemperatureEditorComponentValidPreview() {
+    TemperatureEditorComponent(
+        temperatureEditorModel = TemperatureEditorModel.Valid(123.0)
     )
 }
 
 @Composable
 @Preview(showBackground = true)
-fun TemperatureComponentInvalidPreview() {
-    TemperatureComponent(
-        temperatureModel = TemperatureModel.Invalid("231ed")
+fun TemperatureEditorComponentInvalidPreview() {
+    TemperatureEditorComponent(
+        temperatureEditorModel = TemperatureEditorModel.Invalid("231ed")
     )
 }

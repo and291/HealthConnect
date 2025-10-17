@@ -12,31 +12,31 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.impl.ui.model.TimeComponentModel
-import com.example.healthconnect.components.impl.ui.TimeComponentViewModel.Event.OnTimeChanged
+import com.example.healthconnect.components.impl.ui.model.TimeEditorComponentModel
+import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel.Event.OnTimeChanged
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.TimeZone
 
 @Composable
-fun TimeComponent(
+fun TimeEditorComponent(
     instant: Instant,
     modifier: Modifier = Modifier,
     zoneOffset: ZoneOffset? = null,
-): Unit = TimeComponent(
+): Unit = TimeEditorComponent(
     modifier = modifier,
     viewModel = viewModel(
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(TimeComponentViewModel.Companion.TIME_MODEL_KEY, TimeComponentModel.Companion.create(instant, zoneOffset))
+            set(TimeEditorComponentViewModel.Companion.TIME_MODEL_KEY, TimeEditorComponentModel.Companion.create(instant, zoneOffset))
         }
     )
 )
 
 @Composable
-fun TimeComponent(
-    viewModel: TimeComponentViewModel,
+fun TimeEditorComponent(
+    viewModel: TimeEditorComponentViewModel,
     modifier: Modifier = Modifier
 ) {
 
@@ -50,7 +50,7 @@ fun TimeComponent(
 
         OutlinedTextField(
             value = timeInputValue,
-            isError = timeModel is TimeComponentModel.TimeModel.Invalid,
+            isError = timeModel is TimeEditorComponentModel.TimeModel.Invalid,
             label = { Text("Time") },
             supportingText = {
                 //TODO отобразить старое и новое значение в локали юзера, чтобы ему легче было оринетироваться в формате ISO_DATE_TIME если он с ним не знаком
@@ -89,9 +89,9 @@ fun TimeComponent(
 
 @Composable
 @Preview(showBackground = true, heightDp = 500)
-fun TimeComponentPreview() {
+fun TimeEditorComponentPreview() {
 
-    TimeComponent(
+    TimeEditorComponent(
         instant = Instant.now(),
         modifier = Modifier.padding(24.dp),
         zoneOffset = null,

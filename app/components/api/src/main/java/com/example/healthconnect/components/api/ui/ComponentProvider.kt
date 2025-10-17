@@ -1,26 +1,29 @@
 package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
-import com.example.healthconnect.components.api.ui.model.MetadataModel
-import com.example.healthconnect.components.api.ui.model.InstantModel
-import com.example.healthconnect.components.api.ui.model.TemperatureModel
+import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
+import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import java.time.Instant
 import java.time.ZoneOffset
 
 interface ComponentProvider {
 
     @Composable
-    fun Time(time: Instant, zoneOffset: ZoneOffset?, onTimeChanged: (InstantModel) -> Unit)
+    fun TimeEditor(time: Instant, zoneOffset: ZoneOffset?, onTimeChanged: (TimeEditorModel) -> Unit)
 
     @Composable
     fun MeasurementLocationSelector(currentMeasurementLocation: Int, onItemSelected: (Int) -> Unit)
 
     @Composable
-    fun MetadataEditor(metadataModel: MetadataModel, onMetadataChanged: (MetadataModel) -> Unit)
+    fun MetadataEditor(
+        metadataEditorModel: MetadataEditorModel,
+        onMetadataChanged: (MetadataEditorModel) -> Unit
+    )
 
     @Composable
-    fun Temperature(
-        temperatureModel: TemperatureModel,
-        onTemperatureChanged: (TemperatureModel) -> Unit
+    fun TemperatureEditor(
+        temperatureEditorModel: TemperatureEditorModel,
+        onTemperatureChanged: (TemperatureEditorModel) -> Unit
     )
 }

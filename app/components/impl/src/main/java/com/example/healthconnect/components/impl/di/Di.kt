@@ -15,5 +15,4 @@ object Di {
     internal val deviceTypeMapper = DeviceTypeMapper()
     internal val recordingMethodMapper = RecordingMethodMapper()
     internal val measurementLocationMapper = MeasurementLocationMapper()
-
 }

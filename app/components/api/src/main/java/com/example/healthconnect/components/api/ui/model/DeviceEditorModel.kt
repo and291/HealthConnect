@@ -1,12 +1,12 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class DeviceModel {
+sealed class DeviceEditorModel {
 
-    data object Empty : DeviceModel()
+    data object Empty : DeviceEditorModel()
 
     data class Specified(
         val type: Int,
         val manufacturer: String,
         val model: String,
-    ) : DeviceModel()
+    ) : DeviceEditorModel()
 }

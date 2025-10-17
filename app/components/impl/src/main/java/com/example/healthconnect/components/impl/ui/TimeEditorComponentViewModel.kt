@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.impl.ui.model.TimeComponentModel
-import com.example.healthconnect.components.impl.ui.model.TimeComponentModel.TimeModel
+import com.example.healthconnect.components.impl.ui.model.TimeEditorComponentModel
+import com.example.healthconnect.components.impl.ui.model.TimeEditorComponentModel.TimeModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
@@ -17,13 +17,13 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeParseException
 
-class TimeComponentViewModel(
-    timeComponentModel: TimeComponentModel
+class TimeEditorComponentViewModel(
+    timeEditorComponentModel: TimeEditorComponentModel
 ) : ViewModel() {
 
-    private var _state by mutableStateOf(timeComponentModel)
+    private var _state by mutableStateOf(timeEditorComponentModel)
 
-    val state: TimeComponentModel
+    val state: TimeEditorComponentModel
         get() = _state
 
     private val _effect = MutableStateFlow<Effect?>(null)
@@ -100,6 +100,6 @@ class TimeComponentViewModel(
 
     companion object {
 
-        val TIME_MODEL_KEY: CreationExtras.Key<TimeComponentModel> = CreationExtras.Companion.Key()
+        val TIME_MODEL_KEY: CreationExtras.Key<TimeEditorComponentModel> = CreationExtras.Companion.Key()
     }
 }

@@ -3,14 +3,14 @@ package com.example.healthconnect.components.api.ui.model
 import android.util.Log
 import java.time.Instant
 
-data class MetadataModel(
+data class MetadataEditorModel(
     val recordingMethod: Int,
     val id: String = "",
     val dataOriginPackageName: String = "",
     val lastModifiedTime: Instant = Instant.EPOCH,
     val clientRecordId: String = "",
     val clientRecordVersion: String = "",
-    val deviceModel: DeviceModel = DeviceModel.Empty
+    val deviceEditorModel: DeviceEditorModel = DeviceEditorModel.Empty
 ) {
 
     fun isValid(): Boolean {

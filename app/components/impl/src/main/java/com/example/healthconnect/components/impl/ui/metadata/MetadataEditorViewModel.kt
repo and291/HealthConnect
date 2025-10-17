@@ -6,16 +6,16 @@ import androidx.compose.runtime.setValue
 import androidx.health.connect.client.records.metadata.Device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.api.ui.model.DeviceModel
-import com.example.healthconnect.components.api.ui.model.MetadataModel
+import com.example.healthconnect.components.api.ui.model.DeviceEditorModel
+import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 
 class MetadataEditorViewModel(
-    initialEntity: MetadataModel
+    initialEntity: MetadataEditorModel
 ) : ViewModel() {
 
     private var _state by mutableStateOf(initialEntity)
 
-    val state: MetadataModel
+    val state: MetadataEditorModel
         get() = _state
 
     fun onEvent(event: Event) {
@@ -33,7 +33,7 @@ class MetadataEditorViewModel(
             }
 
             Event.OnSpecifyDevice -> _state.copy(
-                deviceModel = DeviceModel.Specified(
+                deviceEditorModel = DeviceEditorModel.Specified(
                     type = Device.Companion.TYPE_UNKNOWN,
                     manufacturer = "",
                     model = ""
@@ -41,25 +41,25 @@ class MetadataEditorViewModel(
             )
 
             Event.OnRemoveDevice -> _state.copy(
-                deviceModel = DeviceModel.Empty
+                deviceEditorModel = DeviceEditorModel.Empty
             )
 
             is Event.OnTypeSelected -> _state.copy(
-                deviceModel = (_state.deviceModel as DeviceModel.Specified).copy(
+                deviceEditorModel = (_state.deviceEditorModel as DeviceEditorModel.Specified).copy(
                     type = event.type
-                ) as DeviceModel
+                ) as DeviceEditorModel
             )
 
             is Event.OnManufacturerChanged -> _state.copy(
-                deviceModel = (_state.deviceModel as DeviceModel.Specified).copy(
+                deviceEditorModel = (_state.deviceEditorModel as DeviceEditorModel.Specified).copy(
                     manufacturer = event.manufacturer
-                ) as DeviceModel
+                ) as DeviceEditorModel
             )
 
             is Event.OnModelChanged -> _state.copy(
-                deviceModel = (_state.deviceModel as DeviceModel.Specified).copy(
+                deviceEditorModel = (_state.deviceEditorModel as DeviceEditorModel.Specified).copy(
                     model = event.model
-                ) as DeviceModel
+                ) as DeviceEditorModel
             )
         }
     }
@@ -97,6 +97,6 @@ class MetadataEditorViewModel(
 
     companion object {
 
-        val METADATA_ENTITY_KEY: CreationExtras.Key<MetadataModel> = CreationExtras.Companion.Key()
+        val METADATA_ENTITY_KEY: CreationExtras.Key<MetadataEditorModel> = CreationExtras.Companion.Key()
     }
 }

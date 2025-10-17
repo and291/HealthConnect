@@ -1,106 +1,106 @@
 package com.example.healthconnect.utilty.impl.ui.mapper
 
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.ui.model.MetadataModel
+import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 
 class MetadataMapper(
     private val deviceMapper: DeviceMapper
 ) {
 
-    fun toEntity(metadata: Metadata): MetadataModel = MetadataModel(
+    fun toEntity(metadata: Metadata): MetadataEditorModel = MetadataEditorModel(
         recordingMethod = metadata.recordingMethod,
         id = metadata.id,
         dataOriginPackageName = metadata.dataOrigin.packageName,
         lastModifiedTime = metadata.lastModifiedTime,
         clientRecordId = metadata.clientRecordId ?: "",
         clientRecordVersion = metadata.clientRecordVersion.toString(),
-        deviceModel = deviceMapper.toEntity(metadata.device)
+        deviceEditorModel = deviceMapper.toEntity(metadata.device)
     )
 
     fun toLibMetadata(
-        metadataModel: MetadataModel,
-    ): Metadata = when (metadataModel.recordingMethod) {
-        Metadata.Companion.RECORDING_METHOD_UNKNOWN -> metadataModel.defineFactoryMethod(
+        metadataEditorModel: MetadataEditorModel,
+    ): Metadata = when (metadataEditorModel.recordingMethod) {
+        Metadata.Companion.RECORDING_METHOD_UNKNOWN -> metadataEditorModel.defineFactoryMethod(
             withId = {
                 Metadata.Companion.unknownRecordingMethodWithId(
-                    id = metadataModel.id,
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)
+                    id = metadataEditorModel.id,
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.unknownRecordingMethod(
-                    clientRecordId = metadataModel.clientRecordId,
-                    clientRecordVersion = metadataModel.clientRecordVersion.toLong(),
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel),
+                    clientRecordId = metadataEditorModel.clientRecordId,
+                    clientRecordVersion = metadataEditorModel.clientRecordVersion.toLong(),
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel),
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.unknownRecordingMethod(
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel),
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel),
                 )
             }
         )
 
-        Metadata.Companion.RECORDING_METHOD_ACTIVELY_RECORDED -> metadataModel.defineFactoryMethod(
+        Metadata.Companion.RECORDING_METHOD_ACTIVELY_RECORDED -> metadataEditorModel.defineFactoryMethod(
             withId = {
                 Metadata.Companion.activelyRecordedWithId(
-                    metadataModel.id,
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!, //TODO fix possible NPE
+                    metadataEditorModel.id,
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!, //TODO fix possible NPE
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.activelyRecorded(
-                    clientRecordId = metadataModel.clientRecordId,
-                    clientRecordVersion = metadataModel.clientRecordVersion.toLong(),
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!,  //TODO fix possible NPE
+                    clientRecordId = metadataEditorModel.clientRecordId,
+                    clientRecordVersion = metadataEditorModel.clientRecordVersion.toLong(),
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!,  //TODO fix possible NPE
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.activelyRecorded(
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!, //TODO fix possible NPE
                 )
             }
         )
 
-        Metadata.Companion.RECORDING_METHOD_AUTOMATICALLY_RECORDED -> metadataModel.defineFactoryMethod(
+        Metadata.Companion.RECORDING_METHOD_AUTOMATICALLY_RECORDED -> metadataEditorModel.defineFactoryMethod(
             withId = {
                 Metadata.Companion.autoRecordedWithId(
-                    metadataModel.id,
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!, //TODO fix possible NPE
+                    metadataEditorModel.id,
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!, //TODO fix possible NPE
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.autoRecorded(
-                    clientRecordId = metadataModel.clientRecordId,
-                    clientRecordVersion = metadataModel.clientRecordVersion.toLong(),
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!,  //TODO fix possible NPE
+                    clientRecordId = metadataEditorModel.clientRecordId,
+                    clientRecordVersion = metadataEditorModel.clientRecordVersion.toLong(),
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!,  //TODO fix possible NPE
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.autoRecorded(
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!, //TODO fix possible NPE
                 )
             }
 
         )
 
-        Metadata.Companion.RECORDING_METHOD_MANUAL_ENTRY -> metadataModel.defineFactoryMethod(
+        Metadata.Companion.RECORDING_METHOD_MANUAL_ENTRY -> metadataEditorModel.defineFactoryMethod(
             withId = {
                 Metadata.Companion.manualEntryWithId(
-                    metadataModel.id,
-                    deviceMapper.toLibDevice(metadataModel.deviceModel)!!, //TODO fix possible NPE
+                    metadataEditorModel.id,
+                    deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!, //TODO fix possible NPE
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.manualEntry(
-                    clientRecordId = metadataModel.clientRecordId,
-                    clientRecordVersion = metadataModel.clientRecordVersion.toLong(),
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!, //TODO fix possible NPE
+                    clientRecordId = metadataEditorModel.clientRecordId,
+                    clientRecordVersion = metadataEditorModel.clientRecordVersion.toLong(),
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!, //TODO fix possible NPE
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.manualEntry(
-                    device = deviceMapper.toLibDevice(metadataModel.deviceModel)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEditorModel.deviceEditorModel)!!, //TODO fix possible NPE
                 )
             }
         )
@@ -112,10 +112,10 @@ class MetadataMapper(
      * //todo(Из попытки убрать бойлерплейт получилась какая-то херня)
      * Ещё и device является обязательным параметром для некоторых типов записей.
      */
-    private fun MetadataModel.defineFactoryMethod(
-        withId: (metadataModel: MetadataModel) -> Metadata,
-        withClientRecordId: (metadataModel: MetadataModel) -> Metadata,
-        deviceUpdate: (metadataModel: MetadataModel) -> Metadata,
+    private fun MetadataEditorModel.defineFactoryMethod(
+        withId: (metadataEditorModel: MetadataEditorModel) -> Metadata,
+        withClientRecordId: (metadataEditorModel: MetadataEditorModel) -> Metadata,
+        deviceUpdate: (metadataEditorModel: MetadataEditorModel) -> Metadata,
     ): Metadata {
         if (id.isNotBlank()) {
             return withId(this)

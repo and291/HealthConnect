@@ -9,30 +9,30 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
-import com.example.healthconnect.components.api.ui.model.MetadataModel
+import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.api.ui.model.InstantModel
-import com.example.healthconnect.components.api.ui.model.TemperatureModel
+import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorViewModel
-import com.example.healthconnect.components.impl.ui.model.TimeComponentModel
+import com.example.healthconnect.components.impl.ui.model.TimeEditorComponentModel
 import java.time.Instant
 import java.time.ZoneOffset
 
 class ComponentProviderImpl : ComponentProvider {
 
     @Composable
-    override fun Time(
+    override fun TimeEditor(
         time: Instant,
         zoneOffset: ZoneOffset?,
-        onTimeChanged: (InstantModel) -> Unit
+        onTimeChanged: (TimeEditorModel) -> Unit
     ) {
-        val timeComponentViewModel: TimeComponentViewModel = viewModel(
+        val timeEditorComponentViewModel: TimeEditorComponentViewModel = viewModel(
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
                 set(
-                    TimeComponentViewModel.Companion.TIME_MODEL_KEY, TimeComponentModel.create(
+                    TimeEditorComponentViewModel.Companion.TIME_MODEL_KEY, TimeEditorComponentModel.create(
                         instant = time,
                         zoneOffset = zoneOffset,
                     )
@@ -40,22 +40,22 @@ class ComponentProviderImpl : ComponentProvider {
             }
         )
 
-        LaunchedEffect(timeComponentViewModel.state) {
-            Log.d(this::class.simpleName, "Metadata: ${timeComponentViewModel.state}")
-            val instantModel = when (val t = timeComponentViewModel.state.timeModel) {
-                is TimeComponentModel.TimeModel.Invalid -> InstantModel.Invalid
-                is TimeComponentModel.TimeModel.Valid -> InstantModel.Valid(
+        LaunchedEffect(timeEditorComponentViewModel.state) {
+            Log.d(this::class.simpleName, "Metadata: ${timeEditorComponentViewModel.state}")
+            val timeEditorModel = when (val t = timeEditorComponentViewModel.state.timeModel) {
+                is TimeEditorComponentModel.TimeModel.Invalid -> TimeEditorModel.Invalid
+                is TimeEditorComponentModel.TimeModel.Valid -> TimeEditorModel.Valid(
                     instant = t.instant,
-                    zoneOffset = timeComponentViewModel.state.zoneId?.rules?.getOffset(t.instant)
+                    zoneOffset = timeEditorComponentViewModel.state.zoneId?.rules?.getOffset(t.instant)
                 )
             }
 
-            onTimeChanged(instantModel)
+            onTimeChanged(timeEditorModel)
         }
 
-        TimeComponent(
+        TimeEditorComponent(
             modifier = Modifier.fillMaxWidth(),
-            viewModel = timeComponentViewModel,
+            viewModel = timeEditorComponentViewModel,
         )
     }
 
@@ -81,15 +81,15 @@ class ComponentProviderImpl : ComponentProvider {
 
     @Composable
     override fun MetadataEditor(
-        metadataModel: MetadataModel,
-        onMetadataChanged: (MetadataModel) -> Unit,
+        metadataEditorModel: MetadataEditorModel,
+        onMetadataChanged: (MetadataEditorModel) -> Unit,
     ) {
 
         val metadataViewModel: MetadataEditorViewModel = viewModel(
-            key = metadataModel.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
+            key = metadataEditorModel.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
-                set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, metadataModel)
+                set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, metadataEditorModel)
             }
         )
 
@@ -100,20 +100,20 @@ class ComponentProviderImpl : ComponentProvider {
 
         Text("Metadata:")
         MetadataEditorComponent(
-            metadataModel = metadataModel,
+            metadataEditorModel = metadataEditorModel,
             viewModel = metadataViewModel
         )
     }
 
     @Composable
-    override fun Temperature(
-        temperatureModel: TemperatureModel,
-        onTemperatureChanged: (TemperatureModel) -> Unit
+    override fun TemperatureEditor(
+        temperatureEditorModel: TemperatureEditorModel,
+        onTemperatureChanged: (TemperatureEditorModel) -> Unit
     ) {
-        val viewModel: TemperatureComponentViewModel = viewModel(
+        val viewModel: TemperatureEditorComponentViewModel = viewModel(
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
-                set(TemperatureComponentViewModel.TEMPERATURE_MODEL_KEY, temperatureModel)
+                set(TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY, temperatureEditorModel)
             }
         )
 
@@ -121,8 +121,8 @@ class ComponentProviderImpl : ComponentProvider {
             Log.d(this::class.simpleName, "Temperature: ${viewModel.state}")
             onTemperatureChanged(viewModel.state)
         }
-        TemperatureComponent(
-            temperatureModel = temperatureModel,
+        TemperatureEditorComponent(
+            temperatureEditorModel = temperatureEditorModel,
             viewModel = viewModel,
         )
     }

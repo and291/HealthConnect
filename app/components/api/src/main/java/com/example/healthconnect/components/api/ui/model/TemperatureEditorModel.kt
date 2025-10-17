@@ -1,12 +1,12 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class TemperatureModel {
+sealed class TemperatureEditorModel {
 
     abstract val value: String
 
     data class Valid(
         val temperatureCelsius: Double
-    ) : TemperatureModel() {
+    ) : TemperatureEditorModel() {
 
         override val value: String
             get() = temperatureCelsius.toString()
@@ -14,5 +14,5 @@ sealed class TemperatureModel {
 
     data class Invalid(
         override val value: String
-    ) : TemperatureModel()
+    ) : TemperatureEditorModel()
 }

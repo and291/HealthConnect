@@ -1,28 +1,28 @@
 package com.example.healthconnect.utilty.impl.ui.mapper
 
 import androidx.health.connect.client.records.metadata.Device
-import com.example.healthconnect.components.api.ui.model.DeviceModel
+import com.example.healthconnect.components.api.ui.model.DeviceEditorModel
 
 class DeviceMapper {
 
-    fun toEntity(device: Device?): DeviceModel =
+    fun toEntity(device: Device?): DeviceEditorModel =
         if (device != null) {
-            DeviceModel.Specified(
+            DeviceEditorModel.Specified(
                 type = device.type,
                 manufacturer = device.manufacturer ?: "",
                 model = device.model ?: "",
             )
         } else {
-            DeviceModel.Empty
+            DeviceEditorModel.Empty
         }
 
-    fun toLibDevice(deviceModel: DeviceModel): Device? =
-        when (deviceModel) {
-            DeviceModel.Empty -> null
-            is DeviceModel.Specified -> Device(
-                type = deviceModel.type,
-                manufacturer = deviceModel.manufacturer.ifBlank { null },
-                model = deviceModel.model.ifBlank { null }
+    fun toLibDevice(deviceEditorModel: DeviceEditorModel): Device? =
+        when (deviceEditorModel) {
+            DeviceEditorModel.Empty -> null
+            is DeviceEditorModel.Specified -> Device(
+                type = deviceEditorModel.type,
+                manufacturer = deviceEditorModel.manufacturer.ifBlank { null },
+                model = deviceEditorModel.model.ifBlank { null }
             )
         }
 }

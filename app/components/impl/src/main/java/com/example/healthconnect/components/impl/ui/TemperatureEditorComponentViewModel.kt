@@ -6,18 +6,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.api.ui.model.TemperatureModel
-import com.example.healthconnect.components.api.ui.model.TemperatureModel.Invalid
-import com.example.healthconnect.components.api.ui.model.TemperatureModel.Valid
+import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
+import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel.Invalid
+import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel.Valid
 
 //TODO pass a Record's valid temperature range and validate input inside the component?
-class TemperatureComponentViewModel(
-    temperatureModel: TemperatureModel
+class TemperatureEditorComponentViewModel(
+    temperatureEditorModel: TemperatureEditorModel
 ) : ViewModel() {
 
-    private var _state by mutableStateOf(temperatureModel)
+    private var _state by mutableStateOf(temperatureEditorModel)
 
-    val state: TemperatureModel
+    val state: TemperatureEditorModel
         get() = _state
 
     fun onEvent(event: Event) {
@@ -40,7 +40,7 @@ class TemperatureComponentViewModel(
 
     companion object {
 
-        val TEMPERATURE_MODEL_KEY: CreationExtras.Key<TemperatureModel> =
+        val TEMPERATURE_MODEL_KEY: CreationExtras.Key<TemperatureEditorModel> =
             CreationExtras.Companion.Key()
     }
 }
