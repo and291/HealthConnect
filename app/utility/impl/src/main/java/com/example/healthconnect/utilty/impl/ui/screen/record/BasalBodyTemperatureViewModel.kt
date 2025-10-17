@@ -56,6 +56,7 @@ class BasalBodyTemperatureViewModel(
                 } else {
                     val instantModel = _state.instantModel as InstantModel.Valid
                     val temperatureModel = _state.temperatureModel as TemperatureModel.Valid
+                    if (!_state.metadataEntity.isValid()) { return@launch }
                     val modifiedRecord = BasalBodyTemperatureRecord(
                         time = instantModel.instant,
                         zoneOffset = instantModel.zoneOffset,

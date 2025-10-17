@@ -117,7 +117,8 @@ fun MetadataEditorComponent(
         )
 
         OutlinedTextField(
-            value = viewModel.state.clientRecordVersion.toString(),
+            value = viewModel.state.clientRecordVersion,
+            isError = !viewModel.state.isValid(),
             onValueChange = {
                 viewModel.onEvent(Event.OnClientVersionChanged(it))
             },
@@ -172,7 +173,7 @@ fun MetadataEditorComponentEmptyDevicePreview() {
         dataOriginPackageName = "com.example.app",
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
-        clientRecordVersion = 1L,
+        clientRecordVersion = "1",
         deviceModel = DeviceModel.Empty
     )
 
@@ -190,7 +191,7 @@ fun MetadataEditorComponentSpecifiedDevicePreview() {
         dataOriginPackageName = "com.example.app",
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
-        clientRecordVersion = 1L,
+        clientRecordVersion = "1",
         deviceModel = DeviceModel.Specified(
             type = 1, // Example device type
             manufacturer = "Example Manufacturer",

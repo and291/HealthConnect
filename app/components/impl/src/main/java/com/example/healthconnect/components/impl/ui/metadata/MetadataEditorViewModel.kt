@@ -29,8 +29,7 @@ class MetadataEditorViewModel(
             }
 
             is Event.OnClientVersionChanged -> {
-                //TODO check input
-                _state.copy(clientRecordVersion = event.value.toLong())
+                _state.copy(clientRecordVersion = event.value)
             }
 
             Event.OnSpecifyDevice -> _state.copy(

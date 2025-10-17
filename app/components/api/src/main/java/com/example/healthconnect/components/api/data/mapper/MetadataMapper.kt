@@ -14,7 +14,7 @@ class MetadataMapper(
         dataOriginPackageName = metadata.dataOrigin.packageName,
         lastModifiedTime = metadata.lastModifiedTime,
         clientRecordId = metadata.clientRecordId ?: "",
-        clientRecordVersion = metadata.clientRecordVersion,
+        clientRecordVersion = metadata.clientRecordVersion.toString(),
         deviceModel = deviceMapper.toEntity(metadata.device)
     )
 
@@ -31,7 +31,7 @@ class MetadataMapper(
             withClientRecordId = {
                 Metadata.Companion.unknownRecordingMethod(
                     clientRecordId = metadataEntity.clientRecordId,
-                    clientRecordVersion = metadataEntity.clientRecordVersion,
+                    clientRecordVersion = metadataEntity.clientRecordVersion.toLong(),
                     device = deviceMapper.toLibDevice(metadataEntity.deviceModel),
                 )
             },
@@ -52,7 +52,7 @@ class MetadataMapper(
             withClientRecordId = {
                 Metadata.Companion.activelyRecorded(
                     clientRecordId = metadataEntity.clientRecordId,
-                    clientRecordVersion = metadataEntity.clientRecordVersion,
+                    clientRecordVersion = metadataEntity.clientRecordVersion.toLong(),
                     device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!,  //TODO fix possible NPE
                 )
             },
@@ -73,7 +73,7 @@ class MetadataMapper(
             withClientRecordId = {
                 Metadata.Companion.autoRecorded(
                     clientRecordId = metadataEntity.clientRecordId,
-                    clientRecordVersion = metadataEntity.clientRecordVersion,
+                    clientRecordVersion = metadataEntity.clientRecordVersion.toLong(),
                     device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!,  //TODO fix possible NPE
                 )
             },
@@ -95,7 +95,7 @@ class MetadataMapper(
             withClientRecordId = {
                 Metadata.Companion.manualEntry(
                     clientRecordId = metadataEntity.clientRecordId,
-                    clientRecordVersion = metadataEntity.clientRecordVersion,
+                    clientRecordVersion = metadataEntity.clientRecordVersion.toLong(),
                     device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             },
