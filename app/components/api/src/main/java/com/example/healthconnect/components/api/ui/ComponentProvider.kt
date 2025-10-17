@@ -1,7 +1,7 @@
 package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
-import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.api.ui.model.MetadataModel
 import com.example.healthconnect.components.api.ui.model.InstantModel
 import com.example.healthconnect.components.api.ui.model.TemperatureModel
 import java.time.Instant
@@ -16,7 +16,7 @@ interface ComponentProvider {
     fun MeasurementLocationSelector(currentMeasurementLocation: Int, onItemSelected: (Int) -> Unit)
 
     @Composable
-    fun MetadataEditor(metadataEntity: MetadataEntity, onMetadataChanged: (MetadataEntity) -> Unit)
+    fun MetadataEditor(metadataModel: MetadataModel, onMetadataChanged: (MetadataModel) -> Unit)
 
     @Composable
     fun Temperature(

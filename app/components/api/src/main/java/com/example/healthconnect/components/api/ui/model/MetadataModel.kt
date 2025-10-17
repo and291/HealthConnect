@@ -1,10 +1,9 @@
-package com.example.healthconnect.components.api.domain.entity.metadata
+package com.example.healthconnect.components.api.ui.model
 
 import android.util.Log
-import com.example.healthconnect.components.api.ui.model.DeviceModel
 import java.time.Instant
 
-data class MetadataEntity(
+data class MetadataModel(
     val recordingMethod: Int,
     val id: String = "",
     val dataOriginPackageName: String = "",
@@ -25,4 +24,3 @@ data class MetadataEntity(
         }
     }
 }
-

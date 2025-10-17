@@ -83,7 +83,7 @@ fun BasalBodyTemperatureScreen(
         }
 
         componentProvider.MetadataEditor(
-            viewModel.state.metadataEntity
+            viewModel.state.metadataModel
         ) {
             viewModel.onEvent(Event.OnMetaModelChanged(it))
         }

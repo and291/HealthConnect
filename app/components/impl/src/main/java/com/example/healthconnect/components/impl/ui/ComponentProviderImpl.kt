@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
-import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.api.ui.model.MetadataModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.InstantModel
 import com.example.healthconnect.components.api.ui.model.TemperatureModel
@@ -81,15 +81,15 @@ class ComponentProviderImpl : ComponentProvider {
 
     @Composable
     override fun MetadataEditor(
-        metadataEntity: MetadataEntity,
-        onMetadataChanged: (MetadataEntity) -> Unit,
+        metadataModel: MetadataModel,
+        onMetadataChanged: (MetadataModel) -> Unit,
     ) {
 
         val metadataViewModel: MetadataEditorViewModel = viewModel(
-            key = metadataEntity.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
+            key = metadataModel.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
-                set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, metadataEntity)
+                set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, metadataModel)
             }
         )
 
@@ -100,7 +100,7 @@ class ComponentProviderImpl : ComponentProvider {
 
         Text("Metadata:")
         MetadataEditorComponent(
-            metadataEntity = metadataEntity,
+            metadataModel = metadataModel,
             viewModel = metadataViewModel
         )
     }

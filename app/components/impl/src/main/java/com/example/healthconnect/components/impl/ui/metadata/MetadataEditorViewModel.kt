@@ -7,15 +7,15 @@ import androidx.health.connect.client.records.metadata.Device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.ui.model.DeviceModel
-import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.api.ui.model.MetadataModel
 
 class MetadataEditorViewModel(
-    initialEntity: MetadataEntity
+    initialEntity: MetadataModel
 ) : ViewModel() {
 
     private var _state by mutableStateOf(initialEntity)
 
-    val state: MetadataEntity
+    val state: MetadataModel
         get() = _state
 
     fun onEvent(event: Event) {
@@ -97,6 +97,6 @@ class MetadataEditorViewModel(
 
     companion object {
 
-        val METADATA_ENTITY_KEY: CreationExtras.Key<MetadataEntity> = CreationExtras.Companion.Key()
+        val METADATA_ENTITY_KEY: CreationExtras.Key<MetadataModel> = CreationExtras.Companion.Key()
     }
 }

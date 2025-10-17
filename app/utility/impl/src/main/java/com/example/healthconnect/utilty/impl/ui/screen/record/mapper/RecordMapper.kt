@@ -17,7 +17,7 @@ class RecordMapper(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
-            metadataEntity = metadataMapper.toEntity(record.metadata),
+            metadataModel = metadataMapper.toEntity(record.metadata),
             temperatureModel = TemperatureModel.Valid(record.temperature.inCelsius),
             measurementLocation = record.measurementLocation
         )
