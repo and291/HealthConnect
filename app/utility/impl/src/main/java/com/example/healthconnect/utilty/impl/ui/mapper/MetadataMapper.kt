@@ -1,9 +1,8 @@
-package com.example.healthconnect.components.api.data.mapper
+package com.example.healthconnect.utilty.impl.ui.mapper
 
 import androidx.health.connect.client.records.metadata.Metadata
 import com.example.healthconnect.components.api.ui.model.MetadataModel
 
-//TODO remove from API
 class MetadataMapper(
     private val deviceMapper: DeviceMapper
 ) {
