@@ -14,6 +14,7 @@ import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.utilty.impl.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
+import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
 import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,15 +22,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BasalBodyTemperatureViewModel(
-    record: BasalBodyTemperatureModel,
+    recordMapper: RecordMapper,
+    initialRecord: BasalBodyTemperatureRecord ,
     private val metadataMapper: MetadataMapper,
     private val update: Update,
 ) : ViewModel() {
 
-    private var _state by mutableStateOf(record)
+    private val initialModel = recordMapper.toUiModel(initialRecord)
+    private var _state by mutableStateOf(initialModel)
 
     val state: BasalBodyTemperatureModel
         get() = _state
+    val isChanged: Boolean
+        get() = initialModel != _state
 
     private val _effect = MutableStateFlow<Effect?>(null)
 
@@ -50,6 +55,10 @@ class BasalBodyTemperatureViewModel(
             }
 
             Event.OnSave -> viewModelScope.launch {
+                if (!isChanged) {
+                    return@launch
+                }
+
                 if (false) { //TODO is ClientRecordId used to read the data??
                     //upsert here
                     //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
@@ -128,6 +137,6 @@ class BasalBodyTemperatureViewModel(
 
     companion object {
 
-        val RECORD_KEY: CreationExtras.Key<BasalBodyTemperatureModel> = CreationExtras.Key()
+        val RECORD_KEY: CreationExtras.Key<BasalBodyTemperatureRecord> = CreationExtras.Key()
     }
 }

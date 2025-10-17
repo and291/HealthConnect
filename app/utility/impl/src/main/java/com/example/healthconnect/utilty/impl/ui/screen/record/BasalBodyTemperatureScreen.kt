@@ -3,6 +3,7 @@ package com.example.healthconnect.utilty.impl.ui.screen.record
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,21 +26,19 @@ import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.Event
-import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
 import java.time.Instant
 import java.time.ZoneOffset
 
 @Composable
 fun BasalBodyTemperatureScreen(
-    record: BasalBodyTemperatureRecord,
+    initialRecord: BasalBodyTemperatureRecord,
     modifier: Modifier = Modifier,
-    recordMapper: RecordMapper = Di.recordMapper,
     componentProvider: ComponentProvider = Di.componentProvider,
     viewModel: BasalBodyTemperatureViewModel = viewModel(
         modelClass = BasalBodyTemperatureViewModel::class,
         factory = Di.recordViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(BasalBodyTemperatureViewModel.RECORD_KEY, recordMapper.toUiModel(record))
+            set(BasalBodyTemperatureViewModel.RECORD_KEY, initialRecord)
         }
     )
 ) {
@@ -64,14 +63,14 @@ fun BasalBodyTemperatureScreen(
     ) {
 
         componentProvider.TimeEditor(
-            time = record.time,
-            zoneOffset = record.zoneOffset
+            time = initialRecord.time,
+            zoneOffset = initialRecord.zoneOffset
         ) {
             viewModel.onEvent(Event.OnTimeChanged(it))
         }
 
         componentProvider.TemperatureEditor(
-            TemperatureEditorModel.Valid(record.temperature.inCelsius)
+            TemperatureEditorModel.Valid(initialRecord.temperature.inCelsius)
         ) {
             viewModel.onEvent(Event.OnTemperatureChanged(it))
         }
@@ -88,11 +87,17 @@ fun BasalBodyTemperatureScreen(
             viewModel.onEvent(Event.OnMetaModelChanged(it))
         }
 
-        //TODO show the button only if there are changes to save
-        Button(onClick = {
-            viewModel.onEvent(Event.OnSave)
-        }) {
-            Text("Save changes")
+        Row {
+            if (viewModel.isChanged) {
+                Text("There is unsaved changes")
+            }
+
+            Button(
+                enabled = viewModel.isChanged,
+                onClick = { viewModel.onEvent(Event.OnSave) }
+            ) {
+                Text("Save")
+            }
         }
     }
 }
@@ -102,7 +107,7 @@ fun BasalBodyTemperatureScreen(
 fun BasalBodyTemperatureScreenPreview() {
 
     BasalBodyTemperatureScreen(
-        record = BasalBodyTemperatureRecord(
+        initialRecord = BasalBodyTemperatureRecord(
             time = Instant.EPOCH,
             zoneOffset = ZoneOffset.UTC,
             temperature = 36.celsius,
