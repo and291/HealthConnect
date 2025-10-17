@@ -15,7 +15,7 @@ class MetadataMapper(
         lastModifiedTime = metadata.lastModifiedTime,
         clientRecordId = metadata.clientRecordId ?: "",
         clientRecordVersion = metadata.clientRecordVersion,
-        deviceEntity = deviceMapper.toEntity(metadata.device)
+        deviceModel = deviceMapper.toEntity(metadata.device)
     )
 
     fun toLibMetadata(
@@ -25,19 +25,19 @@ class MetadataMapper(
             withId = {
                 Metadata.Companion.unknownRecordingMethodWithId(
                     id = metadataEntity.id,
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.unknownRecordingMethod(
                     clientRecordId = metadataEntity.clientRecordId,
                     clientRecordVersion = metadataEntity.clientRecordVersion,
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity),
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel),
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.unknownRecordingMethod(
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity),
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel),
                 )
             }
         )
@@ -46,19 +46,19 @@ class MetadataMapper(
             withId = {
                 Metadata.Companion.activelyRecordedWithId(
                     metadataEntity.id,
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.activelyRecorded(
                     clientRecordId = metadataEntity.clientRecordId,
                     clientRecordVersion = metadataEntity.clientRecordVersion,
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!,  //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!,  //TODO fix possible NPE
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.activelyRecorded(
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             }
         )
@@ -67,19 +67,19 @@ class MetadataMapper(
             withId = {
                 Metadata.Companion.autoRecordedWithId(
                     metadataEntity.id,
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.autoRecorded(
                     clientRecordId = metadataEntity.clientRecordId,
                     clientRecordVersion = metadataEntity.clientRecordVersion,
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!,  //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!,  //TODO fix possible NPE
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.autoRecorded(
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             }
 
@@ -89,19 +89,19 @@ class MetadataMapper(
             withId = {
                 Metadata.Companion.manualEntryWithId(
                     metadataEntity.id,
-                    deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!, //TODO fix possible NPE
+                    deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             },
             withClientRecordId = {
                 Metadata.Companion.manualEntry(
                     clientRecordId = metadataEntity.clientRecordId,
                     clientRecordVersion = metadataEntity.clientRecordVersion,
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             },
             deviceUpdate = {
                 Metadata.Companion.manualEntry(
-                    device = deviceMapper.toLibDevice(metadataEntity.deviceEntity)!!, //TODO fix possible NPE
+                    device = deviceMapper.toLibDevice(metadataEntity.deviceModel)!!, //TODO fix possible NPE
                 )
             }
         )

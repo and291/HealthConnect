@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.api.domain.entity.metadata.DeviceEntity
+import com.example.healthconnect.components.api.ui.model.DeviceModel
 import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
 import com.example.healthconnect.components.impl.ui.SelectorComponent
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorViewModel.Event
@@ -137,9 +137,9 @@ fun MetadataEditorComponent(
             .fillMaxWidth()
             .padding(16.dp)
 
-        when (val model = viewModel.state.deviceEntity) {
+        when (val model = viewModel.state.deviceModel) {
             //TODO create animation between these states changes
-            DeviceEntity.Empty -> Column(
+            DeviceModel.Empty -> Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = commonModifier
             ) {
@@ -151,8 +151,8 @@ fun MetadataEditorComponent(
                 }
             }
 
-            is DeviceEntity.Specified -> DeviceEditorComponent(
-                specifiedDeviceEntity = model,
+            is DeviceModel.Specified -> DeviceEditorComponent(
+                specifiedDeviceModel = model,
                 modifier = commonModifier,
                 onTypeItemSelected = { (type, _) -> viewModel.onEvent(Event.OnTypeSelected(type)) },
                 onManufacturerValueChanged = { viewModel.onEvent(Event.OnManufacturerChanged(it)) },
@@ -173,7 +173,7 @@ fun MetadataEditorComponentEmptyDevicePreview() {
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
         clientRecordVersion = 1L,
-        deviceEntity = DeviceEntity.Empty
+        deviceModel = DeviceModel.Empty
     )
 
     MetadataEditorComponent(
@@ -191,7 +191,7 @@ fun MetadataEditorComponentSpecifiedDevicePreview() {
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
         clientRecordVersion = 1L,
-        deviceEntity = DeviceEntity.Specified(
+        deviceModel = DeviceModel.Specified(
             type = 1, // Example device type
             manufacturer = "Example Manufacturer",
             model = "Example Model"

@@ -1,5 +1,6 @@
 package com.example.healthconnect.components.api.domain.entity.metadata
 
+import com.example.healthconnect.components.api.ui.model.DeviceModel
 import java.time.Instant
 
 data class MetadataEntity(
@@ -9,6 +10,6 @@ data class MetadataEntity(
     val lastModifiedTime: Instant = Instant.EPOCH,
     val clientRecordId: String = "",
     val clientRecordVersion: Long = 0,
-    val deviceEntity: DeviceEntity = DeviceEntity.Empty
+    val deviceModel: DeviceModel = DeviceModel.Empty
 )
 

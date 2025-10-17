@@ -8,8 +8,8 @@ import com.example.healthconnect.components.api.ui.model.TemperatureModel
 
 data class BasalBodyTemperatureModel(
     val instantModel: InstantModel,
-    override val metadataEntity: MetadataEntity,
+    val metadataEntity: MetadataEntity,
     val temperatureModel: TemperatureModel,
     @property:BodyTemperatureMeasurementLocations
     val measurementLocation: Int = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
-) : RecordModel
+)
