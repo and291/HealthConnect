@@ -8,12 +8,12 @@ import androidx.health.connect.client.units.Temperature
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.api.data.mapper.MetadataMapper
-import com.example.healthconnect.components.api.domain.entity.metadata.MetadataEntity
+import com.example.healthconnect.components.api.ui.model.MetadataModel
 import com.example.healthconnect.components.api.ui.model.InstantModel
 import com.example.healthconnect.components.api.ui.model.TemperatureModel
 import com.example.healthconnect.utilty.impl.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
+import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,7 +45,7 @@ class BasalBodyTemperatureViewModel(
         when (event) {
             is Event.OnMetaModelChanged -> {
                 _state = _state.copy(
-                    metadataEntity = event.metaModel
+                    metadataModel = event.metaModel
                 )
             }
 
@@ -56,12 +56,15 @@ class BasalBodyTemperatureViewModel(
                 } else {
                     val instantModel = _state.instantModel as InstantModel.Valid
                     val temperatureModel = _state.temperatureModel as TemperatureModel.Valid
+                    if (!_state.metadataModel.isValid()) {
+                        return@launch
+                    }
                     val modifiedRecord = BasalBodyTemperatureRecord(
                         time = instantModel.instant,
                         zoneOffset = instantModel.zoneOffset,
                         temperature = Temperature.celsius(temperatureModel.temperatureCelsius),
                         measurementLocation = _state.measurementLocation,
-                        metadata = metadataMapper.toLibMetadata(_state.metadataEntity)
+                        metadata = metadataMapper.toLibMetadata(_state.metadataModel)
                     )
                     when (update(modifiedRecord)) {
                         is Result.IoException -> TODO()
@@ -70,6 +73,7 @@ class BasalBodyTemperatureViewModel(
                         is Result.Success -> {
                             _effect.emit(Effect.RecordUpdated)
                         }
+
                         is Result.UnhandledException -> TODO()
                         is Result.UnpermittedAccess -> TODO()
                     }
@@ -81,6 +85,7 @@ class BasalBodyTemperatureViewModel(
                     measurementLocation = event.location //TODO check input
                 )
             }
+
             is Event.OnTemperatureChanged -> {
                 _state = _state.copy(
                     temperatureModel = event.temperatureModel
@@ -104,7 +109,7 @@ class BasalBodyTemperatureViewModel(
 
         data class OnTimeChanged(
             val instantModel: InstantModel,
-        ): Event()
+        ) : Event()
 
         data class OnTemperatureChanged(
             val temperatureModel: TemperatureModel,
@@ -112,10 +117,10 @@ class BasalBodyTemperatureViewModel(
 
         data class OnMeasurementLocationSelected(
             val location: Int
-        ): Event()
+        ) : Event()
 
         data class OnMetaModelChanged(
-            val metaModel: MetadataEntity
+            val metaModel: MetadataModel
         ) : Event()
 
         data object OnSave : Event()

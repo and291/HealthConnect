@@ -6,8 +6,6 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.components.api.data.mapper.DeviceMapper
-import com.example.healthconnect.components.api.data.mapper.MetadataMapper
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
@@ -17,6 +15,8 @@ import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.Insert
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
+import com.example.healthconnect.utilty.impl.ui.mapper.DeviceMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.screen.record.RecordViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
@@ -93,8 +93,8 @@ object Di { //TODO move to dagger. keep all features
         )
     }
 
-    val deviceMapper = DeviceMapper()
-    val metadataMapper = MetadataMapper(
+    private val deviceMapper = DeviceMapper()
+    private val metadataMapper = MetadataMapper(
         deviceMapper = deviceMapper,
     )
 
