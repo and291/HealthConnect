@@ -3,12 +3,12 @@ package com.example.healthconnect.utilty.impl.ui.screen.record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
+import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
 import kotlin.reflect.KClass
 
 class RecordViewModelFactory(
-    private val metadataMapper: MetadataMapper,
+    private val recordMapper: RecordMapper,
     private val update: Update,
 ) : ViewModelProvider.Factory {
 
@@ -18,8 +18,8 @@ class RecordViewModelFactory(
         extras: CreationExtras
     ): T = when (modelClass) {
         BasalBodyTemperatureViewModel::class -> BasalBodyTemperatureViewModel(
-            record = checkNotNull(extras[BasalBodyTemperatureViewModel.RECORD_KEY]),
-            metadataMapper = metadataMapper,
+            initialRecord = checkNotNull(extras[BasalBodyTemperatureViewModel.RECORD_KEY]),
+            recordMapper = recordMapper,
             update = update,
         )
 

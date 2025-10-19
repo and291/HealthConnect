@@ -46,7 +46,7 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
 
             is UtilityNavigationEntry.RecordScreen -> NavEntry(key) {
                 BasalBodyTemperatureScreen(
-                    record = key.record as BasalBodyTemperatureRecord, //TODO fix type conversion
+                    initialRecord = key.record as BasalBodyTemperatureRecord, //TODO fix type conversion
                     modifier = Modifier.padding(innerPadding ?: defaultPadding)
                 )
             }

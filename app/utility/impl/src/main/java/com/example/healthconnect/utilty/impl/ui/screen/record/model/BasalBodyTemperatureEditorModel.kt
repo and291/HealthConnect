@@ -6,10 +6,15 @@ import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 
-data class BasalBodyTemperatureModel(
+data class BasalBodyTemperatureEditorModel(
     val timeEditorModel: TimeEditorModel,
     val metadataEditorModel: MetadataEditorModel,
     val temperatureEditorModel: TemperatureEditorModel,
     @property:BodyTemperatureMeasurementLocations
     val measurementLocation: Int = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
-)
+) {
+
+    fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
+            temperatureEditorModel is TemperatureEditorModel.Valid &&
+            metadataEditorModel.isValid() //TODO do i need to validate measurementLocation value?
+}

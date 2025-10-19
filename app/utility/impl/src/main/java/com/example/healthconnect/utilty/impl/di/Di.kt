@@ -88,7 +88,7 @@ object Di { //TODO move to dagger. keep all features
 
     val recordViewModelFactory by lazy {
         RecordViewModelFactory(
-            metadataMapper = metadataMapper,
+            recordMapper = recordMapper,
             update = update,
         )
     }
@@ -97,8 +97,7 @@ object Di { //TODO move to dagger. keep all features
     private val metadataMapper = MetadataMapper(
         deviceMapper = deviceMapper,
     )
-
-    val recordMapper = RecordMapper(
+    private val recordMapper = RecordMapper(
         metadataMapper = metadataMapper,
     )
 }
