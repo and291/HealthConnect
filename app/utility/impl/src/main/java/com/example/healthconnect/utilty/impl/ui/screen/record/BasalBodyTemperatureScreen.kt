@@ -1,6 +1,5 @@
 package com.example.healthconnect.utilty.impl.ui.screen.record
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,11 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +23,7 @@ import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.Event
+import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.State
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -42,18 +40,6 @@ fun BasalBodyTemperatureScreen(
         }
     )
 ) {
-
-    val effect by viewModel.effect.collectAsState(null)
-    LaunchedEffect(effect) {
-        effect?.let { modification ->
-            when (modification) {
-                is BasalBodyTemperatureViewModel.Effect.RecordUpdated -> {
-                    Log.d(this::class.simpleName, "Record updated!")
-                }
-            }
-            viewModel.effectConsumed(modification)
-        }
-    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -76,28 +62,43 @@ fun BasalBodyTemperatureScreen(
         }
 
         componentProvider.MeasurementLocationSelector(
-            viewModel.state.measurementLocation
+            viewModel.state.basalBodyTemperatureEditorModel.measurementLocation
         ) {
             viewModel.onEvent(Event.OnMeasurementLocationSelected(it))
         }
 
         componentProvider.MetadataEditor(
-            viewModel.state.metadataEditorModel
+            viewModel.state.basalBodyTemperatureEditorModel.metadataEditorModel
         ) {
             viewModel.onEvent(Event.OnMetaModelChanged(it))
         }
 
-        Row {
+        Column {
             if (viewModel.isChanged) {
                 Text("There is unsaved changes")
             }
 
-            Button(
-                enabled = viewModel.isChanged,
-                onClick = { viewModel.onEvent(Event.OnSave) }
-            ) {
-                Text("Save")
+            when (val state = viewModel.state) {
+                is State.Edition, is State.UpdateResult -> Row {
+                    Button(
+                        enabled = viewModel.isChanged,
+                        onClick = { viewModel.onEvent(Event.OnSave(upsert = false)) }
+                    ) {
+                        Text("Save")
+                    }
+                    if (state is State.UpdateResult) {
+                        Text("Update Result: ${state.result}")
+                    }
+                    if (state is State.Edition && state.errorCreatingEntity != null) {
+                        Text("Error creating entity: ${state.errorCreatingEntity}")
+                    }
+                }
+
+                is State.UpdateInProgress -> {
+                    CircularProgressIndicator()
+                }
             }
+
         }
     }
 }
