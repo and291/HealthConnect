@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
+import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.impl.di.Di
@@ -123,6 +124,28 @@ class ComponentProviderImpl : ComponentProvider {
         }
         TemperatureEditorComponent(
             temperatureEditorModel = temperatureEditorModel,
+            viewModel = viewModel,
+        )
+    }
+
+    @Composable
+    override fun PowerEditor(
+        powerEditorModel: PowerEditorModel,
+        onPowerChanged: (PowerEditorModel) -> Unit
+    ) {
+        val viewModel: PowerEditorComponentViewModel = viewModel(
+            factory = Di.componentViewModelFactory,
+            extras = MutableCreationExtras().apply {
+                set(PowerEditorComponentViewModel.MODEL_KEY, powerEditorModel)
+            }
+        )
+
+        LaunchedEffect(viewModel.state) {
+            Log.d(this::class.simpleName, "Power: ${viewModel.state}")
+            onPowerChanged(viewModel.state)
+        }
+        PowerEditorComponent(
+            powerEditorModel = powerEditorModel,
             viewModel = viewModel,
         )
     }

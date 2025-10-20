@@ -2,6 +2,7 @@ package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
+import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import java.time.Instant
@@ -25,5 +26,11 @@ interface ComponentProvider {
     fun TemperatureEditor(
         temperatureEditorModel: TemperatureEditorModel,
         onTemperatureChanged: (TemperatureEditorModel) -> Unit
+    )
+
+    @Composable
+    fun PowerEditor(
+        powerEditorModel: PowerEditorModel,
+        onPowerChanged: (PowerEditorModel) -> Unit,
     )
 }
