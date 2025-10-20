@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
+import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -24,14 +25,15 @@ class BasalBodyTemperatureViewModel(
     private val update: Update,
 ) : ViewModel() {
 
-    private val initialModel = recordMapper.toUiModel(initialRecord)
-    private var updateJob: Job? = null
-    private var _state: State by mutableStateOf(value = State.Edition(initialModel))
-
-    val state: State
-        get() = _state
+    private val initialModel = recordMapper.toUiModel(initialRecord) as BasalBodyTemperatureEditorModel
     val isChanged: Boolean
         get() = initialModel != _state.basalBodyTemperatureEditorModel
+
+    private var _state: State by mutableStateOf(value = State.Edition(initialModel))
+    val state: State
+        get() = _state
+
+    private var updateJob: Job? = null
 
     fun onEvent(event: Event) {
         when (event) {
@@ -95,7 +97,7 @@ class BasalBodyTemperatureViewModel(
 
                     _state = State.UpdateInProgress(
                         basalBodyTemperatureEditorModel = currentState.basalBodyTemperatureEditorModel,
-                        basalBodyTemperatureRecord = modifiedRecord,
+                        record = modifiedRecord,
                     )
                     updateJob = viewModelScope.launch {
                         _state = State.UpdateResult(
@@ -126,7 +128,7 @@ class BasalBodyTemperatureViewModel(
          */
         data class UpdateInProgress(
             override val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel,
-            val basalBodyTemperatureRecord: BasalBodyTemperatureRecord,
+            val record: Record,
         ) : State()
 
         /**

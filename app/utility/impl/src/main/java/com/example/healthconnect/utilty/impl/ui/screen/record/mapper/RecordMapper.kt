@@ -7,12 +7,13 @@ import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureEditorModel
+import com.example.healthconnect.utilty.impl.ui.screen.record.model.EditorModel
 
 class RecordMapper(
     private val metadataMapper: MetadataMapper
 ) {
 
-    fun toUiModel(record: Record) = when(record) {
+    fun toUiModel(record: Record): EditorModel = when(record) {
         is BasalBodyTemperatureRecord -> BasalBodyTemperatureEditorModel(
             timeEditorModel = TimeEditorModel.Valid(
                 instant = record.time,
@@ -30,9 +31,8 @@ class RecordMapper(
      * @throws error if parameter is invalid
      * @throws error if Library Entity's validation rules (checked at instance creation time) are not satisfied
      */
-    @Suppress("USELESS_IS_CHECK", "REDUNDANT_ELSE_IN_WHEN")
     @Throws(Exception::class)
-    fun toEntity(validUiModel: BasalBodyTemperatureEditorModel) = when(validUiModel) {
+    fun toEntity(validUiModel: EditorModel): Record = when(validUiModel) {
         is BasalBodyTemperatureEditorModel -> BasalBodyTemperatureRecord(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
