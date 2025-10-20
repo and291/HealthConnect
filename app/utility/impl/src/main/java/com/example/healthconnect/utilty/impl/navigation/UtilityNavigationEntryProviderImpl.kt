@@ -6,6 +6,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
+import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.navigation3.runtime.NavEntry
 import com.example.healthconnect.utilty.api.navigation.NavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
@@ -13,6 +14,7 @@ import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.utilty.impl.ui.screen.InsertRecordScreen
 import com.example.healthconnect.utilty.impl.ui.screen.RecordsScreen
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureScreen
+import com.example.healthconnect.utilty.impl.ui.screen.record.BasalMetabolicRateScreen
 
 class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
 
@@ -45,10 +47,17 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
             }
 
             is UtilityNavigationEntry.RecordScreen -> NavEntry(key) {
-                BasalBodyTemperatureScreen(
-                    initialRecord = key.record as BasalBodyTemperatureRecord, //TODO fix type conversion
-                    modifier = Modifier.padding(innerPadding ?: defaultPadding)
-                )
+                when (key.record) {
+                    is BasalBodyTemperatureRecord -> BasalBodyTemperatureScreen(
+                        initialRecord = key.record as BasalBodyTemperatureRecord, //TODO fix type conversion
+                        modifier = Modifier.padding(innerPadding ?: defaultPadding),
+                    )
+                    is BasalMetabolicRateRecord -> BasalMetabolicRateScreen(
+                        initialRecord = key.record as BasalMetabolicRateRecord,
+                        modifier = Modifier.padding(innerPadding ?: defaultPadding),
+                    )
+                    else -> TODO()
+                }
             }
         }
     }

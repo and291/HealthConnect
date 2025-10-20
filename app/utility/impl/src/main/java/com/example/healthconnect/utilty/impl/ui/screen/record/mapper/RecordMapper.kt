@@ -1,12 +1,16 @@
 package com.example.healthconnect.utilty.impl.ui.screen.record.mapper
 
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
+import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.units.celsius
+import androidx.health.connect.client.units.kilocaloriesPerDay
+import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureEditorModel
+import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalMetabolicRateEditorModel
 import com.example.healthconnect.utilty.impl.ui.screen.record.model.EditorModel
 
 class RecordMapper(
@@ -22,6 +26,14 @@ class RecordMapper(
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
             temperatureEditorModel = TemperatureEditorModel.Valid(record.temperature.inCelsius),
             measurementLocation = record.measurementLocation
+        )
+        is BasalMetabolicRateRecord -> BasalMetabolicRateEditorModel(
+            timeEditorModel = TimeEditorModel.Valid(
+                instant = record.time,
+                zoneOffset = record.zoneOffset
+            ),
+            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            powerEditorModel = PowerEditorModel.Valid(kilocaloriesPerDay = record.basalMetabolicRate.inKilocaloriesPerDay)
         )
         else -> TODO()
     }
@@ -39,6 +51,12 @@ class RecordMapper(
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
             temperature = (validUiModel.temperatureEditorModel as TemperatureEditorModel.Valid).temperatureCelsius.celsius,
             measurementLocation = validUiModel.measurementLocation
+        )
+        is BasalMetabolicRateEditorModel -> BasalMetabolicRateRecord(
+            time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            basalMetabolicRate = (validUiModel.powerEditorModel as PowerEditorModel.Valid).kilocaloriesPerDay.kilocaloriesPerDay,
         )
         else -> TODO()
     }
