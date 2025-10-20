@@ -20,7 +20,6 @@ import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.Event
 import com.example.healthconnect.utilty.impl.ui.screen.record.BasalBodyTemperatureViewModel.State
@@ -55,7 +54,7 @@ fun BasalBodyTemperatureScreen(
         }
 
         componentProvider.TemperatureEditor(
-            TemperatureEditorModel.Valid(initialRecord.temperature.inCelsius)
+            viewModel.state.basalBodyTemperatureEditorModel.temperatureEditorModel
         ) {
             viewModel.onEvent(Event.OnTemperatureChanged(it))
         }
