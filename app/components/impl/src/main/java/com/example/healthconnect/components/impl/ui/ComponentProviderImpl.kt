@@ -41,7 +41,7 @@ class ComponentProviderImpl : ComponentProvider {
         )
 
         LaunchedEffect(timeEditorComponentViewModel.state) {
-            Log.d(this::class.simpleName, "Metadata: ${timeEditorComponentViewModel.state}")
+            Log.d(this::class.simpleName, "Time: ${timeEditorComponentViewModel.state}")
             val timeEditorModel = when (val t = timeEditorComponentViewModel.state.timeModel) {
                 is TimeEditorComponentModel.TimeModel.Invalid -> TimeEditorModel.Invalid
                 is TimeEditorComponentModel.TimeModel.Valid -> TimeEditorModel.Valid(

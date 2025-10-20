@@ -8,7 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Available
@@ -39,6 +41,10 @@ fun CreateNavDisplay(
 ) {
     NavDisplay(
         backStack = backStack,
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(), //taken from default parameter
+            rememberViewModelStoreNavEntryDecorator(), //separate VM store for each nav entry
+        ),
         onBack = { backStack.removeLastOrNull() },
     ) { key ->
         when (key) {

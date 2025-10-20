@@ -1,5 +1,6 @@
 package com.example.healthconnect.utilty.impl.ui.screen
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -47,7 +48,10 @@ class RecordsViewModel(
             }
 
             Event.Refresh -> viewModelScope.launch {
-                when (val result = read(recordType)) {
+                val result = read(recordType).also {
+                    Log.d(this::class.qualifiedName, "Records list refreshed with result: $it")
+                }
+                when (result) {
                     is Result.IoException -> TODO()
                     is Result.IpcFailure -> TODO()
                     is Result.PermissionRequired -> {

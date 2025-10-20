@@ -33,7 +33,6 @@ fun BasalBodyTemperatureScreen(
     modifier: Modifier = Modifier,
     componentProvider: ComponentProvider = Di.componentProvider,
     viewModel: BasalBodyTemperatureViewModel = viewModel(
-        modelClass = BasalBodyTemperatureViewModel::class,
         factory = Di.recordViewModelFactory,
         extras = MutableCreationExtras().apply {
             set(BasalBodyTemperatureViewModel.RECORD_KEY, initialRecord)
