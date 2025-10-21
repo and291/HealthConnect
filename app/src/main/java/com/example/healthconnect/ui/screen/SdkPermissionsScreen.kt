@@ -1,14 +1,22 @@
 package com.example.healthconnect.ui.screen
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,29 +31,52 @@ fun SdkPermissionsScreen(
         factory = Di.parameterlessViewModelFactory,
     ),
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth()
+
+    LaunchedEffect("") {
+        viewModel.update()
+    }
+
+    Box(
+        modifier = modifier,
     ) {
-        Text("Granted Permissions:")
-        if (viewModel.isLoading) {
-            CircularProgressIndicator(Modifier.size(64.dp))
-        } else {
-            val sb = StringBuilder()
-            for (p in viewModel.grantedPermissions) {
-                sb.append("$p; ")
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier
+                .fillMaxWidth(),
+        ) {
+            item {
+                Text("List of granted Permissions:")
             }
-            Text(sb.toString())
-            Button(onClick = {
-                viewModel.updateGrantedPermissionsSet()
-            }) {
-                Text("Refresh")
+            items(viewModel.grantedPermissions) {
+                Text(it)
+            }
+        }
+
+        if (viewModel.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(64.dp)
+                    .align(Alignment.Center)
+            )
+        } else {
+            Button(
+                onClick = { viewModel.update() },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopEnd)
+            ) {
+                Image(
+                    painter = painterResource(android.R.drawable.stat_notify_sync_noanim),
+                    contentDescription = "Refresh"
+                )
             }
         }
     }
 }
 
 @Composable
-@Preview(widthDp = 480, heightDp = 720, showBackground = true)
+@Preview(widthDp = 480, heightDp = 300, showBackground = true)
 fun SdkPermissionsScreenPreview() {
     Di.applicationContext = LocalContext.current.applicationContext
 
