@@ -20,14 +20,17 @@ class PowerEditorComponentViewModel(
     fun onEvent(event: Event) {
         _state = when (event) {
             is Event.OnPowerChanged -> try {
-                PowerEditorModel.Valid(event.kilocaloriesPerDay.toDouble())
+                PowerEditorModel.Valid(
+                    parsedValue = event.text.toDouble(),
+                    value = event.text
+                )
             } catch (e: Exception) {
                 Log.d(
                     this::class.simpleName,
-                    "Failed to parse Double kilocalories per day: ${event.kilocaloriesPerDay}",
+                    "Failed to parse Double kilocalories per day: ${event.text}",
                     e
                 )
-                PowerEditorModel.Invalid(event.kilocaloriesPerDay)
+                PowerEditorModel.Invalid(event.text)
             }
         }
     }
@@ -35,7 +38,7 @@ class PowerEditorComponentViewModel(
     sealed class Event {
 
         data class OnPowerChanged(
-            val kilocaloriesPerDay: String
+            val text: String
         ) : Event()
     }
 
