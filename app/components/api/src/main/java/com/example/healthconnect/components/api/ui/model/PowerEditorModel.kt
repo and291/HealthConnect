@@ -5,11 +5,15 @@ sealed class PowerEditorModel {
     abstract val value: String
 
     data class Valid(
-        val kilocaloriesPerDay: Double
+        val parsedValue: Double,
+        override val value: String = parsedValue.toString(),
     ) : PowerEditorModel() {
 
-        override val value: String
-            get() = kilocaloriesPerDay.toString()
+        init {
+            require(value.toDouble() == parsedValue) {
+                "Different values for Valid Power model"
+            }
+        }
     }
 
     data class Invalid(

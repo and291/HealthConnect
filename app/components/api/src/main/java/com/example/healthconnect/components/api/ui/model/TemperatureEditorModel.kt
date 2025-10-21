@@ -5,11 +5,15 @@ sealed class TemperatureEditorModel {
     abstract val value: String
 
     data class Valid(
-        val temperatureCelsius: Double
+        val parsedValue: Double,
+        override val value: String = parsedValue.toString(),
     ) : TemperatureEditorModel() {
 
-        override val value: String
-            get() = temperatureCelsius.toString()
+        init {
+            require(value.toDouble() == parsedValue) {
+                "Different values for Valid Temperature model"
+            }
+        }
     }
 
     data class Invalid(

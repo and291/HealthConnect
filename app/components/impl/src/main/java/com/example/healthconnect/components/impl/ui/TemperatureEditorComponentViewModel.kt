@@ -23,10 +23,13 @@ class TemperatureEditorComponentViewModel(
     fun onEvent(event: Event) {
         _state = when (event) {
             is Event.OnTemperatureChanged -> try {
-                Valid(event.celsius.toDouble())
+                Valid(
+                    parsedValue = event.text.toDouble(),
+                    value = event.text,
+                )
             } catch (e: Exception) {
-                Log.d(this::class.simpleName, "Failed to parse Double celsius: ${event.celsius}", e)
-                Invalid(event.celsius)
+                Log.d(this::class.simpleName, "Failed to parse Double celsius: ${event.text}", e)
+                Invalid(event.text)
             }
         }
     }
@@ -34,7 +37,7 @@ class TemperatureEditorComponentViewModel(
     sealed class Event {
 
         data class OnTemperatureChanged(
-            val celsius: String
+            val text: String
         ) : Event()
     }
 

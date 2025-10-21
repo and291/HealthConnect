@@ -24,7 +24,7 @@ class RecordMapper(
                 zoneOffset = record.zoneOffset
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            temperatureEditorModel = TemperatureEditorModel.Valid(record.temperature.inCelsius),
+            temperatureEditorModel = TemperatureEditorModel.Valid(parsedValue = record.temperature.inCelsius),
             measurementLocation = record.measurementLocation
         )
         is BasalMetabolicRateRecord -> BasalMetabolicRateEditorModel(
@@ -33,7 +33,7 @@ class RecordMapper(
                 zoneOffset = record.zoneOffset
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            powerEditorModel = PowerEditorModel.Valid(kilocaloriesPerDay = record.basalMetabolicRate.inKilocaloriesPerDay)
+            powerEditorModel = PowerEditorModel.Valid(parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay)
         )
         else -> TODO()
     }
@@ -49,14 +49,14 @@ class RecordMapper(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
-            temperature = (validUiModel.temperatureEditorModel as TemperatureEditorModel.Valid).temperatureCelsius.celsius,
+            temperature = (validUiModel.temperatureEditorModel as TemperatureEditorModel.Valid).parsedValue.celsius,
             measurementLocation = validUiModel.measurementLocation
         )
         is BasalMetabolicRateEditorModel -> BasalMetabolicRateRecord(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
-            basalMetabolicRate = (validUiModel.powerEditorModel as PowerEditorModel.Valid).kilocaloriesPerDay.kilocaloriesPerDay,
+            basalMetabolicRate = (validUiModel.powerEditorModel as PowerEditorModel.Valid).parsedValue.kilocaloriesPerDay,
         )
         else -> TODO()
     }
