@@ -23,6 +23,12 @@ class RecordViewModelFactory(
             update = update,
         )
 
+        BasalMetabolicRateViewModel::class -> BasalMetabolicRateViewModel(
+            initialRecord = checkNotNull(extras[BasalMetabolicRateViewModel.RECORD_KEY]),
+            recordMapper = recordMapper,
+            update = update,
+        )
+
         else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.simpleName)
     } as T
 }

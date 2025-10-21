@@ -3,6 +3,7 @@ package com.example.healthconnect.components.impl.ui.metadata
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.healthconnect.components.impl.ui.PowerEditorComponentViewModel
 import com.example.healthconnect.components.impl.ui.TemperatureEditorComponentViewModel
 import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel
 import kotlin.reflect.KClass
@@ -24,6 +25,10 @@ class ComponentViewModelFactory : ViewModelProvider.Factory {
 
         TemperatureEditorComponentViewModel::class -> TemperatureEditorComponentViewModel(
             temperatureEditorModel = checkNotNull(extras[TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY])
+        )
+
+        PowerEditorComponentViewModel::class -> PowerEditorComponentViewModel(
+            powerEditorModel = checkNotNull(extras[PowerEditorComponentViewModel.MODEL_KEY])
         )
 
         else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.simpleName)

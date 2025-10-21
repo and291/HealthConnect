@@ -4,30 +4,31 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.health.connect.client.records.BasalBodyTemperatureRecord
+import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
-import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
+import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.utilty.impl.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
-import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureEditorModel
+import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalMetabolicRateEditorModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class BasalBodyTemperatureViewModel(
-    initialRecord: BasalBodyTemperatureRecord,
+class BasalMetabolicRateViewModel(
+    initialRecord: BasalMetabolicRateRecord,
     private val recordMapper: RecordMapper,
     private val update: Update,
 ) : ViewModel() {
 
-    private val initialModel = recordMapper.toUiModel(initialRecord) as BasalBodyTemperatureEditorModel
+    private val initialModel =
+        recordMapper.toUiModel(initialRecord) as BasalMetabolicRateEditorModel
     val isChanged: Boolean
-        get() = initialModel != _state.basalBodyTemperatureEditorModel
+        get() = initialModel != _state.basalMetabolicRateEditorModel
 
     private var _state: State by mutableStateOf(value = State.Edition(initialModel))
     val state: State
@@ -39,32 +40,24 @@ class BasalBodyTemperatureViewModel(
         when (event) {
             is Event.OnMetaModelChanged -> (_state as? State.Edition)?.also {
                 _state = State.Edition(
-                    basalBodyTemperatureEditorModel = it.basalBodyTemperatureEditorModel.copy(
+                    basalMetabolicRateEditorModel = it.basalMetabolicRateEditorModel.copy(
                         metadataEditorModel = event.metaModel
-                    )
-                )
-            }
-
-            is Event.OnMeasurementLocationSelected -> (_state as? State.Edition)?.also {
-                _state = State.Edition(
-                    basalBodyTemperatureEditorModel = it.basalBodyTemperatureEditorModel.copy(
-                        measurementLocation = event.location //TODO check input
-                    )
-                )
-            }
-
-            is Event.OnTemperatureChanged -> (_state as? State.Edition)?.also {
-                _state = State.Edition(
-                    basalBodyTemperatureEditorModel = it.basalBodyTemperatureEditorModel.copy(
-                        temperatureEditorModel = event.temperatureEditorModel
                     )
                 )
             }
 
             is Event.OnTimeChanged -> (_state as? State.Edition)?.also {
                 _state = State.Edition(
-                    basalBodyTemperatureEditorModel = it.basalBodyTemperatureEditorModel.copy(
+                    basalMetabolicRateEditorModel = it.basalMetabolicRateEditorModel.copy(
                         timeEditorModel = event.timeEditorModel
+                    )
+                )
+            }
+
+            is Event.OnPowerChanged -> (_state as? State.Edition)?.also {
+                _state = State.Edition(
+                    basalMetabolicRateEditorModel = it.basalMetabolicRateEditorModel.copy(
+                        powerEditorModel = event.powerEditorModel
                     )
                 )
             }
@@ -75,9 +68,9 @@ class BasalBodyTemperatureViewModel(
                     return
                 }
 
-                if (!isChanged || !currentState.basalBodyTemperatureEditorModel.isValid()) {
+                if (!isChanged || !currentState.basalMetabolicRateEditorModel.isValid()) {
                     _state = State.Edition(
-                        basalBodyTemperatureEditorModel = currentState.basalBodyTemperatureEditorModel,
+                        basalMetabolicRateEditorModel = currentState.basalMetabolicRateEditorModel,
                         errorCreatingEntity = "Invalid model or there is no changes to save"
                     )
                 }
@@ -86,22 +79,22 @@ class BasalBodyTemperatureViewModel(
                     TODO()
                 } else {
                     val modifiedRecord = try {
-                        recordMapper.toEntity(currentState.basalBodyTemperatureEditorModel)
+                        recordMapper.toEntity(currentState.basalMetabolicRateEditorModel)
                     } catch (e: Exception) {
                         _state = State.Edition(
-                            basalBodyTemperatureEditorModel = currentState.basalBodyTemperatureEditorModel,
+                            basalMetabolicRateEditorModel = currentState.basalMetabolicRateEditorModel,
                             errorCreatingEntity = "Error creating record: ${e.toString()}"
                         )
                         return
                     }
 
                     _state = State.UpdateInProgress(
-                        basalBodyTemperatureEditorModel = currentState.basalBodyTemperatureEditorModel,
+                        basalMetabolicRateEditorModel = currentState.basalMetabolicRateEditorModel,
                         record = modifiedRecord,
                     )
                     updateJob = viewModelScope.launch {
                         _state = State.UpdateResult(
-                            basalBodyTemperatureEditorModel = currentState.basalBodyTemperatureEditorModel,
+                            basalMetabolicRateEditorModel = currentState.basalMetabolicRateEditorModel,
                             result = update(modifiedRecord),
                         )
                     }
@@ -112,13 +105,13 @@ class BasalBodyTemperatureViewModel(
 
     sealed class State {
 
-        abstract val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel
+        abstract val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel
 
         /**
          * User able to modify values
          */
         data class Edition(
-            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel,
+            override val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel,
             val errorCreatingEntity: String? = null,
             //validation and so on
         ) : State()
@@ -127,7 +120,7 @@ class BasalBodyTemperatureViewModel(
          * Show progress bar and stuff
          */
         data class UpdateInProgress(
-            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel,
+            override val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel,
             val record: Record,
         ) : State()
 
@@ -136,7 +129,7 @@ class BasalBodyTemperatureViewModel(
          * Allow to retry in case of failed attempt
          */
         data class UpdateResult(
-            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel,
+            override val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel,
             val result: Result //result of interaction with lib
         ) : State()
     }
@@ -147,16 +140,12 @@ class BasalBodyTemperatureViewModel(
             val timeEditorModel: TimeEditorModel,
         ) : Event()
 
-        data class OnTemperatureChanged(
-            val temperatureEditorModel: TemperatureEditorModel,
-        ) : Event()
-
-        data class OnMeasurementLocationSelected(
-            val location: Int
-        ) : Event()
-
         data class OnMetaModelChanged(
             val metaModel: MetadataEditorModel
+        ) : Event()
+
+        data class OnPowerChanged(
+            val powerEditorModel: PowerEditorModel,
         ) : Event()
 
         data class OnSave(
@@ -167,6 +156,6 @@ class BasalBodyTemperatureViewModel(
 
     companion object {
 
-        val RECORD_KEY: CreationExtras.Key<BasalBodyTemperatureRecord> = CreationExtras.Key()
+        val RECORD_KEY: CreationExtras.Key<BasalMetabolicRateRecord> = CreationExtras.Key()
     }
 }

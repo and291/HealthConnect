@@ -8,11 +8,11 @@ import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 
 data class BasalBodyTemperatureEditorModel(
     val timeEditorModel: TimeEditorModel,
-    val metadataEditorModel: MetadataEditorModel,
+    override val metadataEditorModel: MetadataEditorModel,
     val temperatureEditorModel: TemperatureEditorModel,
     @property:BodyTemperatureMeasurementLocations
     val measurementLocation: Int = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
-) {
+) : EditorModel() {
 
     fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
             temperatureEditorModel is TemperatureEditorModel.Valid &&

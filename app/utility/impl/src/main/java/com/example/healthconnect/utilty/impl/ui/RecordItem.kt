@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.component
+package com.example.healthconnect.utilty.impl.ui
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
