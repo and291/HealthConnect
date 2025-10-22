@@ -6,7 +6,6 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
@@ -23,7 +22,6 @@ object Di { //TODO move to dagger. keep all features
     var isPreview = true
 
     lateinit var applicationContext: Context
-    lateinit var componentProvider: ComponentProvider
 
     private val libraryRepository by lazy {
         if (isPreview) {

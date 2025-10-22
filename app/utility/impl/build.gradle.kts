@@ -47,7 +47,6 @@ dependencies {
 
     //internal module dependencies
     implementation(project(":app:utility:api"))
-    implementation(project(":app:components:api"))
     implementation(project(":app:editor:api"))
     implementation(project(":app:navigation:api"))
 

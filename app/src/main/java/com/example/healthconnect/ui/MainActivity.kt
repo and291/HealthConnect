@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
         com.example.healthconnect.utilty.impl.di.Di.also {
             it.isPreview = false
             it.applicationContext = this.application
-            it.componentProvider = com.example.healthconnect.components.impl.di.Di.componentProvider
         }
         com.example.healthconnect.editor.impl.di.Di.also {
             it.componentProvider = com.example.healthconnect.components.impl.di.Di.componentProvider
