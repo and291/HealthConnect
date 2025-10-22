@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.impl.ui.model.TimeEditorComponentModel
+import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel
 import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel.Event.OnTimeChanged
 import java.time.Instant
 import java.time.ZoneId
@@ -29,7 +29,7 @@ fun TimeEditorComponent(
     viewModel = viewModel(
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(TimeEditorComponentViewModel.Companion.TIME_MODEL_KEY, TimeEditorComponentModel.Companion.create(instant, zoneOffset))
+            set(TimeEditorComponentViewModel.Companion.TIME_MODEL_KEY, TimeEditorInternalModel.Companion.create(instant, zoneOffset))
         }
     )
 )
@@ -50,7 +50,7 @@ fun TimeEditorComponent(
 
         OutlinedTextField(
             value = timeInputValue,
-            isError = timeModel is TimeEditorComponentModel.TimeModel.Invalid,
+            isError = timeModel is TimeEditorInternalModel.TimeModel.Invalid,
             label = { Text("Time") },
             supportingText = {
                 //TODO отобразить старое и новое значение в локали юзера, чтобы ему легче было оринетироваться в формате ISO_DATE_TIME если он с ним не знаком

@@ -5,29 +5,30 @@ import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.units.celsius
 import androidx.health.connect.client.units.kilocaloriesPerDay
+import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
-import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureEditorModel
-import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalMetabolicRateEditorModel
-import com.example.healthconnect.utilty.impl.ui.screen.record.model.EditorModel
 
 class RecordMapper(
     private val metadataMapper: MetadataMapper
 ) {
 
-    fun toUiModel(record: Record): EditorModel = when(record) {
-        is BasalBodyTemperatureRecord -> BasalBodyTemperatureEditorModel(
+    fun toUiModel(record: Record): RecordEditorModel = when(record) {
+        is BasalBodyTemperatureRecord -> BasalBodyTemperatureRecordEditorModel(
             timeEditorModel = TimeEditorModel.Valid(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
             temperatureEditorModel = TemperatureEditorModel.Valid(parsedValue = record.temperature.inCelsius),
-            measurementLocation = record.measurementLocation
+            measurementLocation = BodyTemperatureMeasurementLocationEditorModel.Valid(record.measurementLocation) //TODO validate data from lib
         )
-        is BasalMetabolicRateRecord -> BasalMetabolicRateEditorModel(
+        is BasalMetabolicRateRecord -> BasalMetabolicRateRecordEditorModel(
             timeEditorModel = TimeEditorModel.Valid(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
@@ -44,17 +45,17 @@ class RecordMapper(
      * @throws error if Library Entity's validation rules (checked at instance creation time) are not satisfied
      */
     @Throws(Exception::class)
-    fun toEntity(validUiModel: EditorModel): Record = when(validUiModel) {
-        is BasalBodyTemperatureEditorModel -> BasalBodyTemperatureRecord(
+    fun toEntity(validUiModel: RecordEditorModel): Record = when(validUiModel) {
+        is BasalBodyTemperatureRecordEditorModel -> BasalBodyTemperatureRecord(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
+            zoneOffset = (validUiModel.timeEditorModel as TimeEditorModel.Valid).zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
             temperature = (validUiModel.temperatureEditorModel as TemperatureEditorModel.Valid).parsedValue.celsius,
-            measurementLocation = validUiModel.measurementLocation
+            measurementLocation = validUiModel.measurementLocation.value
         )
-        is BasalMetabolicRateEditorModel -> BasalMetabolicRateRecord(
+        is BasalMetabolicRateRecordEditorModel -> BasalMetabolicRateRecord(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
+            zoneOffset = (validUiModel.timeEditorModel as TimeEditorModel.Valid).zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
             basalMetabolicRate = (validUiModel.powerEditorModel as PowerEditorModel.Valid).parsedValue.kilocaloriesPerDay,
         )

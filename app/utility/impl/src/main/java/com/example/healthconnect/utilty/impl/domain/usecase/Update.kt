@@ -5,7 +5,7 @@ import androidx.health.connect.client.records.Record
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.PayloadMapper
 import com.example.healthconnect.utilty.impl.domain.ResultMapper
-import com.example.healthconnect.utilty.impl.domain.entity.Result
+import com.example.healthconnect.utilty.api.domain.entity.Result
 
 class Update(
     private val libraryRepository: LibraryRepository,

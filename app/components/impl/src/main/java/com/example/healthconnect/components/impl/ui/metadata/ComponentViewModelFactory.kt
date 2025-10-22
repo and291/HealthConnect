@@ -20,7 +20,7 @@ class ComponentViewModelFactory : ViewModelProvider.Factory {
         )
 
         TimeEditorComponentViewModel::class -> TimeEditorComponentViewModel(
-            timeEditorComponentModel = checkNotNull(extras[TimeEditorComponentViewModel.TIME_MODEL_KEY]),
+            timeEditorInternalModel = checkNotNull(extras[TimeEditorComponentViewModel.TIME_MODEL_KEY]),
         )
 
         TemperatureEditorComponentViewModel::class -> TemperatureEditorComponentViewModel(

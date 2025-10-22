@@ -12,10 +12,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
-import com.example.healthconnect.utilty.impl.domain.entity.Result
+import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
+import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
-import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalMetabolicRateEditorModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ class BasalMetabolicRateViewModel(
 ) : ViewModel() {
 
     private val initialModel =
-        recordMapper.toUiModel(initialRecord) as BasalMetabolicRateEditorModel
+        recordMapper.toUiModel(initialRecord) as BasalMetabolicRateRecordEditorModel
     val isChanged: Boolean
         get() = initialModel != _state.basalMetabolicRateEditorModel
 
@@ -105,13 +105,13 @@ class BasalMetabolicRateViewModel(
 
     sealed class State {
 
-        abstract val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel
+        abstract val basalMetabolicRateEditorModel: BasalMetabolicRateRecordEditorModel
 
         /**
          * User able to modify values
          */
         data class Edition(
-            override val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel,
+            override val basalMetabolicRateEditorModel: BasalMetabolicRateRecordEditorModel,
             val errorCreatingEntity: String? = null,
             //validation and so on
         ) : State()
@@ -120,7 +120,7 @@ class BasalMetabolicRateViewModel(
          * Show progress bar and stuff
          */
         data class UpdateInProgress(
-            override val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel,
+            override val basalMetabolicRateEditorModel: BasalMetabolicRateRecordEditorModel,
             val record: Record,
         ) : State()
 
@@ -129,7 +129,7 @@ class BasalMetabolicRateViewModel(
          * Allow to retry in case of failed attempt
          */
         data class UpdateResult(
-            override val basalMetabolicRateEditorModel: BasalMetabolicRateEditorModel,
+            override val basalMetabolicRateEditorModel: BasalMetabolicRateRecordEditorModel,
             val result: Result //result of interaction with lib
         ) : State()
     }

@@ -1,6 +1,7 @@
-package com.example.healthconnect.utilty.impl.domain.entity
+package com.example.healthconnect.utilty.api.domain.entity
 
 import android.os.RemoteException
+import com.example.healthconnect.utilty.api.entity.Payload
 import java.io.IOException
 
 sealed class Result {

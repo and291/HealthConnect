@@ -9,13 +9,14 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
-import com.example.healthconnect.utilty.impl.domain.entity.Result
+import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
+import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
-import com.example.healthconnect.utilty.impl.ui.screen.record.model.BasalBodyTemperatureEditorModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,7 @@ class BasalBodyTemperatureViewModel(
     private val update: Update,
 ) : ViewModel() {
 
-    private val initialModel = recordMapper.toUiModel(initialRecord) as BasalBodyTemperatureEditorModel
+    private val initialModel = recordMapper.toUiModel(initialRecord) as BasalBodyTemperatureRecordEditorModel
     val isChanged: Boolean
         get() = initialModel != _state.basalBodyTemperatureEditorModel
 
@@ -112,13 +113,13 @@ class BasalBodyTemperatureViewModel(
 
     sealed class State {
 
-        abstract val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel
+        abstract val basalBodyTemperatureEditorModel: BasalBodyTemperatureRecordEditorModel
 
         /**
          * User able to modify values
          */
         data class Edition(
-            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel,
+            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureRecordEditorModel,
             val errorCreatingEntity: String? = null,
             //validation and so on
         ) : State()
@@ -127,7 +128,7 @@ class BasalBodyTemperatureViewModel(
          * Show progress bar and stuff
          */
         data class UpdateInProgress(
-            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel,
+            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureRecordEditorModel,
             val record: Record,
         ) : State()
 
@@ -136,7 +137,7 @@ class BasalBodyTemperatureViewModel(
          * Allow to retry in case of failed attempt
          */
         data class UpdateResult(
-            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureEditorModel,
+            override val basalBodyTemperatureEditorModel: BasalBodyTemperatureRecordEditorModel,
             val result: Result //result of interaction with lib
         ) : State()
     }
@@ -152,7 +153,7 @@ class BasalBodyTemperatureViewModel(
         ) : Event()
 
         data class OnMeasurementLocationSelected(
-            val location: Int
+            val location: BodyTemperatureMeasurementLocationEditorModel
         ) : Event()
 
         data class OnMetaModelChanged(

@@ -1,6 +1,6 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class PowerEditorModel {
+sealed class PowerEditorModel : ComponentEditorModel() {
 
     abstract val value: String
 

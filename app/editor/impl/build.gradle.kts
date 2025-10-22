@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.healthconnect.utilty.impl"
+    namespace = "com.example.healthconnect.editor.impl"
     compileSdk = 36
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -31,9 +31,6 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
@@ -45,24 +42,25 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //internal module dependencies
-    implementation(project(":app:utility:api"))
     implementation(project(":app:components:api"))
+    implementation(project(":app:utility:api"))
     implementation(project(":app:editor:api"))
-
-    // Use to implement health connects
-    implementation(libs.androidx.connect.client)
 
     //compose
     implementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
     //viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
     //coroutines viewmodel scope
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    //compose navigation v3
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.material3.adaptive.navigation3)
+
+    //kotlin reflection
+    implementation(kotlin("reflect"))
+
+    // Use to implement health connects
+    implementation(libs.androidx.connect.client)
 }

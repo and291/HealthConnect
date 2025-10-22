@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.domain.entity
+package com.example.healthconnect.utilty.api.entity
 
 import androidx.health.connect.client.records.Record
 
