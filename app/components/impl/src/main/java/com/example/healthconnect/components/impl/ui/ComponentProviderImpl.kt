@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
+import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
 import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
@@ -158,6 +159,28 @@ internal class ComponentProviderImpl : ComponentProvider {
         }
         PowerEditorComponent(
             powerEditorModel = powerEditorModel,
+            viewModel = viewModel,
+        )
+    }
+
+    @Composable
+    override fun BloodGlucoseLevelEditor(
+        editorModel: BloodGlucoseLevelEditorModel,
+        onChanged: (BloodGlucoseLevelEditorModel) -> Unit
+    ) {
+        val viewModel: BloodGlucoseLevelEditorComponentViewModel = viewModel(
+            factory = Di.componentViewModelFactory,
+            extras = MutableCreationExtras().apply {
+                set(BloodGlucoseLevelEditorComponentViewModel.MODEL_KEY, editorModel)
+            }
+        )
+
+        LaunchedEffect(viewModel.state) {
+            Log.d(this::class.simpleName, "Glucose: ${viewModel.state}")
+            onChanged(viewModel.state)
+        }
+        BloodGlucoseLevelEditorComponent(
+            editorModel = editorModel,
             viewModel = viewModel,
         )
     }

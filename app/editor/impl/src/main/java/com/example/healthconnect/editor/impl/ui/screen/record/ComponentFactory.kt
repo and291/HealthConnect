@@ -2,6 +2,7 @@ package com.example.healthconnect.editor.impl.ui.screen.record
 
 import androidx.compose.runtime.Composable
 import com.example.healthconnect.components.api.ui.ComponentProvider
+import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
 import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.ComponentEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
@@ -10,6 +11,7 @@ import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
 import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.*
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
@@ -27,6 +29,7 @@ class ComponentFactory(
         val propertyValues = when (recordEditorModel) {
             is BasalBodyTemperatureRecordEditorModel -> BasalBodyTemperatureRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
             is BasalMetabolicRateRecordEditorModel -> BasalMetabolicRateRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
+            is BloodGlucoseLevelRecordEditorModel -> BloodGlucoseLevelRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
         }
 
         propertyValues.forEach {
@@ -64,6 +67,12 @@ class ComponentFactory(
             editorModel
         ) {
             eventHandler(OnMeasurementLocationSelected(it))
+        }
+
+        is BloodGlucoseLevelEditorModel -> componentProvider.BloodGlucoseLevelEditor(
+            editorModel
+        ) {
+            eventHandler(OnBloodGlucoseLevelChanged(it))
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.healthconnect.editor.api.ui.model
 
+import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
 import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
@@ -26,6 +27,10 @@ sealed class RecordEditEvent : Event() {
 
     data class OnPowerChanged(
         val powerEditorModel: PowerEditorModel,
+    ) : RecordEditEvent()
+
+    data class OnBloodGlucoseLevelChanged(
+        val level: BloodGlucoseLevelEditorModel
     ) : RecordEditEvent()
 }
 

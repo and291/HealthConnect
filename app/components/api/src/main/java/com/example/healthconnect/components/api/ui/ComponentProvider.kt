@@ -1,6 +1,7 @@
 package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
+import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
 import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
@@ -36,5 +37,11 @@ interface ComponentProvider {
     fun PowerEditor(
         powerEditorModel: PowerEditorModel,
         onPowerChanged: (PowerEditorModel) -> Unit,
+    )
+
+    @Composable
+    fun BloodGlucoseLevelEditor(
+        editorModel: BloodGlucoseLevelEditorModel,
+        onChanged:(BloodGlucoseLevelEditorModel) -> Unit,
     )
 }
