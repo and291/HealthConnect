@@ -45,6 +45,7 @@ dependencies {
     implementation(project(":app:components:api"))
     implementation(project(":app:utility:api"))
     implementation(project(":app:editor:api"))
+    implementation(project(":app:navigation:api"))
 
     //compose
     implementation(platform(libs.androidx.compose.bom))
@@ -63,4 +64,7 @@ dependencies {
 
     // Use to implement health connects
     implementation(libs.androidx.connect.client)
+
+    //compose navigation v3
+    implementation(libs.androidx.navigation3.runtime)
 }

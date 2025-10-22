@@ -12,10 +12,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
 import com.example.healthconnect.utilty.api.domain.entity.Result
-import com.example.healthconnect.utilty.impl.domain.usecase.Update
-import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
+import com.example.healthconnect.utilty.api.domain.usecase.Update
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 

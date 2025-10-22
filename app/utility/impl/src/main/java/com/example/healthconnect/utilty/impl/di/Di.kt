@@ -14,12 +14,13 @@ import com.example.healthconnect.utilty.impl.domain.ResultMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.Insert
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
-import com.example.healthconnect.utilty.impl.domain.usecase.Update
-import com.example.healthconnect.utilty.impl.ui.mapper.DeviceMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
+import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
+import com.example.healthconnect.components.api.ui.mapper.DeviceMapper
+import com.example.healthconnect.components.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.screen.record.RecordViewModelFactory
-import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
+import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
+import com.example.healthconnect.utilty.api.domain.usecase.Update
 import kotlin.reflect.KClass
 
 object Di { //TODO move to dagger. keep all features
@@ -70,8 +71,8 @@ object Di { //TODO move to dagger. keep all features
         Insert(libraryRepository, resultMapper, payloadMapper)
     }
 
-    private val update by lazy {
-        Update(libraryRepository, resultMapper, payloadMapper)
+    val update: Update by lazy {
+        UpdateImpl(libraryRepository, resultMapper, payloadMapper)
     }
 
     private val read by lazy {

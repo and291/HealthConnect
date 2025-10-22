@@ -1,7 +1,6 @@
-package com.example.healthconnect.utilty.api.navigation
+package com.example.healthconnect.navigation.api
 
 /**
  * Common interface for all navigation entries inside global navigation graph
  */
-//TODO move into separate :navigation:api module
 interface NavigationEntry

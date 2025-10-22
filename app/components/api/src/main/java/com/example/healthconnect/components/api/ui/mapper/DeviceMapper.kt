@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.mapper
+package com.example.healthconnect.components.api.ui.mapper
 
 import androidx.health.connect.client.records.metadata.Device
 import com.example.healthconnect.components.api.ui.model.DeviceEditorModel
