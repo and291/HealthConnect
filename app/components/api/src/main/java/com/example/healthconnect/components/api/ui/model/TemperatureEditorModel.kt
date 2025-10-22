@@ -1,6 +1,6 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class TemperatureEditorModel {
+sealed class TemperatureEditorModel : ComponentEditorModel() {
 
     abstract val value: String
 

@@ -42,9 +42,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Use to implement health connects
-    implementation(libs.androidx.connect.client)
-
     // Compose
     implementation(libs.androidx.compose.runtime)
 }

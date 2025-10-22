@@ -6,7 +6,7 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.components.api.ui.ComponentProvider
+import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.PayloadMapper
@@ -14,19 +14,14 @@ import com.example.healthconnect.utilty.impl.domain.ResultMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.Insert
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
-import com.example.healthconnect.utilty.impl.domain.usecase.Update
-import com.example.healthconnect.utilty.impl.ui.mapper.DeviceMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
+import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
-import com.example.healthconnect.utilty.impl.ui.screen.record.RecordViewModelFactory
-import com.example.healthconnect.utilty.impl.ui.screen.record.mapper.RecordMapper
 import kotlin.reflect.KClass
 
 object Di { //TODO move to dagger. keep all features
     var isPreview = true
 
     lateinit var applicationContext: Context
-    lateinit var componentProvider: ComponentProvider
 
     private val libraryRepository by lazy {
         if (isPreview) {
@@ -70,8 +65,8 @@ object Di { //TODO move to dagger. keep all features
         Insert(libraryRepository, resultMapper, payloadMapper)
     }
 
-    private val update by lazy {
-        Update(libraryRepository, resultMapper, payloadMapper)
+    val update: Update by lazy {
+        UpdateImpl(libraryRepository, resultMapper, payloadMapper)
     }
 
     private val read by lazy {
@@ -85,19 +80,4 @@ object Di { //TODO move to dagger. keep all features
     val recordsViewModelFactory by lazy {
         RecordsViewModelFactory(read, delete)
     }
-
-    val recordViewModelFactory by lazy {
-        RecordViewModelFactory(
-            recordMapper = recordMapper,
-            update = update,
-        )
-    }
-
-    private val deviceMapper = DeviceMapper()
-    private val metadataMapper = MetadataMapper(
-        deviceMapper = deviceMapper,
-    )
-    private val recordMapper = RecordMapper(
-        metadataMapper = metadataMapper,
-    )
 }

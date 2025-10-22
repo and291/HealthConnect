@@ -11,7 +11,7 @@ data class MetadataEditorModel(
     val clientRecordId: String = "",
     val clientRecordVersion: String = "",
     val deviceEditorModel: DeviceEditorModel = DeviceEditorModel.Empty
-) {
+) : ComponentEditorModel() {
 
     fun isValid(): Boolean {
         //TODO add recording method validity check?

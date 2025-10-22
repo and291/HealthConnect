@@ -12,7 +12,7 @@ import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.impl.di.Di
 
 @Composable
-fun PowerEditorComponent(
+internal fun PowerEditorComponent(
     powerEditorModel: PowerEditorModel,
     modifier: Modifier = Modifier,
     viewModel: PowerEditorComponentViewModel = viewModel(

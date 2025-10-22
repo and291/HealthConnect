@@ -16,7 +16,7 @@ import com.example.healthconnect.components.impl.ui.SelectorComponent
 import com.example.healthconnect.components.impl.ui.metadata.mapper.DeviceTypeMapper
 
 @Composable
-fun DeviceEditorComponent(
+internal fun DeviceEditorComponent(
     specifiedDeviceEditorModel: DeviceEditorModel.Specified,
     onTypeItemSelected: (Pair<Int, String>) -> Unit,
     onManufacturerValueChanged: (String) -> Unit,

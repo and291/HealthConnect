@@ -8,8 +8,8 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.utilty.impl.domain.entity.Payload
-import com.example.healthconnect.utilty.impl.domain.entity.Result
+import com.example.healthconnect.utilty.api.domain.entity.Payload
+import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
 import com.example.healthconnect.utilty.impl.ui.model.DisplayRecord
@@ -59,10 +59,10 @@ class RecordsViewModel(
                     }
 
                     is Result.Success -> {
-                        when (result.payload) {
+                        when (val payload = result.payload) {
                             is Payload.InsertList -> TODO()
                             is Payload.ReadList<*> -> {
-                                _state = State.Data(result.payload.list.map {
+                                _state = State.Data(payload.list.map {
                                     DisplayRecord(
                                         description = it.toString(),
                                         metadataId = it.metadata.id,

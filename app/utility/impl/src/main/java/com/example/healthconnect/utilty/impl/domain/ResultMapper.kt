@@ -1,7 +1,7 @@
 package com.example.healthconnect.utilty.impl.domain
 
 import android.os.RemoteException
-import com.example.healthconnect.utilty.impl.domain.entity.Result
+import com.example.healthconnect.utilty.api.domain.entity.Result
 import java.io.IOException
 
 class ResultMapper {

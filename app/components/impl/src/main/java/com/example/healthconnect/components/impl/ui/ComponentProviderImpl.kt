@@ -11,17 +11,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
+import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorViewModel
-import com.example.healthconnect.components.impl.ui.model.TimeEditorComponentModel
+import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel
 import java.time.Instant
 import java.time.ZoneOffset
 
-class ComponentProviderImpl : ComponentProvider {
+internal class ComponentProviderImpl : ComponentProvider {
 
     @Composable
     override fun TimeEditor(
@@ -33,7 +34,8 @@ class ComponentProviderImpl : ComponentProvider {
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
                 set(
-                    TimeEditorComponentViewModel.Companion.TIME_MODEL_KEY, TimeEditorComponentModel.create(
+                    TimeEditorComponentViewModel.Companion.TIME_MODEL_KEY,
+                    TimeEditorInternalModel.create(
                         instant = time,
                         zoneOffset = zoneOffset,
                     )
@@ -44,8 +46,8 @@ class ComponentProviderImpl : ComponentProvider {
         LaunchedEffect(timeEditorComponentViewModel.state) {
             Log.d(this::class.simpleName, "Time: ${timeEditorComponentViewModel.state}")
             val timeEditorModel = when (val t = timeEditorComponentViewModel.state.timeModel) {
-                is TimeEditorComponentModel.TimeModel.Invalid -> TimeEditorModel.Invalid
-                is TimeEditorComponentModel.TimeModel.Valid -> TimeEditorModel.Valid(
+                is TimeEditorInternalModel.TimeModel.Invalid -> TimeEditorModel.Invalid
+                is TimeEditorInternalModel.TimeModel.Valid -> TimeEditorModel.Valid(
                     instant = t.instant,
                     zoneOffset = timeEditorComponentViewModel.state.zoneId?.rules?.getOffset(t.instant)
                 )
@@ -62,8 +64,8 @@ class ComponentProviderImpl : ComponentProvider {
 
     @Composable
     override fun MeasurementLocationSelector(
-        currentMeasurementLocation: Int,
-        onItemSelected: (Int) -> Unit,
+        bodyTemperatureMeasurementLocationEditorModel: BodyTemperatureMeasurementLocationEditorModel,
+        onLocationChanged: (BodyTemperatureMeasurementLocationEditorModel) -> Unit
     ) {
 
         val measurementLocationMapper: MeasurementLocationMapper = Di.measurementLocationMapper
@@ -71,12 +73,19 @@ class ComponentProviderImpl : ComponentProvider {
         SelectorComponent(
             title = "Measurement Location",
             supportText = "Where on the user's basal body the temperature measurement was taken from. Optional field.",
-            selectedText = measurementLocationMapper.map(currentMeasurementLocation),
+            selectedText = measurementLocationMapper.map(bodyTemperatureMeasurementLocationEditorModel.value),
             items = measurementLocationMapper.locations,
             itemComposable = { (_, name) ->
                 Text(text = name)
             },
-            onItemSelected = { (locationType, _) -> onItemSelected(locationType) }
+            onItemSelected = { (locationType, _) ->
+                val location = if (measurementLocationMapper.locations.find { x -> x.first == locationType } != null) {
+                    BodyTemperatureMeasurementLocationEditorModel.Valid(locationType)
+                } else {
+                    BodyTemperatureMeasurementLocationEditorModel.Invalid(locationType)
+                }
+                onLocationChanged(location)
+            }
         )
     }
 
@@ -114,7 +123,10 @@ class ComponentProviderImpl : ComponentProvider {
         val viewModel: TemperatureEditorComponentViewModel = viewModel(
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
-                set(TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY, temperatureEditorModel)
+                set(
+                    TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY,
+                    temperatureEditorModel
+                )
             }
         )
 

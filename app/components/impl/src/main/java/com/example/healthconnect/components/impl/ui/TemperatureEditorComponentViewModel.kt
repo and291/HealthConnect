@@ -11,7 +11,7 @@ import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel.
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel.Valid
 
 //TODO pass a Record's valid temperature range and validate input inside the component?
-class TemperatureEditorComponentViewModel(
+internal class TemperatureEditorComponentViewModel(
     temperatureEditorModel: TemperatureEditorModel
 ) : ViewModel() {
 

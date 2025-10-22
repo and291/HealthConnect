@@ -22,7 +22,7 @@ import com.example.healthconnect.components.impl.ui.metadata.mapper.RecordingMet
 import java.time.Instant
 
 @Composable
-fun MetadataEditorComponent(
+internal fun MetadataEditorComponent(
     metadataEditorModel: MetadataEditorModel,
     modifier: Modifier = Modifier,
     recordingMethodMapper: RecordingMethodMapper = Di.recordingMethodMapper,

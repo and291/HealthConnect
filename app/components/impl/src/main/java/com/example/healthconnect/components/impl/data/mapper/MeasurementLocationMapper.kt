@@ -2,7 +2,7 @@ package com.example.healthconnect.components.impl.data.mapper
 
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
 
-class MeasurementLocationMapper {
+internal class MeasurementLocationMapper {
 
     val locations = listOf(
         BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN to "UNKNOWN",

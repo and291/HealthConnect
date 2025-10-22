@@ -14,7 +14,7 @@ import com.example.healthconnect.components.impl.ui.TemperatureEditorComponentVi
 
 
 @Composable
-fun TemperatureEditorComponent(
+internal fun TemperatureEditorComponent(
     temperatureEditorModel: TemperatureEditorModel,
     modifier: Modifier = Modifier,
     viewModel: TemperatureEditorComponentViewModel = viewModel(
