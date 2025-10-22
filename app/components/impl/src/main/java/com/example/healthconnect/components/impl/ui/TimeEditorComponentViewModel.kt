@@ -17,7 +17,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeParseException
 
-class TimeEditorComponentViewModel(
+internal class TimeEditorComponentViewModel(
     timeEditorInternalModel: TimeEditorInternalModel
 ) : ViewModel() {
 

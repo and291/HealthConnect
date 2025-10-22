@@ -20,7 +20,7 @@ import java.time.ZoneOffset
 import java.util.TimeZone
 
 @Composable
-fun TimeEditorComponent(
+internal fun TimeEditorComponent(
     instant: Instant,
     modifier: Modifier = Modifier,
     zoneOffset: ZoneOffset? = null,
@@ -35,7 +35,7 @@ fun TimeEditorComponent(
 )
 
 @Composable
-fun TimeEditorComponent(
+internal fun TimeEditorComponent(
     viewModel: TimeEditorComponentViewModel,
     modifier: Modifier = Modifier
 ) {

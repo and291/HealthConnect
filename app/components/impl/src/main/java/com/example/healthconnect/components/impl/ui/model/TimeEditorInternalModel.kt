@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
 
-data class TimeEditorInternalModel( //TODO mark as internal
+internal data class TimeEditorInternalModel(
     val timeModel: TimeModel,
     val zoneId: ZoneId? = null,
     val setZoneAttemptErrorMessage: String? = null,

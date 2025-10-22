@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 
-class PowerEditorComponentViewModel(
+internal class PowerEditorComponentViewModel(
     powerEditorModel: PowerEditorModel
 ) : ViewModel() {
 

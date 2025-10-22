@@ -22,7 +22,7 @@ import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalMode
 import java.time.Instant
 import java.time.ZoneOffset
 
-class ComponentProviderImpl : ComponentProvider {
+internal class ComponentProviderImpl : ComponentProvider {
 
     @Composable
     override fun TimeEditor(

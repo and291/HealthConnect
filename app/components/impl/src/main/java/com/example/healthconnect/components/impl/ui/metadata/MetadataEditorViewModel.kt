@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.ui.model.DeviceEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 
-class MetadataEditorViewModel(
+internal class MetadataEditorViewModel(
     initialEntity: MetadataEditorModel
 ) : ViewModel() {
 

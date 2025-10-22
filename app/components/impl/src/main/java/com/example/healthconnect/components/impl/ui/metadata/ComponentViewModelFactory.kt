@@ -8,7 +8,7 @@ import com.example.healthconnect.components.impl.ui.TemperatureEditorComponentVi
 import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel
 import kotlin.reflect.KClass
 
-class ComponentViewModelFactory : ViewModelProvider.Factory {
+internal class ComponentViewModelFactory : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(
