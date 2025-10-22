@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
-import com.example.healthconnect.editor.api.ui.model.CommonRecordModificationEvent
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
 import com.example.healthconnect.editor.api.ui.model.Event
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import com.example.healthconnect.editor.impl.ui.screen.record.CommonRecordViewModel.State.*
@@ -36,14 +36,14 @@ class CommonRecordViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
-            is CommonRecordModificationEvent -> (_state as? Edition)?.also {
+            is RecordEditEvent -> (_state as? Edition)?.also {
                 _state = Edition(
                     editorModel = it.editorModel.update(event)
                 )
             }
-            is Event.OnSave -> (_state as? Edition)?.also { currentState ->
+            is Event.OnUpdate -> (_state as? Edition)?.also { currentState ->
                 updateJob?.takeIf { it.isActive }?.let {
-                    Log.w(this::class.simpleName, "Attempt to start parallel updateJob was stopped")
+                    Log.w(this::class.simpleName, "Attempt to start parallel updateJob was prevented")
                     return
                 }
 

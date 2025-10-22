@@ -27,7 +27,7 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
                 RecordsScreen(
                     requestPermission = requestPermission,
                     onRecordClick = {
-                        backStack.add(EditorNavigationEntry.RecordScreen(it))
+                        backStack.add(EditorNavigationEntry.EditRecordScreen(it))
                     },
                     onInsertRecordClick = {
                         backStack.add(UtilityNavigationEntry.Insert(key.recordType))

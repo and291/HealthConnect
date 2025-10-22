@@ -17,17 +17,17 @@ data class BasalBodyTemperatureRecordEditorModel(
             measurementLocation is BodyTemperatureMeasurementLocationEditorModel.Valid &&
             metadataEditorModel.isValid()
 
-    override fun update(event: CommonRecordModificationEvent): RecordEditorModel = when (event) {
-        is CommonRecordModificationEvent.OnMeasurementLocationSelected -> copy(
+    override fun update(event: RecordEditEvent): RecordEditorModel = when (event) {
+        is RecordEditEvent.OnMeasurementLocationSelected -> copy(
             measurementLocation = event.location
         )
-        is CommonRecordModificationEvent.OnMetaModelChanged -> copy(
-            metadataEditorModel = event.metaModel
+        is RecordEditEvent.OnMetadataChanged -> copy(
+            metadataEditorModel = event.metadata
         )
-        is CommonRecordModificationEvent.OnTemperatureChanged -> copy(
+        is RecordEditEvent.OnTemperatureChanged -> copy(
             temperatureEditorModel = event.temperatureEditorModel
         )
-        is CommonRecordModificationEvent.OnTimeChanged -> copy(
+        is RecordEditEvent.OnTimeChanged -> copy(
             timeEditorModel = event.timeEditorModel
         )
         else -> TODO()

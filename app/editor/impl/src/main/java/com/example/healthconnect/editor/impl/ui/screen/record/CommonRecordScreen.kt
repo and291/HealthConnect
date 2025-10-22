@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.editor.api.ui.model.Event
 import com.example.healthconnect.editor.impl.di.Di
+import com.example.healthconnect.editor.impl.ui.screen.record.CommonRecordViewModel.State
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -55,22 +56,22 @@ fun CommonRecordScreen(
             }
 
             when (val state = viewModel.state) {
-                is CommonRecordViewModel.State.Edition, is CommonRecordViewModel.State.UpdateResult -> Row {
+                is State.Edition, is State.UpdateResult -> Row {
                     Button(
                         enabled = viewModel.isChanged,
-                        onClick = { viewModel.onEvent(Event.OnSave(upsert = false)) }
+                        onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) }
                     ) {
                         Text("Save")
                     }
-                    if (state is CommonRecordViewModel.State.UpdateResult) {
+                    if (state is State.UpdateResult) {
                         Text("Update Result: ${state.result}")
                     }
-                    if (state is CommonRecordViewModel.State.Edition && state.errorCreatingEntity != null) {
+                    if (state is State.Edition && state.errorCreatingEntity != null) {
                         Text("Error creating entity: ${state.errorCreatingEntity}")
                     }
                 }
 
-                is CommonRecordViewModel.State.UpdateInProgress -> {
+                is State.UpdateInProgress -> {
                     CircularProgressIndicator()
                 }
             }

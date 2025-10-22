@@ -6,32 +6,32 @@ import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
-sealed class CommonRecordModificationEvent : Event() {
+sealed class RecordEditEvent : Event() {
 
     data class OnTimeChanged(
         val timeEditorModel: TimeEditorModel,
-    ) : CommonRecordModificationEvent()
+    ) : RecordEditEvent()
 
     data class OnTemperatureChanged(
         val temperatureEditorModel: TemperatureEditorModel,
-    ) : CommonRecordModificationEvent()
+    ) : RecordEditEvent()
 
     data class OnMeasurementLocationSelected(
         val location: BodyTemperatureMeasurementLocationEditorModel
-    ) : CommonRecordModificationEvent()
+    ) : RecordEditEvent()
 
-    data class OnMetaModelChanged(
-        val metaModel: MetadataEditorModel
-    ) : CommonRecordModificationEvent()
+    data class OnMetadataChanged(
+        val metadata: MetadataEditorModel
+    ) : RecordEditEvent()
 
     data class OnPowerChanged(
         val powerEditorModel: PowerEditorModel,
-    ) : CommonRecordModificationEvent()
+    ) : RecordEditEvent()
 }
 
 sealed class Event {
 
-    data class OnSave(
+    data class OnUpdate(
         //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
         val upsert: Boolean = false
     ) : Event()

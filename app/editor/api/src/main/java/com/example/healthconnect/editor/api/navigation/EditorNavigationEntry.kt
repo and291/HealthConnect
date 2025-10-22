@@ -11,5 +11,5 @@ import com.example.healthconnect.navigation.api.NavigationEntry
  */
 sealed class EditorNavigationEntry : NavigationEntry {
 
-    data class RecordScreen(val record: Record) : EditorNavigationEntry()
+    data class EditRecordScreen(val record: Record) : EditorNavigationEntry()
 }

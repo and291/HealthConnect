@@ -20,7 +20,7 @@ class EditorNavigationEntryProviderImpl : EditorNavigationEntryProvider {
     ): NavEntry<NavigationEntry> {
         val defaultPadding = PaddingValues(all = 0.dp)
         return when (key) {
-            is EditorNavigationEntry.RecordScreen -> NavEntry(key) {
+            is EditorNavigationEntry.EditRecordScreen -> NavEntry(key) {
                 CommonRecordScreen(
                     initialRecord = key.record,
                     modifier = Modifier.padding(innerPadding ?: defaultPadding),

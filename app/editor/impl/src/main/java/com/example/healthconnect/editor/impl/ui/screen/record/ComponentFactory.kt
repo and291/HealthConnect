@@ -10,8 +10,8 @@ import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
-import com.example.healthconnect.editor.api.ui.model.CommonRecordModificationEvent
-import com.example.healthconnect.editor.api.ui.model.CommonRecordModificationEvent.*
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.*
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import kotlin.reflect.full.declaredMemberProperties
 
@@ -22,7 +22,7 @@ class ComponentFactory(
     @Composable
     fun Create(
         recordEditorModel: RecordEditorModel,
-        eventHandler: (CommonRecordModificationEvent) -> Unit,
+        eventHandler: (RecordEditEvent) -> Unit,
     ) {
         val propertyValues = when (recordEditorModel) {
             is BasalBodyTemperatureRecordEditorModel -> BasalBodyTemperatureRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
@@ -40,7 +40,7 @@ class ComponentFactory(
     @Composable
     private fun Create(
         editorModel: ComponentEditorModel,
-        eventHandler: (CommonRecordModificationEvent) -> Unit
+        eventHandler: (RecordEditEvent) -> Unit
     ) = when (editorModel) {
         is TimeEditorModel.Valid -> componentProvider.TimeEditor(
             time = editorModel.instant,
@@ -57,7 +57,7 @@ class ComponentFactory(
         }
 
         is MetadataEditorModel -> componentProvider.MetadataEditor(editorModel) {
-            eventHandler(OnMetaModelChanged(it))
+            eventHandler(OnMetadataChanged(it))
         }
 
         is BodyTemperatureMeasurementLocationEditorModel -> componentProvider.MeasurementLocationSelector(
