@@ -2,12 +2,16 @@ package com.example.healthconnect.editor.api.ui.model
 
 import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
 data class BloodGlucoseLevelRecordEditorModel(
     val timeEditorModel: TimeEditorModel,
     override val metadataEditorModel: MetadataEditorModel,
     val level: BloodGlucoseLevelEditorModel,
+    val specimenSource: SelectorEditorModel,
+    val mealType: SelectorEditorModel,
+    val relationToMeals: SelectorEditorModel,
 ) : RecordEditorModel() {
 
     override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&

@@ -51,7 +51,19 @@ class RecordMapper(
                 zoneOffset = record.zoneOffset
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            level = BloodGlucoseLevelEditorModel.Valid(record.level.inMillimolesPerLiter)
+            level = BloodGlucoseLevelEditorModel.Valid(record.level.inMillimolesPerLiter),
+            specimenSource = SelectorEditorModel.Valid(
+                value = record.specimenSource,
+                selectorType = SelectorType.SpecimenSource()
+            ),
+            mealType = SelectorEditorModel.Valid(
+                value = record.mealType,
+                selectorType = SelectorType.MealType()
+            ),
+            relationToMeals = SelectorEditorModel.Valid(
+                value = record.relationToMeal,
+                selectorType = SelectorType.RelationToMeal()
+            ),
         )
 
         else -> TODO()
@@ -84,9 +96,9 @@ class RecordMapper(
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
             level = BloodGlucose.millimolesPerLiter((validUiModel.level as BloodGlucoseLevelEditorModel.Valid).parsedValue),
-//            specimenSource = TODO(),
-//            mealType = TODO(),
-//            relationToMeal = TODO()
+            specimenSource = (validUiModel.specimenSource as SelectorEditorModel.Valid).value,
+            mealType = (validUiModel.mealType as SelectorEditorModel.Valid).value,
+            relationToMeal = (validUiModel.relationToMeals as SelectorEditorModel.Valid).value
         )
     }
 }
