@@ -15,6 +15,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
+
+@Composable
+internal fun SelectorComponent(
+    editor: SelectorEditorModel,
+    onItemSelected: (SelectorEditorModel) -> Unit,
+) {
+
+    SelectorComponent(
+        title = editor.selectorType.title,
+        supportText = editor.selectorType.supportText,
+        selectedText = editor.selectorType.map(editor.value),
+        items = editor.selectorType.items,
+        itemComposable = { (_, name) ->
+            Text(text = name)
+        },
+        onItemSelected = { (value, _) ->
+            //TODO replace with required BL-validation
+            val isValid = editor.selectorType.items.find { x -> x.first == value } != null
+            val selectorEditorModel = if (isValid) {
+                SelectorEditorModel.Valid(value, editor.selectorType)
+            } else {
+                SelectorEditorModel.Invalid(value, editor.selectorType)
+            }
+            onItemSelected(selectorEditorModel)
+        }
+    )
+}
 
 @Composable
 internal fun <T> SelectorComponent(

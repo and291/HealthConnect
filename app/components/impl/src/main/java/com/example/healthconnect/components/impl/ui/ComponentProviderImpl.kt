@@ -8,12 +8,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
-import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.impl.di.Di
@@ -60,33 +59,6 @@ internal class ComponentProviderImpl : ComponentProvider {
         TimeEditorComponent(
             modifier = Modifier.fillMaxWidth(),
             viewModel = timeEditorComponentViewModel,
-        )
-    }
-
-    @Composable
-    override fun MeasurementLocationSelector(
-        bodyTemperatureMeasurementLocationEditorModel: BodyTemperatureMeasurementLocationEditorModel,
-        onLocationChanged: (BodyTemperatureMeasurementLocationEditorModel) -> Unit
-    ) {
-
-        val measurementLocationMapper: MeasurementLocationMapper = Di.measurementLocationMapper
-
-        SelectorComponent(
-            title = "Measurement Location",
-            supportText = "Where on the user's basal body the temperature measurement was taken from. Optional field.",
-            selectedText = measurementLocationMapper.map(bodyTemperatureMeasurementLocationEditorModel.value),
-            items = measurementLocationMapper.locations,
-            itemComposable = { (_, name) ->
-                Text(text = name)
-            },
-            onItemSelected = { (locationType, _) ->
-                val location = if (measurementLocationMapper.locations.find { x -> x.first == locationType } != null) {
-                    BodyTemperatureMeasurementLocationEditorModel.Valid(locationType)
-                } else {
-                    BodyTemperatureMeasurementLocationEditorModel.Invalid(locationType)
-                }
-                onLocationChanged(location)
-            }
         )
     }
 
@@ -184,4 +156,13 @@ internal class ComponentProviderImpl : ComponentProvider {
             viewModel = viewModel,
         )
     }
+
+    @Composable
+    override fun Selector(
+        editor: SelectorEditorModel,
+        onLocationChanged: (SelectorEditorModel) -> Unit
+    ): Unit = SelectorComponent(
+        editor = editor,
+        onItemSelected = { onLocationChanged(it) }
+    )
 }

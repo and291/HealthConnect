@@ -2,9 +2,9 @@ package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
 import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
-import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import java.time.Instant
@@ -14,12 +14,6 @@ interface ComponentProvider {
 
     @Composable
     fun TimeEditor(time: Instant, zoneOffset: ZoneOffset?, onTimeChanged: (TimeEditorModel) -> Unit)
-
-    @Composable
-    fun MeasurementLocationSelector(
-        bodyTemperatureMeasurementLocationEditorModel: BodyTemperatureMeasurementLocationEditorModel,
-        onLocationChanged: (BodyTemperatureMeasurementLocationEditorModel) -> Unit
-    )
 
     @Composable
     fun MetadataEditor(
@@ -43,5 +37,11 @@ interface ComponentProvider {
     fun BloodGlucoseLevelEditor(
         editorModel: BloodGlucoseLevelEditorModel,
         onChanged:(BloodGlucoseLevelEditorModel) -> Unit,
+    )
+
+    @Composable
+    fun Selector(
+        editor: SelectorEditorModel,
+        onLocationChanged: (SelectorEditorModel) -> Unit,
     )
 }

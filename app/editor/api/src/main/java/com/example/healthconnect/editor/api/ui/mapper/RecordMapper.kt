@@ -8,8 +8,9 @@ import androidx.health.connect.client.units.BloodGlucose
 import androidx.health.connect.client.units.celsius
 import androidx.health.connect.client.units.kilocaloriesPerDay
 import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
-import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorType
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
@@ -29,7 +30,10 @@ class RecordMapper(
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
             temperatureEditorModel = TemperatureEditorModel.Valid(parsedValue = record.temperature.inCelsius),
-            measurementLocation = BodyTemperatureMeasurementLocationEditorModel.Valid(record.measurementLocation) //TODO validate data from lib
+            measurementLocation = SelectorEditorModel.Valid(
+                value = record.measurementLocation, //TODO validate data from lib
+                selectorType = SelectorType.BodyTemperatureMeasurementLocationType(),
+            )
         )
 
         is BasalMetabolicRateRecord -> BasalMetabolicRateRecordEditorModel(
@@ -65,7 +69,7 @@ class RecordMapper(
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
             temperature = (validUiModel.temperatureEditorModel as TemperatureEditorModel.Valid).parsedValue.celsius,
-            measurementLocation = validUiModel.measurementLocation.value
+            measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value
         )
 
         is BasalMetabolicRateRecordEditorModel -> BasalMetabolicRateRecord(

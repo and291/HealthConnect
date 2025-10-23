@@ -1,7 +1,7 @@
 package com.example.healthconnect.editor.api.ui.model
 
-import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 
@@ -9,12 +9,12 @@ data class BasalBodyTemperatureRecordEditorModel(
     val timeEditorModel: TimeEditorModel,
     override val metadataEditorModel: MetadataEditorModel,
     val temperatureEditorModel: TemperatureEditorModel,
-    val measurementLocation: BodyTemperatureMeasurementLocationEditorModel,
+    val measurementLocation: SelectorEditorModel,
 ) : RecordEditorModel() {
 
     override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
             temperatureEditorModel is TemperatureEditorModel.Valid &&
-            measurementLocation is BodyTemperatureMeasurementLocationEditorModel.Valid &&
+            measurementLocation is SelectorEditorModel.Valid &&
             metadataEditorModel.isValid()
 
     override fun update(event: RecordEditEvent): RecordEditorModel = when (event) {

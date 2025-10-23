@@ -3,10 +3,10 @@ package com.example.healthconnect.editor.impl.ui.screen.record
 import androidx.compose.runtime.Composable
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
-import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
 import com.example.healthconnect.components.api.ui.model.ComponentEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
@@ -63,9 +63,7 @@ class ComponentFactory(
             eventHandler(OnMetadataChanged(it))
         }
 
-        is BodyTemperatureMeasurementLocationEditorModel -> componentProvider.MeasurementLocationSelector(
-            editorModel
-        ) {
+        is SelectorEditorModel -> componentProvider.Selector(editorModel) {
             eventHandler(OnMeasurementLocationSelected(it))
         }
 

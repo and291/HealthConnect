@@ -1,7 +1,6 @@
 package com.example.healthconnect.components.impl.di
 
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.impl.data.mapper.MeasurementLocationMapper
 import com.example.healthconnect.components.impl.ui.ComponentProviderImpl
 import com.example.healthconnect.components.impl.ui.metadata.ComponentViewModelFactory
 import com.example.healthconnect.components.impl.ui.metadata.mapper.DeviceTypeMapper
@@ -20,5 +19,4 @@ object Di {
 
     internal val deviceTypeMapper = DeviceTypeMapper()
     internal val recordingMethodMapper = RecordingMethodMapper()
-    internal val measurementLocationMapper = MeasurementLocationMapper()
 }
