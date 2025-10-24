@@ -8,37 +8,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.impl.ui.TemperatureEditorComponentViewModel.Event
+import com.example.healthconnect.components.impl.ui.DoubleValueEditorComponentViewModel.Event
 
 
 @Composable
-internal fun TemperatureEditorComponent(
-    temperatureEditorModel: TemperatureEditorModel,
+internal fun DoubleValueEditorComponent(
+    editorModel: DoubleValueEditorModel,
     modifier: Modifier = Modifier,
-    viewModel: TemperatureEditorComponentViewModel = viewModel(
+    viewModel: DoubleValueEditorComponentViewModel = viewModel(
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY, temperatureEditorModel)
+            set(DoubleValueEditorComponentViewModel.MODEL_KEY, editorModel)
         }
-    )
+    ),
 ) = OutlinedTextField(
     value = viewModel.state.value,
     suffix = {
-        Text("Celsius") //TODO create more sophisticated view that will allow editing fahrenheit also
+        Text(editorModel.type.label) //TODO create more sophisticated view that will support other units
     },
     enabled = true,
     singleLine = true,
-    isError = viewModel.state is TemperatureEditorModel.Invalid,
+    isError = viewModel.state is DoubleValueEditorModel.Invalid,
     onValueChange = {
-        viewModel.onEvent(Event.OnTemperatureChanged(it))
+        viewModel.onEvent(Event.OnValueChanged(it))
     },
     label = {
-        Text("Temperature")
+        Text(editorModel.type.label)
     },
     supportingText = {
-        Text("Temperature in \"Temperature\" unit.")
+        Text(editorModel.type.supportingText)
     },
     modifier = modifier.fillMaxWidth()
 )
@@ -46,15 +46,21 @@ internal fun TemperatureEditorComponent(
 @Composable
 @Preview(showBackground = true)
 fun TemperatureEditorComponentValidPreview() {
-    TemperatureEditorComponent(
-        temperatureEditorModel = TemperatureEditorModel.Valid(123.0)
+    DoubleValueEditorComponent(
+        editorModel = DoubleValueEditorModel.Valid(
+            parsedValue = 123.0,
+            type = DoubleValueEditorModel.Type.Temperature(),
+        )
     )
 }
 
 @Composable
 @Preview(showBackground = true)
 fun TemperatureEditorComponentInvalidPreview() {
-    TemperatureEditorComponent(
-        temperatureEditorModel = TemperatureEditorModel.Invalid("231ed")
+    DoubleValueEditorComponent(
+        editorModel = DoubleValueEditorModel.Invalid(
+            value = "231ed",
+            type = DoubleValueEditorModel.Type.Temperature(),
+        )
     )
 }

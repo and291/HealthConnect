@@ -1,9 +1,8 @@
 package com.example.healthconnect.editor.api.ui.model
 
-import com.example.healthconnect.components.api.ui.model.BodyTemperatureMeasurementLocationEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
-import com.example.healthconnect.components.api.ui.model.PowerEditorModel
-import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
+import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
 sealed class RecordEditEvent : Event() {
@@ -12,20 +11,16 @@ sealed class RecordEditEvent : Event() {
         val timeEditorModel: TimeEditorModel,
     ) : RecordEditEvent()
 
-    data class OnTemperatureChanged(
-        val temperatureEditorModel: TemperatureEditorModel,
-    ) : RecordEditEvent()
-
-    data class OnMeasurementLocationSelected(
-        val location: BodyTemperatureMeasurementLocationEditorModel
+    data class OnValueSelected(
+        val editorModel: SelectorEditorModel
     ) : RecordEditEvent()
 
     data class OnMetadataChanged(
         val metadata: MetadataEditorModel
     ) : RecordEditEvent()
 
-    data class OnPowerChanged(
-        val powerEditorModel: PowerEditorModel,
+    data class OnDoubleValueChanged(
+        val editorModel: DoubleValueEditorModel,
     ) : RecordEditEvent()
 }
 

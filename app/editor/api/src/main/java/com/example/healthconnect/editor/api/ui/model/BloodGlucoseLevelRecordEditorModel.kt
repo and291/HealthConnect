@@ -5,22 +5,31 @@ import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
-data class BasalBodyTemperatureRecordEditorModel(
+data class BloodGlucoseLevelRecordEditorModel(
     val timeEditorModel: TimeEditorModel,
     override val metadataEditorModel: MetadataEditorModel,
-    val temperatureEditorModel: DoubleValueEditorModel,
-    val measurementLocation: SelectorEditorModel,
+    val level: DoubleValueEditorModel,
+    val specimenSource: SelectorEditorModel,
+    val mealType: SelectorEditorModel,
+    val relationToMeals: SelectorEditorModel,
 ) : RecordEditorModel() {
 
     override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
-            temperatureEditorModel is DoubleValueEditorModel.Valid &&
-            measurementLocation is SelectorEditorModel.Valid &&
+            level is DoubleValueEditorModel.Valid &&
             metadataEditorModel.isValid()
 
     override fun update(event: RecordEditEvent): RecordEditorModel = when (event) {
         is RecordEditEvent.OnValueSelected -> when (event.editorModel.type) {
-            is SelectorEditorModel.Type.BodyTemperatureMeasurementLocationType -> copy(
-                measurementLocation = event.editorModel
+            is SelectorEditorModel.Type.MealType -> copy(
+                mealType = event.editorModel,
+            )
+
+            is SelectorEditorModel.Type.RelationToMeal -> copy(
+                relationToMeals = event.editorModel,
+            )
+
+            is SelectorEditorModel.Type.SpecimenSource -> copy(
+                specimenSource = event.editorModel,
             )
 
             else -> TODO()
@@ -31,8 +40,8 @@ data class BasalBodyTemperatureRecordEditorModel(
         )
 
         is RecordEditEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
-            is DoubleValueEditorModel.Type.Temperature -> copy(
-                temperatureEditorModel = event.editorModel
+            is DoubleValueEditorModel.Type.BloodGlucoseLevel -> copy(
+                level = event.editorModel
             )
 
             else -> TODO()
@@ -41,5 +50,8 @@ data class BasalBodyTemperatureRecordEditorModel(
         is RecordEditEvent.OnTimeChanged -> copy(
             timeEditorModel = event.timeEditorModel
         )
+
+        else -> TODO()
     }
+
 }
