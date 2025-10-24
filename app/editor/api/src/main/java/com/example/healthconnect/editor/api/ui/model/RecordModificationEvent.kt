@@ -5,29 +5,21 @@ import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
-sealed class RecordEditEvent : Event() {
+sealed class RecordModificationEvent {
 
     data class OnTimeChanged(
         val timeEditorModel: TimeEditorModel,
-    ) : RecordEditEvent()
+    ) : RecordModificationEvent()
 
     data class OnValueSelected(
         val editorModel: SelectorEditorModel
-    ) : RecordEditEvent()
+    ) : RecordModificationEvent()
 
     data class OnMetadataChanged(
         val metadata: MetadataEditorModel
-    ) : RecordEditEvent()
+    ) : RecordModificationEvent()
 
     data class OnDoubleValueChanged(
         val editorModel: DoubleValueEditorModel,
-    ) : RecordEditEvent()
-}
-
-sealed class Event {
-
-    data class OnUpdate(
-        //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
-        val upsert: Boolean = false
-    ) : Event()
+    ) : RecordModificationEvent()
 }

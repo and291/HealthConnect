@@ -13,5 +13,4 @@ import kotlin.reflect.KClass
 sealed class UtilityNavigationEntry : NavigationEntry {
 
     data class Records(val recordType: KClass<Record>) : UtilityNavigationEntry()
-    data class Insert(val recordType: KClass<Record>) : UtilityNavigationEntry()
 }

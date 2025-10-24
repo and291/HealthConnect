@@ -6,13 +6,14 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
+import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.PayloadMapper
 import com.example.healthconnect.utilty.impl.domain.ResultMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
-import com.example.healthconnect.utilty.impl.domain.usecase.Insert
+import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
@@ -61,8 +62,8 @@ object Di { //TODO move to dagger. keep all features
     private val payloadMapper = PayloadMapper()
     private val resultMapper = ResultMapper()
 
-    private val insert by lazy {
-        Insert(libraryRepository, resultMapper, payloadMapper)
+    val insert: Insert by lazy {
+        InsertImpl(libraryRepository, resultMapper, payloadMapper)
     }
 
     val update: Update by lazy {

@@ -20,24 +20,25 @@ import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.editor.api.ui.model.Event
 import com.example.healthconnect.editor.impl.di.Di
-import com.example.healthconnect.editor.impl.ui.screen.record.CommonRecordViewModel.State
+import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel.Event
+import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel.State
 import java.time.Instant
 import java.time.ZoneOffset
+import kotlin.reflect.KClass
 
 
 @Composable
-fun CommonRecordScreen(
-    initialRecord: Record,
+fun InsertRecordScreen(
+    recordClass: KClass<Record>,
     modifier: Modifier = Modifier,
     componentFactory: ComponentFactory = Di.componentFactory,
-    viewModel: CommonRecordViewModel = viewModel(
+    viewModel: InsertRecordViewModel = viewModel(
         factory = Di.recordViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(CommonRecordViewModel.RECORD_KEY, initialRecord)
+            set(InsertRecordViewModel.RECORD_CLASS_KEY, recordClass)
         }
-    )
+    ),
 ) {
 
     Column(
@@ -51,27 +52,24 @@ fun CommonRecordScreen(
         }
 
         Column {
-            if (viewModel.isChanged) {
-                Text("There is unsaved changes")
-            }
 
             when (val state = viewModel.state) {
-                is State.Edition, is State.UpdateResult -> Row {
+                is State.Edition, is State.InsertResult -> Row {
                     Button(
-                        enabled = viewModel.isChanged,
-                        onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) }
+                        enabled = viewModel.state.editorModel.isValid(),
+                        onClick = { viewModel.onEvent(Event.OnInsert) }
                     ) {
-                        Text("Save")
+                        Text("Insert")
                     }
-                    if (state is State.UpdateResult) {
-                        Text("Update Result: ${state.result}")
+                    if (state is State.InsertResult) {
+                        Text("Insert Result: ${state.result}")
                     }
                     if (state is State.Edition && state.errorCreatingEntity != null) {
                         Text("Error creating entity: ${state.errorCreatingEntity}")
                     }
                 }
 
-                is State.UpdateInProgress -> {
+                is State.InsertInProgress -> {
                     CircularProgressIndicator()
                 }
             }
@@ -82,9 +80,9 @@ fun CommonRecordScreen(
 
 @Composable
 @Preview(showBackground = true, heightDp = 1600)
-fun CommonRecordScreenPreview() {
+fun InsertRecordScreenPreview() {
 
-    CommonRecordScreen(
+    EditRecordScreen(
         initialRecord = BasalBodyTemperatureRecord(
             time = Instant.EPOCH,
             zoneOffset = ZoneOffset.UTC,

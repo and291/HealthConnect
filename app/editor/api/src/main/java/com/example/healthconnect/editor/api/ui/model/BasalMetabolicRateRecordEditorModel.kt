@@ -14,12 +14,12 @@ data class BasalMetabolicRateRecordEditorModel(
             powerEditorModel is DoubleValueEditorModel.Valid &&
             metadataEditorModel.isValid()
 
-    override fun update(event: RecordEditEvent): RecordEditorModel = when (event) {
-        is RecordEditEvent.OnMetadataChanged -> copy(
+    override fun update(event: RecordModificationEvent): RecordEditorModel = when (event) {
+        is RecordModificationEvent.OnMetadataChanged -> copy(
             metadataEditorModel = event.metadata
         )
 
-        is RecordEditEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
+        is RecordModificationEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
             is DoubleValueEditorModel.Type.Power -> copy(
                 powerEditorModel = event.editorModel
             )
@@ -27,7 +27,7 @@ data class BasalMetabolicRateRecordEditorModel(
             else -> TODO()
         }
 
-        is RecordEditEvent.OnTimeChanged -> copy(
+        is RecordModificationEvent.OnTimeChanged -> copy(
             timeEditorModel = event.timeEditorModel
         )
 

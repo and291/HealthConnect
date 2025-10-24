@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
         com.example.healthconnect.editor.impl.di.Di.also {
             it.componentProvider = com.example.healthconnect.components.impl.di.Di.componentProvider
             it.update = com.example.healthconnect.utilty.impl.di.Di.update
+            it.insert = com.example.healthconnect.utilty.impl.di.Di.insert
         }
 
         //injects for current activity below
