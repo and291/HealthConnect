@@ -3,9 +3,7 @@ package com.example.healthconnect.components.impl.ui.metadata
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.impl.ui.BloodGlucoseLevelEditorComponentViewModel
-import com.example.healthconnect.components.impl.ui.PowerEditorComponentViewModel
-import com.example.healthconnect.components.impl.ui.TemperatureEditorComponentViewModel
+import com.example.healthconnect.components.impl.ui.DoubleValueEditorComponentViewModel
 import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel
 import kotlin.reflect.KClass
 
@@ -24,16 +22,8 @@ internal class ComponentViewModelFactory : ViewModelProvider.Factory {
             timeEditorInternalModel = checkNotNull(extras[TimeEditorComponentViewModel.TIME_MODEL_KEY]),
         )
 
-        TemperatureEditorComponentViewModel::class -> TemperatureEditorComponentViewModel(
-            temperatureEditorModel = checkNotNull(extras[TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY])
-        )
-
-        PowerEditorComponentViewModel::class -> PowerEditorComponentViewModel(
-            powerEditorModel = checkNotNull(extras[PowerEditorComponentViewModel.MODEL_KEY])
-        )
-
-        BloodGlucoseLevelEditorComponentViewModel::class -> BloodGlucoseLevelEditorComponentViewModel(
-            editorModel = checkNotNull(extras[BloodGlucoseLevelEditorComponentViewModel.MODEL_KEY])
+        DoubleValueEditorComponentViewModel::class -> DoubleValueEditorComponentViewModel(
+            editorModel = checkNotNull(extras[DoubleValueEditorComponentViewModel.MODEL_KEY])
         )
 
         else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.simpleName)

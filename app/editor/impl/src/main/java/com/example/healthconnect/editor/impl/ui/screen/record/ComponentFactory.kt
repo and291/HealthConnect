@@ -2,23 +2,24 @@ package com.example.healthconnect.editor.impl.ui.screen.record
 
 import androidx.compose.runtime.Composable
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
 import com.example.healthconnect.components.api.ui.model.ComponentEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
-import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.*
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnDoubleValueChanged
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnMeasurementLocationSelected
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnMetadataChanged
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnTimeChanged
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import kotlin.reflect.full.declaredMemberProperties
 
 class ComponentFactory(
-    private val componentProvider: ComponentProvider
+    private val componentProvider: ComponentProvider,
 ) {
 
     @Composable
@@ -43,7 +44,7 @@ class ComponentFactory(
     @Composable
     private fun Create(
         editorModel: ComponentEditorModel,
-        eventHandler: (RecordEditEvent) -> Unit
+        eventHandler: (RecordEditEvent) -> Unit,
     ) = when (editorModel) {
         is TimeEditorModel.Valid -> componentProvider.TimeEditor(
             time = editorModel.instant,
@@ -51,26 +52,17 @@ class ComponentFactory(
         ) { eventHandler(OnTimeChanged(it)) }
 
         is TimeEditorModel.Invalid -> TODO()
-        is PowerEditorModel -> componentProvider.PowerEditor(editorModel) {
-            eventHandler(OnPowerChanged(it))
-        }
-
-        is TemperatureEditorModel -> componentProvider.TemperatureEditor(editorModel) {
-            eventHandler(OnTemperatureChanged(it))
-        }
 
         is MetadataEditorModel -> componentProvider.MetadataEditor(editorModel) {
             eventHandler(OnMetadataChanged(it))
         }
 
-        is SelectorEditorModel -> componentProvider.Selector(editorModel) {
-            eventHandler(OnMeasurementLocationSelected(it))
+        is DoubleValueEditorModel -> componentProvider.DoubleValueEditor(editorModel) {
+            eventHandler(OnDoubleValueChanged(it))
         }
 
-        is BloodGlucoseLevelEditorModel -> componentProvider.BloodGlucoseLevelEditor(
-            editorModel
-        ) {
-            eventHandler(OnBloodGlucoseLevelChanged(it))
+        is SelectorEditorModel -> componentProvider.Selector(editorModel) {
+            eventHandler(OnMeasurementLocationSelected(it))
         }
     }
 }

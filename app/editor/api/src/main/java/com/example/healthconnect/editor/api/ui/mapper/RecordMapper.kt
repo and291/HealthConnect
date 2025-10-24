@@ -7,10 +7,8 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.units.BloodGlucose
 import androidx.health.connect.client.units.celsius
 import androidx.health.connect.client.units.kilocaloriesPerDay
-import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
-import com.example.healthconnect.components.api.ui.model.PowerEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
@@ -28,7 +26,10 @@ class RecordMapper(
                 zoneOffset = record.zoneOffset
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            temperatureEditorModel = TemperatureEditorModel.Valid(parsedValue = record.temperature.inCelsius),
+            temperatureEditorModel = DoubleValueEditorModel.Valid(
+                parsedValue = record.temperature.inCelsius,
+                type = DoubleValueEditorModel.Type.Temperature(),
+            ),
             measurementLocation = SelectorEditorModel.Valid(
                 value = record.measurementLocation, //TODO validate data from lib
                 type = SelectorEditorModel.Type.BodyTemperatureMeasurementLocationType(),
@@ -41,7 +42,10 @@ class RecordMapper(
                 zoneOffset = record.zoneOffset
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            powerEditorModel = PowerEditorModel.Valid(parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay)
+            powerEditorModel = DoubleValueEditorModel.Valid(
+                parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay,
+                type = DoubleValueEditorModel.Type.Power(),
+            )
         )
 
         is BloodGlucoseRecord -> BloodGlucoseLevelRecordEditorModel(
@@ -50,7 +54,10 @@ class RecordMapper(
                 zoneOffset = record.zoneOffset
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            level = BloodGlucoseLevelEditorModel.Valid(record.level.inMillimolesPerLiter),
+            level = DoubleValueEditorModel.Valid(
+                parsedValue = record.level.inMillimolesPerLiter,
+                type = DoubleValueEditorModel.Type.BloodGlucoseLevel(),
+            ),
             specimenSource = SelectorEditorModel.Valid(
                 value = record.specimenSource,
                 type = SelectorEditorModel.Type.SpecimenSource()
@@ -79,7 +86,7 @@ class RecordMapper(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
-            temperature = (validUiModel.temperatureEditorModel as TemperatureEditorModel.Valid).parsedValue.celsius,
+            temperature = (validUiModel.temperatureEditorModel as DoubleValueEditorModel.Valid).parsedValue.celsius,
             measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value
         )
 
@@ -87,14 +94,14 @@ class RecordMapper(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
-            basalMetabolicRate = (validUiModel.powerEditorModel as PowerEditorModel.Valid).parsedValue.kilocaloriesPerDay,
+            basalMetabolicRate = (validUiModel.powerEditorModel as DoubleValueEditorModel.Valid).parsedValue.kilocaloriesPerDay,
         )
 
         is BloodGlucoseLevelRecordEditorModel -> BloodGlucoseRecord(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
-            level = BloodGlucose.millimolesPerLiter((validUiModel.level as BloodGlucoseLevelEditorModel.Valid).parsedValue),
+            level = BloodGlucose.millimolesPerLiter((validUiModel.level as DoubleValueEditorModel.Valid).parsedValue),
             specimenSource = (validUiModel.specimenSource as SelectorEditorModel.Valid).value,
             mealType = (validUiModel.mealType as SelectorEditorModel.Valid).value,
             relationToMeal = (validUiModel.relationToMeals as SelectorEditorModel.Valid).value

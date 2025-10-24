@@ -8,13 +8,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
-import com.example.healthconnect.components.api.ui.model.PowerEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
+import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
-import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorViewModel
@@ -89,69 +87,22 @@ internal class ComponentProviderImpl : ComponentProvider {
     }
 
     @Composable
-    override fun TemperatureEditor(
-        temperatureEditorModel: TemperatureEditorModel,
-        onTemperatureChanged: (TemperatureEditorModel) -> Unit
+    override fun DoubleValueEditor(
+        editorModel: DoubleValueEditorModel,
+        onChanged: (DoubleValueEditorModel) -> Unit
     ) {
-        val viewModel: TemperatureEditorComponentViewModel = viewModel(
+        val viewModel: DoubleValueEditorComponentViewModel = viewModel(
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
-                set(
-                    TemperatureEditorComponentViewModel.TEMPERATURE_MODEL_KEY,
-                    temperatureEditorModel
-                )
+                set(DoubleValueEditorComponentViewModel.MODEL_KEY, editorModel)
             }
         )
 
         LaunchedEffect(viewModel.state) {
-            Log.d(this::class.simpleName, "Temperature: ${viewModel.state}")
-            onTemperatureChanged(viewModel.state)
-        }
-        TemperatureEditorComponent(
-            temperatureEditorModel = temperatureEditorModel,
-            viewModel = viewModel,
-        )
-    }
-
-    @Composable
-    override fun PowerEditor(
-        powerEditorModel: PowerEditorModel,
-        onPowerChanged: (PowerEditorModel) -> Unit
-    ) {
-        val viewModel: PowerEditorComponentViewModel = viewModel(
-            factory = Di.componentViewModelFactory,
-            extras = MutableCreationExtras().apply {
-                set(PowerEditorComponentViewModel.MODEL_KEY, powerEditorModel)
-            }
-        )
-
-        LaunchedEffect(viewModel.state) {
-            Log.d(this::class.simpleName, "Power: ${viewModel.state}")
-            onPowerChanged(viewModel.state)
-        }
-        PowerEditorComponent(
-            powerEditorModel = powerEditorModel,
-            viewModel = viewModel,
-        )
-    }
-
-    @Composable
-    override fun BloodGlucoseLevelEditor(
-        editorModel: BloodGlucoseLevelEditorModel,
-        onChanged: (BloodGlucoseLevelEditorModel) -> Unit
-    ) {
-        val viewModel: BloodGlucoseLevelEditorComponentViewModel = viewModel(
-            factory = Di.componentViewModelFactory,
-            extras = MutableCreationExtras().apply {
-                set(BloodGlucoseLevelEditorComponentViewModel.MODEL_KEY, editorModel)
-            }
-        )
-
-        LaunchedEffect(viewModel.state) {
-            Log.d(this::class.simpleName, "Glucose: ${viewModel.state}")
+            Log.d(this::class.simpleName, "${editorModel.type.label}: ${viewModel.state}")
             onChanged(viewModel.state)
         }
-        BloodGlucoseLevelEditorComponent(
+        DoubleValueEditorComponent(
             editorModel = editorModel,
             viewModel = viewModel,
         )

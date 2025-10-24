@@ -1,6 +1,6 @@
 package com.example.healthconnect.editor.api.ui.model
 
-import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
@@ -8,14 +8,14 @@ import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 data class BloodGlucoseLevelRecordEditorModel(
     val timeEditorModel: TimeEditorModel,
     override val metadataEditorModel: MetadataEditorModel,
-    val level: BloodGlucoseLevelEditorModel,
+    val level: DoubleValueEditorModel,
     val specimenSource: SelectorEditorModel,
     val mealType: SelectorEditorModel,
     val relationToMeals: SelectorEditorModel,
 ) : RecordEditorModel() {
 
     override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
-            level is BloodGlucoseLevelEditorModel.Valid &&
+            level is DoubleValueEditorModel.Valid &&
             metadataEditorModel.isValid()
 
     override fun update(event: RecordEditEvent): RecordEditorModel = when (event) {
@@ -23,9 +23,13 @@ data class BloodGlucoseLevelRecordEditorModel(
             metadataEditorModel = event.metadata
         )
 
-        is RecordEditEvent.OnBloodGlucoseLevelChanged -> copy(
-            level = event.level
-        )
+        is RecordEditEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
+            is DoubleValueEditorModel.Type.BloodGlucoseLevel -> copy(
+                level = event.editorModel
+            )
+
+            else -> TODO()
+        }
 
         is RecordEditEvent.OnTimeChanged -> copy(
             timeEditorModel = event.timeEditorModel
