@@ -1,6 +1,7 @@
 package com.example.healthconnect.editor.impl.ui.screen.record
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.ComponentEditorModel
 import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
@@ -26,6 +27,7 @@ class ComponentFactory(
     @Composable
     fun Create(
         recordEditorModel: RecordEditorModel,
+        modifier: Modifier = Modifier,
         eventHandler: (RecordModificationEvent) -> Unit,
     ) {
         val propertyValues = when (recordEditorModel) {
@@ -38,7 +40,8 @@ class ComponentFactory(
         propertyValues.forEach {
             Create(
                 editorModel = it,
-                eventHandler = eventHandler
+                eventHandler = eventHandler,
+                modifier = modifier,
             )
         }
     }
@@ -47,23 +50,25 @@ class ComponentFactory(
     private fun Create(
         editorModel: ComponentEditorModel,
         eventHandler: (RecordModificationEvent) -> Unit,
+        modifier: Modifier,
     ) = when (editorModel) {
         is TimeEditorModel.Valid -> componentProvider.TimeEditor(
             time = editorModel.instant,
             zoneOffset = editorModel.zoneOffset,
+            modifier = modifier,
         ) { eventHandler(OnTimeChanged(it)) }
 
         is TimeEditorModel.Invalid -> TODO()
 
-        is MetadataEditorModel -> componentProvider.MetadataEditor(editorModel) {
+        is MetadataEditorModel -> componentProvider.MetadataEditor(editorModel, modifier) {
             eventHandler(OnMetadataChanged(it))
         }
 
-        is DoubleValueEditorModel -> componentProvider.DoubleValueEditor(editorModel) {
+        is DoubleValueEditorModel -> componentProvider.DoubleValueEditor(editorModel, modifier) {
             eventHandler(OnDoubleValueChanged(it))
         }
 
-        is SelectorEditorModel -> componentProvider.Selector(editorModel) {
+        is SelectorEditorModel -> componentProvider.Selector(editorModel, modifier) {
             eventHandler(OnValueSelected(it))
         }
     }

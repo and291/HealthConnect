@@ -1,6 +1,7 @@
 package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
 import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
@@ -11,23 +12,31 @@ import java.time.ZoneOffset
 interface ComponentProvider {
 
     @Composable
-    fun TimeEditor(time: Instant, zoneOffset: ZoneOffset?, onTimeChanged: (TimeEditorModel) -> Unit)
+    fun TimeEditor(
+        time: Instant,
+        zoneOffset: ZoneOffset?,
+        modifier: Modifier,
+        onChanged: (TimeEditorModel) -> Unit,
+    )
 
     @Composable
     fun MetadataEditor(
         metadataEditorModel: MetadataEditorModel,
-        onMetadataChanged: (MetadataEditorModel) -> Unit
+        modifier: Modifier,
+        onChanged: (MetadataEditorModel) -> Unit,
     )
 
     @Composable
     fun DoubleValueEditor(
         editorModel: DoubleValueEditorModel,
-        onChanged: (DoubleValueEditorModel) -> Unit
+        modifier: Modifier,
+        onChanged: (DoubleValueEditorModel) -> Unit,
     )
 
     @Composable
     fun Selector(
         editor: SelectorEditorModel,
-        onLocationChanged: (SelectorEditorModel) -> Unit,
+        modifier: Modifier,
+        onChanged: (SelectorEditorModel) -> Unit,
     )
 }
