@@ -58,5 +58,11 @@ sealed class DoubleValueEditorModel : ComponentEditorModel() {
             override val supportingText: String = "Diastolic blood pressure measurement, in Pressure unit. Required field. Valid range: 10-180mmHg. For SDK extension 17 or higher, Valid range: 10-300mmHg.",
             override val suffix: String = "millimeters of Mercury (mmHg)",
         ) : Type()
+
+        data class PercentageBodyFat(
+            override val label: String = "Percentage",
+            override val supportingText: String = "Percentage. Required field. Valid range: 0-100.",
+            override val suffix: String = "%",
+        ) : Type()
     }
 }
