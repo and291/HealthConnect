@@ -10,28 +10,29 @@ import androidx.health.connect.client.units.Power
 import androidx.health.connect.client.units.Temperature
 import java.time.Instant
 import java.time.ZoneOffset
+import kotlin.reflect.KClass
 
 class InsertRecordFactory {
 
-    fun createDefault(recordClass: Class<Record>): Record = when (recordClass) {
+    fun createDefault(recordClass: KClass<Record>): Record = when (recordClass) {
 
-        BasalBodyTemperatureRecord::class.java -> BasalBodyTemperatureRecord(
+        BasalBodyTemperatureRecord::class -> BasalBodyTemperatureRecord(
             time = Instant.now(),
-            zoneOffset = ZoneOffset.systemDefault() as ZoneOffset,
+            zoneOffset = ZoneOffset.UTC,
             metadata = Metadata.Companion.unknownRecordingMethod(),
             temperature = Temperature.Companion.celsius(36.6)
         )
 
-        BasalMetabolicRateRecord::class.java -> BasalMetabolicRateRecord(
+        BasalMetabolicRateRecord::class -> BasalMetabolicRateRecord(
             time = Instant.now(),
-            zoneOffset = ZoneOffset.systemDefault() as ZoneOffset,
+            zoneOffset = ZoneOffset.UTC,
             metadata = Metadata.Companion.unknownRecordingMethod(),
             basalMetabolicRate = Power.Companion.kilocaloriesPerDay(2500.0),
         )
 
-        BloodGlucoseRecord::class.java -> BloodGlucoseRecord(
+        BloodGlucoseRecord::class -> BloodGlucoseRecord(
             time = Instant.now(),
-            zoneOffset = ZoneOffset.systemDefault() as ZoneOffset,
+            zoneOffset = ZoneOffset.UTC,
             metadata = Metadata.Companion.unknownRecordingMethod(),
             level = BloodGlucose.Companion.millimolesPerLiter(5.0)
         )

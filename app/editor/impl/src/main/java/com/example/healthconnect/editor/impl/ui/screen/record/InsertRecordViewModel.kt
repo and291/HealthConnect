@@ -16,9 +16,10 @@ import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 
 class InsertRecordViewModel(
-    recordClass: Class<Record>,
+    recordClass: KClass<Record>,
     insertRecordFactory: InsertRecordFactory,
     private val recordMapper: RecordMapper,
     private val insert: Insert,
@@ -117,6 +118,6 @@ class InsertRecordViewModel(
 
     companion object {
 
-        val RECORD_CLASS_KEY: CreationExtras.Key<Class<Record>> = CreationExtras.Key()
+        val RECORD_CLASS_KEY: CreationExtras.Key<KClass<Record>> = CreationExtras.Key()
     }
 }

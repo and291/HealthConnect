@@ -10,7 +10,6 @@ import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
-import com.example.healthconnect.utilty.impl.ui.screen.InsertRecordScreen
 import com.example.healthconnect.utilty.impl.ui.screen.RecordsScreen
 
 class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
@@ -30,16 +29,10 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
                         backStack.add(EditorNavigationEntry.EditRecordScreen(it))
                     },
                     onInsertRecordClick = {
-                        backStack.add(UtilityNavigationEntry.Insert(key.recordType))
+                        backStack.add(EditorNavigationEntry.Insert(key.recordType))
                     },
                     recordType = key.recordType,
                     modifier = Modifier.padding(innerPadding ?: defaultPadding)
-                )
-            }
-
-            is UtilityNavigationEntry.Insert -> NavEntry(key) {
-                InsertRecordScreen(
-                    modifier = Modifier.padding(innerPadding ?: defaultPadding),
                 )
             }
         }

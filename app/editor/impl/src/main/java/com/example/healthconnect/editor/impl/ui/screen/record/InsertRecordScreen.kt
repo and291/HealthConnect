@@ -25,11 +25,12 @@ import com.example.healthconnect.editor.impl.di.Di
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel.State
 import java.time.Instant
 import java.time.ZoneOffset
+import kotlin.reflect.KClass
 
 
 @Composable
 fun InsertRecordScreen(
-    recordClass: Class<Record>,
+    recordClass: KClass<Record>,
     modifier: Modifier = Modifier,
     componentFactory: ComponentFactory = Di.componentFactory,
     viewModel: InsertRecordViewModel = viewModel(
