@@ -1,5 +1,6 @@
 package com.example.healthconnect.components.impl.ui.metadata
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,10 +26,11 @@ import java.time.Instant
 @Composable
 internal fun MetadataEditorComponent(
     metadataEditorModel: MetadataEditorModel,
+    onMetadataChanged: (MetadataEditorModel) -> Unit,
     modifier: Modifier = Modifier,
     recordingMethodMapper: RecordingMethodMapper = Di.recordingMethodMapper,
     viewModel: MetadataEditorViewModel = viewModel(
-        modelClass = MetadataEditorViewModel::class,
+        key = metadataEditorModel.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
             set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, metadataEditorModel)
@@ -35,12 +38,18 @@ internal fun MetadataEditorComponent(
     ),
 ) {
 
+    LaunchedEffect(viewModel.state) {
+        Log.d(this::class.simpleName, "Metadata: ${viewModel.state}")
+        onMetadataChanged(viewModel.state)
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
+        Text("Metadata:")
 
         SelectorComponent(
             title = "Recording Method",
@@ -179,6 +188,7 @@ fun MetadataEditorComponentEmptyDevicePreview() {
 
     MetadataEditorComponent(
         metadataEditorModel = sampleMetadataEditorModel,
+        onMetadataChanged = {},
     )
 }
 
@@ -201,5 +211,6 @@ fun MetadataEditorComponentSpecifiedDevicePreview() {
 
     MetadataEditorComponent(
         metadataEditorModel = sampleMetadataEditorModel,
+        onMetadataChanged = {},
     )
 }

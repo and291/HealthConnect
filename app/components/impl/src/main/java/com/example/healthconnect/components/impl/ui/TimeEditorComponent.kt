@@ -1,44 +1,51 @@
 package com.example.healthconnect.components.impl.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel
 import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel.Event.OnTimeChanged
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.TimeZone
 
 @Composable
 internal fun TimeEditorComponent(
-    instant: Instant,
+    model: TimeEditorInternalModel,
+    onTimeChanged: (TimeEditorModel) -> Unit,
     modifier: Modifier = Modifier,
-    zoneOffset: ZoneOffset? = null,
-): Unit = TimeEditorComponent(
-    modifier = modifier,
-    viewModel = viewModel(
+    viewModel: TimeEditorComponentViewModel = viewModel(
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(TimeEditorComponentViewModel.Companion.TIME_MODEL_KEY, TimeEditorInternalModel.Companion.create(instant, zoneOffset))
+            set(TimeEditorComponentViewModel.TIME_MODEL_KEY, model)
         }
-    )
-)
-
-@Composable
-internal fun TimeEditorComponent(
-    viewModel: TimeEditorComponentViewModel,
-    modifier: Modifier = Modifier
+    ),
 ) {
+
+    LaunchedEffect(viewModel.state) {
+        Log.d(this::class.simpleName, "Time: ${viewModel.state}")
+        val timeEditorModel = when (val t = viewModel.state.timeModel) {
+            is TimeEditorInternalModel.TimeModel.Invalid -> TimeEditorModel.Invalid
+            is TimeEditorInternalModel.TimeModel.Valid -> TimeEditorModel.Valid(
+                instant = t.instant,
+                zoneOffset = viewModel.state.zoneId?.rules?.getOffset(t.instant)
+            )
+        }
+
+        onTimeChanged(timeEditorModel)
+    }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -92,8 +99,8 @@ internal fun TimeEditorComponent(
 fun TimeEditorComponentPreview() {
 
     TimeEditorComponent(
-        instant = Instant.now(),
+        model = TimeEditorInternalModel.create(Instant.now(), null),
+        onTimeChanged = {},
         modifier = Modifier.padding(24.dp),
-        zoneOffset = null,
     )
 }
