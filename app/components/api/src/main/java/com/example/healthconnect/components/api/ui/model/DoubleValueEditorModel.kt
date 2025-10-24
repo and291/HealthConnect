@@ -46,7 +46,7 @@ sealed class DoubleValueEditorModel : ComponentEditorModel() {
             override val suffix: String = "millimoles per liter",
         ) : Type()
 
-        //TODO unite with next?
+        //TODO unite with next? Keep in mind that viewmodel's key depends on this Type!
         data class SystolicPressure(
             override val label: String = "Systolic Pressure",
             override val supportingText: String = "Systolic blood pressure measurement, in Pressure unit. Required field. Valid range: 20-200mmHg. For SDK extension 17 or higher, Valid range: 20-300mmHg.",
