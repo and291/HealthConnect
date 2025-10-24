@@ -29,12 +29,12 @@ class RecordMapper(
 
     fun toUiModel(record: Record): RecordEditorModel = when (record) {
         is BasalBodyTemperatureRecord -> BasalBodyTemperatureRecordEditorModel(
-            timeEditorModel = TimeEditorModel.Valid(
+            time = TimeEditorModel.Valid(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
-            metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            temperatureEditorModel = DoubleValueEditorModel.Valid(
+            metadata = metadataMapper.toEntity(record.metadata),
+            temperature = DoubleValueEditorModel.Valid(
                 parsedValue = record.temperature.inCelsius,
                 type = DoubleValueEditorModel.Type.Temperature(),
             ),
@@ -49,7 +49,7 @@ class RecordMapper(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
-            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            metadata = metadataMapper.toEntity(record.metadata),
             temperature = DoubleValueEditorModel.Valid(
                 parsedValue = record.temperature.inCelsius,
                 type = DoubleValueEditorModel.Type.Temperature(),
@@ -61,23 +61,23 @@ class RecordMapper(
         )
 
         is BasalMetabolicRateRecord -> BasalMetabolicRateRecordEditorModel(
-            timeEditorModel = TimeEditorModel.Valid(
+            time = TimeEditorModel.Valid(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
-            metadataEditorModel = metadataMapper.toEntity(record.metadata),
-            powerEditorModel = DoubleValueEditorModel.Valid(
+            metadata = metadataMapper.toEntity(record.metadata),
+            power = DoubleValueEditorModel.Valid(
                 parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay,
                 type = DoubleValueEditorModel.Type.Power(),
             )
         )
 
         is BloodGlucoseRecord -> BloodGlucoseLevelRecordEditorModel(
-            timeEditorModel = TimeEditorModel.Valid(
+            time = TimeEditorModel.Valid(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
-            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            metadata = metadataMapper.toEntity(record.metadata),
             level = DoubleValueEditorModel.Valid(
                 parsedValue = record.level.inMillimolesPerLiter,
                 type = DoubleValueEditorModel.Type.BloodGlucoseLevel(),
@@ -97,11 +97,11 @@ class RecordMapper(
         )
         
         is BloodPressureRecord -> BloodPressureRecordEditorModel(
-            timeEditorModel = TimeEditorModel.Valid(
+            time = TimeEditorModel.Valid(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
-            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            metadata = metadataMapper.toEntity(record.metadata),
             systolic = DoubleValueEditorModel.Valid(
                 parsedValue = record.systolic.inMillimetersOfMercury,
                 type = DoubleValueEditorModel.Type.SystolicPressure()
@@ -125,7 +125,7 @@ class RecordMapper(
                 instant = record.time,
                 zoneOffset = record.zoneOffset
             ),
-            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            metadata = metadataMapper.toEntity(record.metadata),
             percentage = DoubleValueEditorModel.Valid(
                 parsedValue = record.percentage.value,
                 type = DoubleValueEditorModel.Type.PercentageBodyFat(),
@@ -143,32 +143,32 @@ class RecordMapper(
     @Throws(Exception::class)
     fun toEntity(validUiModel: RecordEditorModel): Record = when (validUiModel) {
         is BasalBodyTemperatureRecordEditorModel -> BasalBodyTemperatureRecord(
-            time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
-            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
-            temperature = (validUiModel.temperatureEditorModel as DoubleValueEditorModel.Valid).parsedValue.celsius,
+            time = (validUiModel.time as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.time.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
+            temperature = (validUiModel.temperature as DoubleValueEditorModel.Valid).parsedValue.celsius,
             measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value
         )
 
         is BodyTemperatureRecordEditorModel -> BodyTemperatureRecord(
             time = (validUiModel.time as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.time.zoneOffset,
-            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
             temperature = (validUiModel.temperature as DoubleValueEditorModel.Valid).parsedValue.celsius,
             measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value
         )
 
         is BasalMetabolicRateRecordEditorModel -> BasalMetabolicRateRecord(
-            time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
-            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
-            basalMetabolicRate = (validUiModel.powerEditorModel as DoubleValueEditorModel.Valid).parsedValue.kilocaloriesPerDay,
+            time = (validUiModel.time as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.time.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
+            basalMetabolicRate = (validUiModel.power as DoubleValueEditorModel.Valid).parsedValue.kilocaloriesPerDay,
         )
 
         is BloodGlucoseLevelRecordEditorModel -> BloodGlucoseRecord(
-            time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
-            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            time = (validUiModel.time as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.time.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
             level = BloodGlucose.millimolesPerLiter((validUiModel.level as DoubleValueEditorModel.Valid).parsedValue),
             specimenSource = (validUiModel.specimenSource as SelectorEditorModel.Valid).value,
             mealType = (validUiModel.mealType as SelectorEditorModel.Valid).value,
@@ -176,9 +176,9 @@ class RecordMapper(
         )
 
         is BloodPressureRecordEditorModel -> BloodPressureRecord(
-            time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
-            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            time = (validUiModel.time as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.time.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
             systolic = Pressure.millimetersOfMercury((validUiModel.systolic as DoubleValueEditorModel.Valid).parsedValue),
             diastolic = Pressure.millimetersOfMercury((validUiModel.diastolic as DoubleValueEditorModel.Valid).parsedValue),
             bodyPosition = (validUiModel.bodyPosition as SelectorEditorModel.Valid).value,
@@ -188,7 +188,7 @@ class RecordMapper(
         is BodyFatRecordEditorModel -> BodyFatRecord(
             time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
-            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
             percentage = (validUiModel.percentage as DoubleValueEditorModel.Valid).parsedValue.percent,
         )
     }

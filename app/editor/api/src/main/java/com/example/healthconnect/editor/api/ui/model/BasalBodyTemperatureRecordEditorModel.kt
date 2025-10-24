@@ -6,40 +6,43 @@ import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
 data class BasalBodyTemperatureRecordEditorModel(
-    val timeEditorModel: TimeEditorModel,
-    override val metadataEditorModel: MetadataEditorModel,
-    val temperatureEditorModel: DoubleValueEditorModel,
+    val time: TimeEditorModel,
+    override val metadata: MetadataEditorModel,
+    val temperature: DoubleValueEditorModel,
     val measurementLocation: SelectorEditorModel,
 ) : RecordEditorModel() {
 
-    override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
-            temperatureEditorModel is DoubleValueEditorModel.Valid &&
+    override fun isValid(): Boolean = time is TimeEditorModel.Valid &&
+            temperature is DoubleValueEditorModel.Valid &&
             measurementLocation is SelectorEditorModel.Valid &&
-            metadataEditorModel.isValid()
+            metadata.isValid()
 
+    @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(event: RecordModificationEvent): RecordEditorModel = when (event) {
-        is RecordModificationEvent.OnValueSelected -> when (event.editorModel.type) {
+        is RecordModificationEvent.OnValueSelected -> when (event.selector.type) {
             is SelectorEditorModel.Type.MeasurementLocationBodyTemperature -> copy(
-                measurementLocation = event.editorModel
+                measurementLocation = event.selector
             )
 
-            else -> TODO()
+            else -> throw NotImplementedError()
         }
 
         is RecordModificationEvent.OnMetadataChanged -> copy(
-            metadataEditorModel = event.metadata
+            metadata = event.metadata
         )
 
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
+        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
             is DoubleValueEditorModel.Type.Temperature -> copy(
-                temperatureEditorModel = event.editorModel
+                temperature = event.value
             )
 
-            else -> TODO()
+            else -> throw NotImplementedError()
         }
 
         is RecordModificationEvent.OnTimeChanged -> copy(
-            timeEditorModel = event.timeEditorModel
+            time = event.time
         )
+
+        else -> throw NotImplementedError()
     }
 }

@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 
 sealed class RecordEditorModel {
-    abstract val metadataEditorModel: MetadataEditorModel
+    abstract val metadata: MetadataEditorModel
     abstract fun isValid(): Boolean
     abstract fun update(event: RecordModificationEvent): RecordEditorModel
 

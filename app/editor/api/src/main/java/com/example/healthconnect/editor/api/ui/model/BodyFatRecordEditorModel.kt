@@ -6,26 +6,32 @@ import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
 data class BodyFatRecordEditorModel(
     val timeEditorModel: TimeEditorModel,
-    override val metadataEditorModel: MetadataEditorModel,
+    override val metadata: MetadataEditorModel,
     val percentage: DoubleValueEditorModel,
 ) : RecordEditorModel() {
     override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
             percentage is DoubleValueEditorModel.Valid &&
-            metadataEditorModel.isValid()
+            metadata.isValid()
 
+    @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(event: RecordModificationEvent): RecordEditorModel = when (event) {
         is RecordModificationEvent.OnMetadataChanged -> copy(
-            metadataEditorModel = event.metadata
+            metadata = event.metadata
         )
+
         is RecordModificationEvent.OnTimeChanged -> copy(
-            timeEditorModel = event.timeEditorModel
+            timeEditorModel = event.time
         )
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
+
+        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
             is DoubleValueEditorModel.Type.PercentageBodyFat -> copy(
-                percentage = event.editorModel
+                percentage = event.value
             )
+
             else -> throw NotImplementedError()
         }
+
         is RecordModificationEvent.OnValueSelected -> throw NotImplementedError()
+        else -> throw NotImplementedError()
     }
 }

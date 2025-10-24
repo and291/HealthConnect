@@ -8,11 +8,11 @@ import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 sealed class RecordModificationEvent {
 
     data class OnTimeChanged(
-        val timeEditorModel: TimeEditorModel,
+        val time: TimeEditorModel,
     ) : RecordModificationEvent()
 
     data class OnValueSelected(
-        val editorModel: SelectorEditorModel
+        val selector: SelectorEditorModel
     ) : RecordModificationEvent()
 
     data class OnMetadataChanged(
@@ -20,6 +20,6 @@ sealed class RecordModificationEvent {
     ) : RecordModificationEvent()
 
     data class OnDoubleValueChanged(
-        val editorModel: DoubleValueEditorModel,
+        val value: DoubleValueEditorModel,
     ) : RecordModificationEvent()
 }

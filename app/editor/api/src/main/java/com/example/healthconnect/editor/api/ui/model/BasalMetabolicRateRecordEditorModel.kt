@@ -5,32 +5,33 @@ import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
 data class BasalMetabolicRateRecordEditorModel(
-    val timeEditorModel: TimeEditorModel,
-    val powerEditorModel: DoubleValueEditorModel,
-    override val metadataEditorModel: MetadataEditorModel,
+    val time: TimeEditorModel,
+    val power: DoubleValueEditorModel,
+    override val metadata: MetadataEditorModel,
 ) : RecordEditorModel() {
 
-    override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
-            powerEditorModel is DoubleValueEditorModel.Valid &&
-            metadataEditorModel.isValid()
+    override fun isValid(): Boolean = time is TimeEditorModel.Valid &&
+            power is DoubleValueEditorModel.Valid &&
+            metadata.isValid()
 
+    @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(event: RecordModificationEvent): RecordEditorModel = when (event) {
         is RecordModificationEvent.OnMetadataChanged -> copy(
-            metadataEditorModel = event.metadata
+            metadata = event.metadata
         )
 
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
+        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
             is DoubleValueEditorModel.Type.Power -> copy(
-                powerEditorModel = event.editorModel
+                power = event.value
             )
 
-            else -> TODO()
+            else -> throw NotImplementedError()
         }
 
         is RecordModificationEvent.OnTimeChanged -> copy(
-            timeEditorModel = event.timeEditorModel
+            time = event.time
         )
 
-        else -> TODO()
+        else -> throw NotImplementedError()
     }
 }
