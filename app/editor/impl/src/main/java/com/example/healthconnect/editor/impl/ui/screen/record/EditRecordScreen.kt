@@ -20,8 +20,8 @@ import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.editor.api.ui.model.Event
 import com.example.healthconnect.editor.impl.di.Di
+import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.Event
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State
 import java.time.Instant
 import java.time.ZoneOffset

@@ -20,8 +20,8 @@ import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.editor.api.ui.model.Event
 import com.example.healthconnect.editor.impl.di.Di
+import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel.Event
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel.State
 import java.time.Instant
 import java.time.ZoneOffset
@@ -57,7 +57,7 @@ fun InsertRecordScreen(
                 is State.Edition, is State.InsertResult -> Row {
                     Button(
                         enabled = viewModel.state.editorModel.isValid(),
-                        onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) } //TODO change event
+                        onClick = { viewModel.onEvent(Event.OnInsert) }
                     ) {
                         Text("Insert")
                     }

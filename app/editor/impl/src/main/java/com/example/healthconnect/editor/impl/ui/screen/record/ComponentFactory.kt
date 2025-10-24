@@ -10,11 +10,11 @@ import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnDoubleValueChanged
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnValueSelected
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnMetadataChanged
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnTimeChanged
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnDoubleValueChanged
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnValueSelected
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnMetadataChanged
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnTimeChanged
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import kotlin.reflect.full.declaredMemberProperties
 
@@ -25,7 +25,7 @@ class ComponentFactory(
     @Composable
     fun Create(
         recordEditorModel: RecordEditorModel,
-        eventHandler: (RecordEditEvent) -> Unit,
+        eventHandler: (RecordModificationEvent) -> Unit,
     ) {
         val propertyValues = when (recordEditorModel) {
             is BasalBodyTemperatureRecordEditorModel -> BasalBodyTemperatureRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
@@ -44,7 +44,7 @@ class ComponentFactory(
     @Composable
     private fun Create(
         editorModel: ComponentEditorModel,
-        eventHandler: (RecordEditEvent) -> Unit,
+        eventHandler: (RecordModificationEvent) -> Unit,
     ) = when (editorModel) {
         is TimeEditorModel.Valid -> componentProvider.TimeEditor(
             time = editorModel.instant,

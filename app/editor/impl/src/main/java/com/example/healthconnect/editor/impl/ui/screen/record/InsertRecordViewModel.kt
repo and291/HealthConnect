@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
-import com.example.healthconnect.editor.api.ui.model.Event
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
@@ -27,7 +26,7 @@ class InsertRecordViewModel(
 
     private var _state: State<RecordEditorModel> by mutableStateOf(
         State.Edition(
-            recordMapper.toUiModel(
+            editorModel = recordMapper.toUiModel(
                 record = insertRecordFactory.createDefault(recordClass)
             )
         )
@@ -37,15 +36,16 @@ class InsertRecordViewModel(
 
     private var insertJob: Job? = null
 
+    fun onEvent(event: RecordModificationEvent) {
+        (_state as? State.Edition<RecordEditorModel>)?.also {
+            _state = State.Edition(it.editorModel.update(event))
+        }
+    }
+
     fun onEvent(event: Event) {
         when (event) {
-            is RecordEditEvent -> (_state as? State.Edition)?.also {
-                _state = State.Edition(
-                    editorModel = it.editorModel.update(event)
-                )
-            }
 
-            is Event.OnUpdate -> (_state as? State.Edition)?.also { currentState ->
+            is Event.OnInsert -> (_state as? State.Edition)?.also { currentState ->
                 insertJob?.takeIf { it.isActive }?.let {
                     Log.w(
                         this::class.simpleName,
@@ -83,6 +83,11 @@ class InsertRecordViewModel(
                 }
             }
         }
+    }
+
+    sealed class Event {
+
+        data object OnInsert : Event()
     }
 
     sealed class State<T : RecordEditorModel> {

@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
-import com.example.healthconnect.editor.api.ui.model.Event
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State.*
 import com.example.healthconnect.utilty.api.domain.entity.Result
@@ -34,13 +33,14 @@ class EditRecordViewModel(
 
     private var updateJob: Job? = null
 
+    fun onEvent(event: RecordModificationEvent) {
+        (_state as? Edition)?.also {
+            _state = Edition(it.editorModel.update(event))
+        }
+    }
+
     fun onEvent(event: Event) {
         when (event) {
-            is RecordEditEvent -> (_state as? Edition)?.also {
-                _state = Edition(
-                    editorModel = it.editorModel.update(event)
-                )
-            }
             is Event.OnUpdate -> (_state as? Edition)?.also { currentState ->
                 updateJob?.takeIf { it.isActive }?.let {
                     Log.w(this::class.simpleName, "Attempt to start parallel updateJob was prevented")
@@ -80,6 +80,14 @@ class EditRecordViewModel(
                 }
             }
         }
+    }
+
+    sealed class Event {
+
+        data class OnUpdate(
+            //https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data
+            val upsert: Boolean = false
+        ) : Event()
     }
 
     sealed class State<T : RecordEditorModel> {
