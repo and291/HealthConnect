@@ -6,6 +6,12 @@ import androidx.health.connect.client.records.BloodGlucoseRecord.Companion.RELAT
 import androidx.health.connect.client.records.BloodGlucoseRecord.Companion.RELATION_TO_MEAL_FASTING
 import androidx.health.connect.client.records.BloodGlucoseRecord.Companion.RELATION_TO_MEAL_GENERAL
 import androidx.health.connect.client.records.BloodGlucoseRecord.Companion.RELATION_TO_MEAL_UNKNOWN
+import androidx.health.connect.client.records.BloodPressureRecord
+import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY_POSITION_LYING_DOWN
+import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY_POSITION_RECLINING
+import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY_POSITION_SITTING_DOWN
+import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY_POSITION_STANDING_UP
+import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY_POSITION_UNKNOWN
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_BREAKFAST
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER
@@ -37,7 +43,7 @@ sealed class SelectorEditorModel() : ComponentEditorModel() {
             return requireNotNull(foundItem?.second) { "$title = $item not found among available items: $items" }
         }
 
-        data class BodyTemperatureMeasurementLocationType(
+        data class MeasurementLocationBodyTemperature(
             override val title: String = "Measurement Location",
             override val supportText: String = "Where on the user's basal body the temperature measurement was taken from. Optional field.",
             override val items: List<Pair<Int, String>> = listOf(
@@ -90,6 +96,30 @@ sealed class SelectorEditorModel() : ComponentEditorModel() {
                 RELATION_TO_MEAL_FASTING to "FASTING",
                 RELATION_TO_MEAL_BEFORE_MEAL to "BEFORE_MEAL",
                 RELATION_TO_MEAL_AFTER_MEAL to "AFTER_MEAL",
+            ),
+        ) : Type()
+
+        data class BodyPosition(
+            override val title: String = "Body Position",
+            override val supportText: String = "The user's body position when the measurement was taken. Optional field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                BODY_POSITION_UNKNOWN to "UNKNOWN",
+                BODY_POSITION_STANDING_UP to "STANDING_UP",
+                BODY_POSITION_SITTING_DOWN to "SITTING_DOWN",
+                BODY_POSITION_LYING_DOWN to "LYING_DOWN",
+                BODY_POSITION_RECLINING to "RECLINING",
+            ),
+        ) : Type()
+
+        data class MeasurementLocationBloodPressure(
+            override val title: String = "Measurement Location",
+            override val supportText: String = "The arm and part of the arm where the measurement was taken. Optional field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                BloodPressureRecord.MEASUREMENT_LOCATION_UNKNOWN to "UNKNOWN",
+                BloodPressureRecord.MEASUREMENT_LOCATION_LEFT_WRIST to "LEFT_WRIST",
+                BloodPressureRecord.MEASUREMENT_LOCATION_RIGHT_WRIST to "RIGHT_WRIST",
+                BloodPressureRecord.MEASUREMENT_LOCATION_LEFT_UPPER_ARM to "LEFT_UPPER_ARM",
+                BloodPressureRecord.MEASUREMENT_LOCATION_RIGHT_UPPER_ARM to "RIGHT_UPPER_ARM",
             ),
         ) : Type()
     }

@@ -10,6 +10,7 @@ import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.BloodPressureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
 import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnDoubleValueChanged
 import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnValueSelected
@@ -31,6 +32,7 @@ class ComponentFactory(
             is BasalBodyTemperatureRecordEditorModel -> BasalBodyTemperatureRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
             is BasalMetabolicRateRecordEditorModel -> BasalMetabolicRateRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
             is BloodGlucoseLevelRecordEditorModel -> BloodGlucoseLevelRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
+            is BloodPressureRecordEditorModel -> BloodPressureRecordEditorModel::class.declaredMemberProperties.map { it.get(recordEditorModel) as ComponentEditorModel }
         }
 
         propertyValues.forEach {

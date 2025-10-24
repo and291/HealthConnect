@@ -3,8 +3,10 @@ package com.example.healthconnect.editor.api.ui.mapper
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
+import androidx.health.connect.client.records.BloodPressureRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.units.BloodGlucose
+import androidx.health.connect.client.units.Pressure
 import androidx.health.connect.client.units.celsius
 import androidx.health.connect.client.units.kilocaloriesPerDay
 import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
@@ -13,6 +15,7 @@ import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.BloodPressureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 
 class RecordMapper(
@@ -32,7 +35,7 @@ class RecordMapper(
             ),
             measurementLocation = SelectorEditorModel.Valid(
                 value = record.measurementLocation, //TODO validate data from lib
-                type = SelectorEditorModel.Type.BodyTemperatureMeasurementLocationType(),
+                type = SelectorEditorModel.Type.MeasurementLocationBodyTemperature(),
             )
         )
 
@@ -71,6 +74,30 @@ class RecordMapper(
                 type = SelectorEditorModel.Type.RelationToMeal()
             ),
         )
+        
+        is BloodPressureRecord -> BloodPressureRecordEditorModel(
+            timeEditorModel = TimeEditorModel.Valid(
+                instant = record.time,
+                zoneOffset = record.zoneOffset
+            ),
+            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            systolic = DoubleValueEditorModel.Valid(
+                parsedValue = record.systolic.inMillimetersOfMercury,
+                type = DoubleValueEditorModel.Type.SystolicPressure()
+            ),
+            diastolic = DoubleValueEditorModel.Valid(
+                parsedValue = record.diastolic.inMillimetersOfMercury,
+                type = DoubleValueEditorModel.Type.DiastolicPressure()
+            ),
+            bodyPosition = SelectorEditorModel.Valid(
+                value = record.bodyPosition,
+                type = SelectorEditorModel.Type.BodyPosition()
+            ),
+            measurementLocation = SelectorEditorModel.Valid(
+                value = record.measurementLocation,
+                type = SelectorEditorModel.Type.MeasurementLocationBloodPressure()
+            )
+        )
 
         else -> TODO()
     }
@@ -105,6 +132,16 @@ class RecordMapper(
             specimenSource = (validUiModel.specimenSource as SelectorEditorModel.Valid).value,
             mealType = (validUiModel.mealType as SelectorEditorModel.Valid).value,
             relationToMeal = (validUiModel.relationToMeals as SelectorEditorModel.Valid).value
+        )
+
+        is BloodPressureRecordEditorModel -> BloodPressureRecord(
+            time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            systolic = Pressure.millimetersOfMercury((validUiModel.systolic as DoubleValueEditorModel.Valid).parsedValue),
+            diastolic = Pressure.millimetersOfMercury((validUiModel.diastolic as DoubleValueEditorModel.Valid).parsedValue),
+            bodyPosition = (validUiModel.bodyPosition as SelectorEditorModel.Valid).value,
+            measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value,
         )
     }
 }

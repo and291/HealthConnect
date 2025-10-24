@@ -92,6 +92,7 @@ internal class ComponentProviderImpl : ComponentProvider {
         onChanged: (DoubleValueEditorModel) -> Unit
     ) {
         val viewModel: DoubleValueEditorComponentViewModel = viewModel(
+            key = editorModel.type.toString(),
             factory = Di.componentViewModelFactory,
             extras = MutableCreationExtras().apply {
                 set(DoubleValueEditorComponentViewModel.MODEL_KEY, editorModel)

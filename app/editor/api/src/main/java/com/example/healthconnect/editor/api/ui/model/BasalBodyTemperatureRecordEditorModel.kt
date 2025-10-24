@@ -19,7 +19,7 @@ data class BasalBodyTemperatureRecordEditorModel(
 
     override fun update(event: RecordModificationEvent): RecordEditorModel = when (event) {
         is RecordModificationEvent.OnValueSelected -> when (event.editorModel.type) {
-            is SelectorEditorModel.Type.BodyTemperatureMeasurementLocationType -> copy(
+            is SelectorEditorModel.Type.MeasurementLocationBodyTemperature -> copy(
                 measurementLocation = event.editorModel
             )
 
