@@ -12,7 +12,7 @@ import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEdi
 import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordEditEvent
 import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnDoubleValueChanged
-import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnMeasurementLocationSelected
+import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnValueSelected
 import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnMetadataChanged
 import com.example.healthconnect.editor.api.ui.model.RecordEditEvent.OnTimeChanged
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
@@ -62,7 +62,7 @@ class ComponentFactory(
         }
 
         is SelectorEditorModel -> componentProvider.Selector(editorModel) {
-            eventHandler(OnMeasurementLocationSelected(it))
+            eventHandler(OnValueSelected(it))
         }
     }
 }

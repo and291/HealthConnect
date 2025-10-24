@@ -11,8 +11,8 @@ sealed class RecordEditEvent : Event() {
         val timeEditorModel: TimeEditorModel,
     ) : RecordEditEvent()
 
-    data class OnMeasurementLocationSelected(
-        val location: SelectorEditorModel
+    data class OnValueSelected(
+        val editorModel: SelectorEditorModel
     ) : RecordEditEvent()
 
     data class OnMetadataChanged(

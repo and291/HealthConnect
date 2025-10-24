@@ -19,6 +19,22 @@ data class BloodGlucoseLevelRecordEditorModel(
             metadataEditorModel.isValid()
 
     override fun update(event: RecordEditEvent): RecordEditorModel = when (event) {
+        is RecordEditEvent.OnValueSelected -> when (event.editorModel.type) {
+            is SelectorEditorModel.Type.MealType -> copy(
+                mealType = event.editorModel,
+            )
+
+            is SelectorEditorModel.Type.RelationToMeal -> copy(
+                relationToMeals = event.editorModel,
+            )
+
+            is SelectorEditorModel.Type.SpecimenSource -> copy(
+                specimenSource = event.editorModel,
+            )
+
+            else -> TODO()
+        }
+
         is RecordEditEvent.OnMetadataChanged -> copy(
             metadataEditorModel = event.metadata
         )
