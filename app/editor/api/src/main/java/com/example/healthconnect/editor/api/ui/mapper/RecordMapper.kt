@@ -5,6 +5,7 @@ import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.BloodPressureRecord
 import androidx.health.connect.client.records.BodyFatRecord
+import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.units.BloodGlucose
 import androidx.health.connect.client.units.Pressure
@@ -19,6 +20,7 @@ import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEdi
 import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BloodPressureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BodyFatRecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.BodyTemperatureRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 
 class RecordMapper(
@@ -33,6 +35,22 @@ class RecordMapper(
             ),
             metadataEditorModel = metadataMapper.toEntity(record.metadata),
             temperatureEditorModel = DoubleValueEditorModel.Valid(
+                parsedValue = record.temperature.inCelsius,
+                type = DoubleValueEditorModel.Type.Temperature(),
+            ),
+            measurementLocation = SelectorEditorModel.Valid(
+                value = record.measurementLocation, //TODO validate data from lib
+                type = SelectorEditorModel.Type.MeasurementLocationBodyTemperature(),
+            )
+        )
+
+        is BodyTemperatureRecord -> BodyTemperatureRecordEditorModel(
+            time = TimeEditorModel.Valid(
+                instant = record.time,
+                zoneOffset = record.zoneOffset
+            ),
+            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            temperature = DoubleValueEditorModel.Valid(
                 parsedValue = record.temperature.inCelsius,
                 type = DoubleValueEditorModel.Type.Temperature(),
             ),
@@ -129,6 +147,14 @@ class RecordMapper(
             zoneOffset = validUiModel.timeEditorModel.zoneOffset,
             metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
             temperature = (validUiModel.temperatureEditorModel as DoubleValueEditorModel.Valid).parsedValue.celsius,
+            measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value
+        )
+
+        is BodyTemperatureRecordEditorModel -> BodyTemperatureRecord(
+            time = (validUiModel.time as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.time.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            temperature = (validUiModel.temperature as DoubleValueEditorModel.Valid).parsedValue.celsius,
             measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value
         )
 
