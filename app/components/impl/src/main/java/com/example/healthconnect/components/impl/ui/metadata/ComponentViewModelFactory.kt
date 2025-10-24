@@ -14,7 +14,7 @@ internal class ComponentViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(
         modelClass: KClass<T>,
-        extras: CreationExtras
+        extras: CreationExtras,
     ): T = when (modelClass) {
         MetadataEditorViewModel::class -> MetadataEditorViewModel(
             initialEntity = checkNotNull(extras[MetadataEditorViewModel.METADATA_ENTITY_KEY])
@@ -32,7 +32,7 @@ internal class ComponentViewModelFactory : ViewModelProvider.Factory {
             powerEditorModel = checkNotNull(extras[PowerEditorComponentViewModel.MODEL_KEY])
         )
 
-        BloodGlucoseLevelEditorComponentViewModel::class ->BloodGlucoseLevelEditorComponentViewModel(
+        BloodGlucoseLevelEditorComponentViewModel::class -> BloodGlucoseLevelEditorComponentViewModel(
             editorModel = checkNotNull(extras[BloodGlucoseLevelEditorComponentViewModel.MODEL_KEY])
         )
 

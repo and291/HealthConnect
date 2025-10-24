@@ -10,7 +10,6 @@ import androidx.health.connect.client.units.kilocaloriesPerDay
 import com.example.healthconnect.components.api.ui.model.BloodGlucoseLevelEditorModel
 import com.example.healthconnect.components.api.ui.model.PowerEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.SelectorType
 import com.example.healthconnect.components.api.ui.model.TemperatureEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
@@ -32,7 +31,7 @@ class RecordMapper(
             temperatureEditorModel = TemperatureEditorModel.Valid(parsedValue = record.temperature.inCelsius),
             measurementLocation = SelectorEditorModel.Valid(
                 value = record.measurementLocation, //TODO validate data from lib
-                selectorType = SelectorType.BodyTemperatureMeasurementLocationType(),
+                type = SelectorEditorModel.Type.BodyTemperatureMeasurementLocationType(),
             )
         )
 
@@ -54,15 +53,15 @@ class RecordMapper(
             level = BloodGlucoseLevelEditorModel.Valid(record.level.inMillimolesPerLiter),
             specimenSource = SelectorEditorModel.Valid(
                 value = record.specimenSource,
-                selectorType = SelectorType.SpecimenSource()
+                type = SelectorEditorModel.Type.SpecimenSource()
             ),
             mealType = SelectorEditorModel.Valid(
                 value = record.mealType,
-                selectorType = SelectorType.MealType()
+                type = SelectorEditorModel.Type.MealType()
             ),
             relationToMeals = SelectorEditorModel.Valid(
                 value = record.relationToMeal,
-                selectorType = SelectorType.RelationToMeal()
+                type = SelectorEditorModel.Type.RelationToMeal()
             ),
         )
 

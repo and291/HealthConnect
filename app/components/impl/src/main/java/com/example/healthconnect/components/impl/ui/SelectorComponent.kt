@@ -24,20 +24,20 @@ internal fun SelectorComponent(
 ) {
 
     SelectorComponent(
-        title = editor.selectorType.title,
-        supportText = editor.selectorType.supportText,
-        selectedText = editor.selectorType.map(editor.value),
-        items = editor.selectorType.items,
+        title = editor.type.title,
+        supportText = editor.type.supportText,
+        selectedText = editor.type.map(editor.value),
+        items = editor.type.items,
         itemComposable = { (_, name) ->
             Text(text = name)
         },
         onItemSelected = { (value, _) ->
             //TODO replace with required BL-validation
-            val isValid = editor.selectorType.items.find { x -> x.first == value } != null
+            val isValid = editor.type.items.find { x -> x.first == value } != null
             val selectorEditorModel = if (isValid) {
-                SelectorEditorModel.Valid(value, editor.selectorType)
+                SelectorEditorModel.Valid(value, editor.type)
             } else {
-                SelectorEditorModel.Invalid(value, editor.selectorType)
+                SelectorEditorModel.Invalid(value, editor.type)
             }
             onItemSelected(selectorEditorModel)
         }
