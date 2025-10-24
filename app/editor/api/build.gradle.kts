@@ -52,4 +52,7 @@ dependencies {
 
     //compose navigation v3
     implementation(libs.androidx.navigation3.runtime)
+
+    //kotlin reflection
+    implementation(kotlin("reflect"))
 }

@@ -59,9 +59,6 @@ dependencies {
     //coroutines viewmodel scope
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    //kotlin reflection
-    implementation(kotlin("reflect"))
-
     // Use to implement health connects
     implementation(libs.androidx.connect.client)
 

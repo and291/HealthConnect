@@ -4,11 +4,13 @@ import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.BloodPressureRecord
+import androidx.health.connect.client.records.BodyFatRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.units.BloodGlucose
 import androidx.health.connect.client.units.Pressure
 import androidx.health.connect.client.units.celsius
 import androidx.health.connect.client.units.kilocaloriesPerDay
+import androidx.health.connect.client.units.percent
 import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
@@ -16,6 +18,7 @@ import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordE
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.BloodPressureRecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.BodyFatRecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 
 class RecordMapper(
@@ -99,6 +102,18 @@ class RecordMapper(
             )
         )
 
+        is BodyFatRecord -> BodyFatRecordEditorModel(
+            timeEditorModel = TimeEditorModel.Valid(
+                instant = record.time,
+                zoneOffset = record.zoneOffset
+            ),
+            metadataEditorModel = metadataMapper.toEntity(record.metadata),
+            percentage = DoubleValueEditorModel.Valid(
+                parsedValue = record.percentage.value,
+                type = DoubleValueEditorModel.Type.PercentageBodyFat(),
+            )
+        )
+
         else -> TODO()
     }
 
@@ -142,6 +157,13 @@ class RecordMapper(
             diastolic = Pressure.millimetersOfMercury((validUiModel.diastolic as DoubleValueEditorModel.Valid).parsedValue),
             bodyPosition = (validUiModel.bodyPosition as SelectorEditorModel.Valid).value,
             measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value,
+        )
+
+        is BodyFatRecordEditorModel -> BodyFatRecord(
+            time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
+            zoneOffset = validUiModel.timeEditorModel.zoneOffset,
+            metadata = metadataMapper.toLibMetadata(validUiModel.metadataEditorModel),
+            percentage = (validUiModel.percentage as DoubleValueEditorModel.Valid).parsedValue.percent,
         )
     }
 }
