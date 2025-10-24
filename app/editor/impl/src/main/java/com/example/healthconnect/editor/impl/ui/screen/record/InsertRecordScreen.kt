@@ -56,7 +56,7 @@ fun InsertRecordScreen(
             when (val state = viewModel.state) {
                 is State.Edition, is State.InsertResult -> Row {
                     Button(
-                        enabled = viewModel.state.editorModel.isValid(), //TODO fix save in EditorScreen!
+                        enabled = viewModel.state.editorModel.isValid(),
                         onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) } //TODO change event
                     ) {
                         Text("Insert")
@@ -82,7 +82,7 @@ fun InsertRecordScreen(
 @Preview(showBackground = true, heightDp = 1600)
 fun InsertRecordScreenPreview() {
 
-    CommonRecordScreen(
+    EditRecordScreen(
         initialRecord = BasalBodyTemperatureRecord(
             time = Instant.EPOCH,
             zoneOffset = ZoneOffset.UTC,

@@ -22,20 +22,20 @@ import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.editor.api.ui.model.Event
 import com.example.healthconnect.editor.impl.di.Di
-import com.example.healthconnect.editor.impl.ui.screen.record.CommonRecordViewModel.State
+import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State
 import java.time.Instant
 import java.time.ZoneOffset
 
 
 @Composable
-fun CommonRecordScreen(
+fun EditRecordScreen(
     initialRecord: Record,
     modifier: Modifier = Modifier,
     componentFactory: ComponentFactory = Di.componentFactory,
-    viewModel: CommonRecordViewModel = viewModel(
+    viewModel: EditRecordViewModel = viewModel(
         factory = Di.recordViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(CommonRecordViewModel.RECORD_KEY, initialRecord)
+            set(EditRecordViewModel.RECORD_KEY, initialRecord)
         }
     )
 ) {
@@ -58,7 +58,7 @@ fun CommonRecordScreen(
             when (val state = viewModel.state) {
                 is State.Edition, is State.UpdateResult -> Row {
                     Button(
-                        enabled = viewModel.isChanged,
+                        enabled = viewModel.isChanged && viewModel.state.editorModel.isValid(),
                         onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) }
                     ) {
                         Text("Save")
@@ -84,7 +84,7 @@ fun CommonRecordScreen(
 @Preview(showBackground = true, heightDp = 1600)
 fun CommonRecordScreenPreview() {
 
-    CommonRecordScreen(
+    EditRecordScreen(
         initialRecord = BasalBodyTemperatureRecord(
             time = Instant.EPOCH,
             zoneOffset = ZoneOffset.UTC,

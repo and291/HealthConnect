@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
-import com.example.healthconnect.editor.impl.ui.screen.record.CommonRecordViewModel
+import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordFactory
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
@@ -23,8 +23,8 @@ class RecordViewModelFactory(
         modelClass: KClass<T>,
         extras: CreationExtras,
     ): T = when (modelClass) {
-        CommonRecordViewModel::class -> CommonRecordViewModel(
-            initialRecord = checkNotNull(extras[CommonRecordViewModel.RECORD_KEY]),
+        EditRecordViewModel::class -> EditRecordViewModel(
+            initialRecord = checkNotNull(extras[EditRecordViewModel.RECORD_KEY]),
             recordMapper = recordMapper,
             update = update,
         )
