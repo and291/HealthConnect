@@ -115,11 +115,11 @@ sealed class SelectorEditorModel() : ComponentEditorModel() {
             override val title: String = "Measurement Location",
             override val supportText: String = "The arm and part of the arm where the measurement was taken. Optional field.",
             override val items: List<Pair<Int, String>> = listOf(
-                BloodPressureRecord.Companion.MEASUREMENT_LOCATION_UNKNOWN to "UNKNOWN",
-                BloodPressureRecord.Companion.MEASUREMENT_LOCATION_LEFT_WRIST to "LEFT_WRIST",
-                BloodPressureRecord.Companion.MEASUREMENT_LOCATION_RIGHT_WRIST to "RIGHT_WRIST",
-                BloodPressureRecord.Companion.MEASUREMENT_LOCATION_LEFT_UPPER_ARM to "LEFT_UPPER_ARM",
-                BloodPressureRecord.Companion.MEASUREMENT_LOCATION_RIGHT_UPPER_ARM to "RIGHT_UPPER_ARM",
+                BloodPressureRecord.MEASUREMENT_LOCATION_UNKNOWN to "UNKNOWN",
+                BloodPressureRecord.MEASUREMENT_LOCATION_LEFT_WRIST to "LEFT_WRIST",
+                BloodPressureRecord.MEASUREMENT_LOCATION_RIGHT_WRIST to "RIGHT_WRIST",
+                BloodPressureRecord.MEASUREMENT_LOCATION_LEFT_UPPER_ARM to "LEFT_UPPER_ARM",
+                BloodPressureRecord.MEASUREMENT_LOCATION_RIGHT_UPPER_ARM to "RIGHT_UPPER_ARM",
             ),
         ) : Type()
     }
