@@ -64,5 +64,11 @@ sealed class DoubleValueComponentModel : ComponentModel() {
             override val supportingText: String = "Percentage. Required field. Valid range: 0-100.",
             override val suffix: String = "%",
         ) : Type()
+
+        data class Mass(
+            override val label: String = "Mass",
+            override val supportingText: String = "Mass in Mass unit. Required field. Valid range: 0-1000 kilograms.",
+            override val suffix: String = "kilograms",
+        ) : Type()
     }
 }
