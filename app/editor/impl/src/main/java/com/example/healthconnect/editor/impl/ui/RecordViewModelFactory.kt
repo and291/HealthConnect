@@ -3,18 +3,18 @@ package com.example.healthconnect.editor.impl.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
+import com.example.healthconnect.editor.api.ui.editor.EditorFactory
+import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel
-import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordFactory
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import kotlin.reflect.KClass
 
 class RecordViewModelFactory(
-    private val recordMapper: RecordMapper,
+    private val editorFactory: EditorFactory,
+    private val metadataMapper: MetadataMapper,
     private val update: Update,
-    private val insertRecordFactory: InsertRecordFactory,
     private val insert: Insert,
 ) : ViewModelProvider.Factory {
 
@@ -25,14 +25,15 @@ class RecordViewModelFactory(
     ): T = when (modelClass) {
         EditRecordViewModel::class -> EditRecordViewModel(
             initialRecord = checkNotNull(extras[EditRecordViewModel.RECORD_KEY]),
-            recordMapper = recordMapper,
+            editorFactory = editorFactory,
+            metadataMapper = metadataMapper,
             update = update,
         )
 
         InsertRecordViewModel::class -> InsertRecordViewModel(
             recordClass = checkNotNull(extras[InsertRecordViewModel.RECORD_CLASS_KEY]),
-            insertRecordFactory = insertRecordFactory,
-            recordMapper = recordMapper,
+            editorFactory = editorFactory,
+            metadataMapper = metadataMapper,
             insert = insert,
         )
 

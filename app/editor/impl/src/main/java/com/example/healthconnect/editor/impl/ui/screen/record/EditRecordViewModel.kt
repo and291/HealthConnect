@@ -8,9 +8,11 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
+import com.example.healthconnect.editor.api.ui.editor.Editor
+import com.example.healthconnect.editor.api.ui.editor.EditorFactory
+import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State.*
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Update
@@ -19,11 +21,13 @@ import kotlinx.coroutines.launch
 
 class EditRecordViewModel(
     initialRecord: Record,
-    private val recordMapper: RecordMapper,
+    editorFactory: EditorFactory,
+    private val metadataMapper: MetadataMapper,
     private val update: Update,
 ) : ViewModel() {
 
-    private val initialModel = recordMapper.toUiModel(initialRecord)
+    private val editor: Editor<Record, RecordEditorModel> = editorFactory.create(initialRecord::class)
+    private val initialModel = editor.toModel(initialRecord, metadataMapper)
     val isChanged: Boolean
         get() = initialModel != _state.editorModel
 
@@ -35,7 +39,7 @@ class EditRecordViewModel(
 
     fun onEvent(event: RecordModificationEvent) {
         (_state as? Edition)?.also {
-            _state = Edition(it.editorModel.update(event))
+            _state = Edition(editor.update(it.editorModel, event))
         }
     }
 
@@ -58,7 +62,7 @@ class EditRecordViewModel(
                     TODO()
                 } else {
                     val modifiedRecord = try {
-                        recordMapper.toEntity(currentState.editorModel)
+                        editor.toRecord(currentState.editorModel, metadataMapper)
                     } catch (e: Exception) {
                         _state = Edition(
                             editorModel = currentState.editorModel,

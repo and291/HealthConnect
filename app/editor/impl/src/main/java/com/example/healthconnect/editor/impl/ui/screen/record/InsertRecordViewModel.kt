@@ -8,7 +8,9 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.api.ui.mapper.RecordMapper
+import com.example.healthconnect.editor.api.ui.editor.Editor
+import com.example.healthconnect.editor.api.ui.editor.EditorFactory
+import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import com.example.healthconnect.utilty.api.domain.entity.Result
@@ -19,15 +21,18 @@ import kotlin.reflect.KClass
 
 class InsertRecordViewModel(
     recordClass: KClass<Record>,
-    insertRecordFactory: InsertRecordFactory,
-    private val recordMapper: RecordMapper,
+    editorFactory: EditorFactory,
+    private val metadataMapper: MetadataMapper,
     private val insert: Insert,
 ) : ViewModel() {
 
+    private val editor: Editor<Record, RecordEditorModel> = editorFactory.create(recordClass)
+
     private var _state: State<RecordEditorModel> by mutableStateOf(
         State.Edition(
-            editorModel = recordMapper.toUiModel(
-                record = insertRecordFactory.createDefault(recordClass)
+            editorModel = editor.toModel(
+                record = editor.createDefault(),
+                metadataMapper = metadataMapper,
             )
         )
     )
@@ -38,7 +43,7 @@ class InsertRecordViewModel(
 
     fun onEvent(event: RecordModificationEvent) {
         (_state as? State.Edition<RecordEditorModel>)?.also {
-            _state = State.Edition(it.editorModel.update(event))
+            _state = State.Edition(editor.update(it.editorModel, event))
         }
     }
 
@@ -62,7 +67,7 @@ class InsertRecordViewModel(
                 }
 
                 val modifiedRecord = try {
-                    recordMapper.toEntity(currentState.editorModel)
+                    editor.toRecord(currentState.editorModel, metadataMapper)
                 } catch (e: Exception) {
                     _state = State.Edition(
                         editorModel = currentState.editorModel,
