@@ -1,4 +1,4 @@
-package com.example.healthconnect.editor.api.ui.editor
+package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord

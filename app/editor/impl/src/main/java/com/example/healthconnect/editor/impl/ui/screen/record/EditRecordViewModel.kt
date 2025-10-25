@@ -8,8 +8,8 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.api.ui.editor.Editor
-import com.example.healthconnect.editor.api.ui.editor.EditorFactory
+import com.example.healthconnect.editor.impl.ui.editor.Editor
+import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
 import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent

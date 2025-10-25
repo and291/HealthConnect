@@ -1,4 +1,4 @@
-package com.example.healthconnect.editor.api.ui.editor
+package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.BodyFatRecord
 import androidx.health.connect.client.records.metadata.Metadata
@@ -57,7 +57,7 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatRecordEditorModel>() {
         metadataMapper: MetadataMapper,
     ): BodyFatRecord = BodyFatRecord(
         time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-        zoneOffset = validUiModel.timeEditorModel.zoneOffset,
+        zoneOffset = (validUiModel.timeEditorModel as TimeEditorModel.Valid).zoneOffset,
         metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
         percentage = (validUiModel.percentage as DoubleValueEditorModel.Valid).parsedValue.percent,
     )

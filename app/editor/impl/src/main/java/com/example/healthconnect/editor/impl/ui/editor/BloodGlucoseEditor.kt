@@ -1,4 +1,4 @@
-package com.example.healthconnect.editor.api.ui.editor
+package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.metadata.Metadata
@@ -86,7 +86,7 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseLevelRecordE
         metadataMapper: MetadataMapper,
     ): BloodGlucoseRecord = BloodGlucoseRecord(
         time = (validUiModel.time as TimeEditorModel.Valid).instant,
-        zoneOffset = validUiModel.time.zoneOffset,
+        zoneOffset = (validUiModel.time as TimeEditorModel.Valid).zoneOffset,
         metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
         level = BloodGlucose.Companion.millimolesPerLiter((validUiModel.level as DoubleValueEditorModel.Valid).parsedValue),
         specimenSource = (validUiModel.specimenSource as SelectorEditorModel.Valid).value,

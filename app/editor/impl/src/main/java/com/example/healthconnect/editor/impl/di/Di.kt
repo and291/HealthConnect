@@ -1,9 +1,9 @@
 package com.example.healthconnect.editor.impl.di
 
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.editor.api.ui.editor.EditorFactory
 import com.example.healthconnect.editor.api.ui.mapper.DeviceMapper
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
+import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
 import com.example.healthconnect.editor.impl.ui.RecordViewModelFactory
 import com.example.healthconnect.editor.impl.ui.screen.record.ComponentFactory
 import com.example.healthconnect.utilty.api.domain.usecase.Insert

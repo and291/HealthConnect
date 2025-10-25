@@ -3,7 +3,7 @@ package com.example.healthconnect.editor.impl.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.api.ui.editor.EditorFactory
+import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel

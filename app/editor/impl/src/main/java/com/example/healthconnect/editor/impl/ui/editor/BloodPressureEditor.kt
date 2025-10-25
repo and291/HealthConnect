@@ -1,4 +1,4 @@
-package com.example.healthconnect.editor.api.ui.editor
+package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.BloodPressureRecord
 import androidx.health.connect.client.records.metadata.Metadata
@@ -86,7 +86,7 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureRecordEdi
         metadataMapper: MetadataMapper,
     ): BloodPressureRecord = BloodPressureRecord(
         time = (validUiModel.time as TimeEditorModel.Valid).instant,
-        zoneOffset = validUiModel.time.zoneOffset,
+        zoneOffset = (validUiModel.time as TimeEditorModel.Valid).zoneOffset,
         metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
         systolic = Pressure.Companion.millimetersOfMercury((validUiModel.systolic as DoubleValueEditorModel.Valid).parsedValue),
         diastolic = Pressure.Companion.millimetersOfMercury((validUiModel.diastolic as DoubleValueEditorModel.Valid).parsedValue),

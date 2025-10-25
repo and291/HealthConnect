@@ -1,4 +1,4 @@
-package com.example.healthconnect.editor.api.ui.editor
+package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.metadata.Metadata
@@ -59,7 +59,7 @@ class BasalMetabolicRateEditor() :
         metadataMapper: MetadataMapper,
     ): BasalMetabolicRateRecord = BasalMetabolicRateRecord(
         time = (validUiModel.time as TimeEditorModel.Valid).instant,
-        zoneOffset = validUiModel.time.zoneOffset,
+        zoneOffset = (validUiModel.time as TimeEditorModel.Valid).zoneOffset,
         metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
         basalMetabolicRate = (validUiModel.power as DoubleValueEditorModel.Valid).parsedValue.kilocaloriesPerDay,
     )
