@@ -3,10 +3,10 @@ package com.example.healthconnect.components.impl.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
-import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
-import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
+import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
 import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel
 import java.time.Instant
@@ -19,42 +19,42 @@ internal class ComponentProviderImpl : ComponentProvider {
         time: Instant,
         zoneOffset: ZoneOffset?,
         modifier: Modifier,
-        onChanged: (TimeEditorModel) -> Unit,
+        onChanged: (TimeComponentModel) -> Unit,
     ) = TimeEditorComponent(
         model = TimeEditorInternalModel.create(time, zoneOffset),
-        onTimeChanged = onChanged,
+        onChanged = onChanged,
         modifier = modifier,
     )
 
     @Composable
     override fun MetadataEditor(
-        metadataEditorModel: MetadataEditorModel,
+        metadata: MetadataComponentModel,
         modifier: Modifier,
-        onChanged: (MetadataEditorModel) -> Unit,
+        onChanged: (MetadataComponentModel) -> Unit,
     ) = MetadataEditorComponent(
-        metadataEditorModel = metadataEditorModel,
-        onMetadataChanged = onChanged,
+        model = metadata,
+        onChanged = onChanged,
         modifier = modifier,
     )
 
     @Composable
     override fun DoubleValueEditor(
-        editorModel: DoubleValueEditorModel,
+        value: DoubleValueComponentModel,
         modifier: Modifier,
-        onChanged: (DoubleValueEditorModel) -> Unit,
+        onChanged: (DoubleValueComponentModel) -> Unit,
     ) = DoubleValueEditorComponent(
-        editorModel = editorModel,
+        model = value,
         onChanged = onChanged,
         modifier = modifier,
     )
 
     @Composable
     override fun Selector(
-        editor: SelectorEditorModel,
+        selector: SelectorComponentModel,
         modifier: Modifier,
-        onChanged: (SelectorEditorModel) -> Unit,
+        onChanged: (SelectorComponentModel) -> Unit,
     ): Unit = SelectorComponent(
-        editor = editor,
+        editor = selector,
         onItemSelected = { onChanged(it) }
     )
 }

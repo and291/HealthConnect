@@ -3,51 +3,51 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.BloodGlucose
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
-import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.BloodGlucoseLevelRecordEditorModel
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
+import com.example.healthconnect.editor.api.ui.model.BloodGlucoseModel
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import java.time.Instant
 import java.time.ZoneOffset
 
-class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseLevelRecordEditorModel>() {
+class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: BloodGlucoseLevelRecordEditorModel,
-        event: RecordModificationEvent,
-    ): BloodGlucoseLevelRecordEditorModel = when (event) {
-        is RecordModificationEvent.OnValueSelected -> when (event.selector.type) {
-            is SelectorEditorModel.Type.MealType -> model.copy(
+        model: BloodGlucoseModel,
+        event: ModelModificationEvent,
+    ): BloodGlucoseModel = when (event) {
+        is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
+            is SelectorComponentModel.Type.MealType -> model.copy(
                 mealType = event.selector,
             )
 
-            is SelectorEditorModel.Type.RelationToMeal -> model.copy(
+            is SelectorComponentModel.Type.RelationToMeal -> model.copy(
                 relationToMeals = event.selector,
             )
 
-            is SelectorEditorModel.Type.SpecimenSource -> model.copy(
+            is SelectorComponentModel.Type.SpecimenSource -> model.copy(
                 specimenSource = event.selector,
             )
 
             else -> throw NotImplementedError()
         }
 
-        is RecordModificationEvent.OnMetadataChanged -> model.copy(
+        is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
 
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueEditorModel.Type.BloodGlucoseLevel -> model.copy(
+        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
+            is DoubleValueComponentModel.Type.BloodGlucoseLevel -> model.copy(
                 level = event.value
             )
 
             else -> throw NotImplementedError()
         }
 
-        is RecordModificationEvent.OnTimeChanged -> model.copy(
+        is ModelModificationEvent.OnTimeChanged -> model.copy(
             time = event.time
         )
 
@@ -56,42 +56,42 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseLevelRecordE
 
     override fun toModel(
         record: BloodGlucoseRecord,
-        metadataMapper: MetadataMapper,
-    ): BloodGlucoseLevelRecordEditorModel = BloodGlucoseLevelRecordEditorModel(
-        time = TimeEditorModel.Valid(
+        mapper: MetadataMapper,
+    ): BloodGlucoseModel = BloodGlucoseModel(
+        time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
-        metadata = metadataMapper.toEntity(record.metadata),
-        level = DoubleValueEditorModel.Valid(
+        metadata = mapper.toEntity(record.metadata),
+        level = DoubleValueComponentModel.Valid(
             parsedValue = record.level.inMillimolesPerLiter,
-            type = DoubleValueEditorModel.Type.BloodGlucoseLevel(),
+            type = DoubleValueComponentModel.Type.BloodGlucoseLevel(),
         ),
-        specimenSource = SelectorEditorModel.Valid(
+        specimenSource = SelectorComponentModel.Valid(
             value = record.specimenSource,
-            type = SelectorEditorModel.Type.SpecimenSource()
+            type = SelectorComponentModel.Type.SpecimenSource()
         ),
-        mealType = SelectorEditorModel.Valid(
+        mealType = SelectorComponentModel.Valid(
             value = record.mealType,
-            type = SelectorEditorModel.Type.MealType()
+            type = SelectorComponentModel.Type.MealType()
         ),
-        relationToMeals = SelectorEditorModel.Valid(
+        relationToMeals = SelectorComponentModel.Valid(
             value = record.relationToMeal,
-            type = SelectorEditorModel.Type.RelationToMeal()
+            type = SelectorComponentModel.Type.RelationToMeal()
         ),
     )
 
     override fun toRecord(
-        validUiModel: BloodGlucoseLevelRecordEditorModel,
-        metadataMapper: MetadataMapper,
+        validModel: BloodGlucoseModel,
+        mapper: MetadataMapper,
     ): BloodGlucoseRecord = BloodGlucoseRecord(
-        time = (validUiModel.time as TimeEditorModel.Valid).instant,
-        zoneOffset = (validUiModel.time as TimeEditorModel.Valid).zoneOffset,
-        metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
-        level = BloodGlucose.Companion.millimolesPerLiter((validUiModel.level as DoubleValueEditorModel.Valid).parsedValue),
-        specimenSource = (validUiModel.specimenSource as SelectorEditorModel.Valid).value,
-        mealType = (validUiModel.mealType as SelectorEditorModel.Valid).value,
-        relationToMeal = (validUiModel.relationToMeals as SelectorEditorModel.Valid).value
+        time = (validModel.time as TimeComponentModel.Valid).instant,
+        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        metadata = mapper.toLibMetadata(validModel.metadata),
+        level = BloodGlucose.Companion.millimolesPerLiter((validModel.level as DoubleValueComponentModel.Valid).parsedValue),
+        specimenSource = (validModel.specimenSource as SelectorComponentModel.Valid).value,
+        mealType = (validModel.mealType as SelectorComponentModel.Valid).value,
+        relationToMeal = (validModel.relationToMeals as SelectorComponentModel.Valid).value
     )
 
     override fun createDefault(): BloodGlucoseRecord = BloodGlucoseRecord(

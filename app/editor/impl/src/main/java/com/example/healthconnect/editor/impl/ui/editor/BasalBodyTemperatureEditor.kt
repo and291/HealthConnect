@@ -4,43 +4,43 @@ import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Temperature
 import androidx.health.connect.client.units.celsius
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
-import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureRecordEditorModel
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
+import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureModel
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import java.time.Instant
 import java.time.ZoneOffset
 
-class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBodyTemperatureRecordEditorModel>() {
+class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBodyTemperatureModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: BasalBodyTemperatureRecordEditorModel,
-        event: RecordModificationEvent,
-    ): BasalBodyTemperatureRecordEditorModel = when (event) {
-        is RecordModificationEvent.OnValueSelected -> when (event.selector.type) {
-            is SelectorEditorModel.Type.MeasurementLocationBodyTemperature -> model.copy(
+        model: BasalBodyTemperatureModel,
+        event: ModelModificationEvent,
+    ): BasalBodyTemperatureModel = when (event) {
+        is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
+            is SelectorComponentModel.Type.MeasurementLocationBodyTemperature -> model.copy(
                 measurementLocation = event.selector
             )
 
             else -> throw NotImplementedError()
         }
 
-        is RecordModificationEvent.OnMetadataChanged -> model.copy(
+        is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
 
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueEditorModel.Type.Temperature -> model.copy(
+        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
+            is DoubleValueComponentModel.Type.Temperature -> model.copy(
                 temperature = event.value
             )
 
             else -> throw NotImplementedError()
         }
 
-        is RecordModificationEvent.OnTimeChanged -> model.copy(
+        is ModelModificationEvent.OnTimeChanged -> model.copy(
             time = event.time
         )
 
@@ -49,32 +49,32 @@ class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBod
 
     override fun toModel(
         record: BasalBodyTemperatureRecord,
-        metadataMapper: MetadataMapper,
-    ): BasalBodyTemperatureRecordEditorModel = BasalBodyTemperatureRecordEditorModel(
-        time = TimeEditorModel.Valid(
+        mapper: MetadataMapper,
+    ): BasalBodyTemperatureModel = BasalBodyTemperatureModel(
+        time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
-        metadata = metadataMapper.toEntity(record.metadata),
-        temperature = DoubleValueEditorModel.Valid(
+        metadata = mapper.toEntity(record.metadata),
+        temperature = DoubleValueComponentModel.Valid(
             parsedValue = record.temperature.inCelsius,
-            type = DoubleValueEditorModel.Type.Temperature(),
+            type = DoubleValueComponentModel.Type.Temperature(),
         ),
-        measurementLocation = SelectorEditorModel.Valid(
+        measurementLocation = SelectorComponentModel.Valid(
             value = record.measurementLocation, //TODO validate data from lib
-            type = SelectorEditorModel.Type.MeasurementLocationBodyTemperature(),
+            type = SelectorComponentModel.Type.MeasurementLocationBodyTemperature(),
         )
     )
 
     override fun toRecord(
-        validUiModel: BasalBodyTemperatureRecordEditorModel,
-        metadataMapper: MetadataMapper,
+        validModel: BasalBodyTemperatureModel,
+        mapper: MetadataMapper,
     ): BasalBodyTemperatureRecord = BasalBodyTemperatureRecord(
-        time = (validUiModel.time as TimeEditorModel.Valid).instant,
-        zoneOffset = (validUiModel.time as TimeEditorModel.Valid).zoneOffset,
-        metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
-        temperature = (validUiModel.temperature as DoubleValueEditorModel.Valid).parsedValue.celsius,
-        measurementLocation = (validUiModel.measurementLocation as SelectorEditorModel.Valid).value
+        time = (validModel.time as TimeComponentModel.Valid).instant,
+        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        metadata = mapper.toLibMetadata(validModel.metadata),
+        temperature = (validModel.temperature as DoubleValueComponentModel.Valid).parsedValue.celsius,
+        measurementLocation = (validModel.measurementLocation as SelectorComponentModel.Valid).value
     )
 
     override fun createDefault(): BasalBodyTemperatureRecord = BasalBodyTemperatureRecord(

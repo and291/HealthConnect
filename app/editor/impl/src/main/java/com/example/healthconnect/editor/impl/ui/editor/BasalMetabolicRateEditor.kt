@@ -4,35 +4,35 @@ import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Power
 import androidx.health.connect.client.units.kilocaloriesPerDay
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateRecordEditorModel
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
+import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateModel
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import java.time.Instant
 import java.time.ZoneOffset
 
 class BasalMetabolicRateEditor() :
-    Editor<BasalMetabolicRateRecord, BasalMetabolicRateRecordEditorModel>() {
+    Editor<BasalMetabolicRateRecord, BasalMetabolicRateModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: BasalMetabolicRateRecordEditorModel,
-        event: RecordModificationEvent,
-    ): BasalMetabolicRateRecordEditorModel = when (event) {
-        is RecordModificationEvent.OnMetadataChanged -> model.copy(
+        model: BasalMetabolicRateModel,
+        event: ModelModificationEvent,
+    ): BasalMetabolicRateModel = when (event) {
+        is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
 
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueEditorModel.Type.Power -> model.copy(
+        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
+            is DoubleValueComponentModel.Type.Power -> model.copy(
                 power = event.value
             )
 
             else -> throw NotImplementedError()
         }
 
-        is RecordModificationEvent.OnTimeChanged -> model.copy(
+        is ModelModificationEvent.OnTimeChanged -> model.copy(
             time = event.time
         )
 
@@ -41,27 +41,27 @@ class BasalMetabolicRateEditor() :
 
     override fun toModel(
         record: BasalMetabolicRateRecord,
-        metadataMapper: MetadataMapper,
-    ): BasalMetabolicRateRecordEditorModel = BasalMetabolicRateRecordEditorModel(
-        time = TimeEditorModel.Valid(
+        mapper: MetadataMapper,
+    ): BasalMetabolicRateModel = BasalMetabolicRateModel(
+        time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
-        metadata = metadataMapper.toEntity(record.metadata),
-        power = DoubleValueEditorModel.Valid(
+        metadata = mapper.toEntity(record.metadata),
+        power = DoubleValueComponentModel.Valid(
             parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay,
-            type = DoubleValueEditorModel.Type.Power(),
+            type = DoubleValueComponentModel.Type.Power(),
         )
     )
 
     override fun toRecord(
-        validUiModel: BasalMetabolicRateRecordEditorModel,
-        metadataMapper: MetadataMapper,
+        validModel: BasalMetabolicRateModel,
+        mapper: MetadataMapper,
     ): BasalMetabolicRateRecord = BasalMetabolicRateRecord(
-        time = (validUiModel.time as TimeEditorModel.Valid).instant,
-        zoneOffset = (validUiModel.time as TimeEditorModel.Valid).zoneOffset,
-        metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
-        basalMetabolicRate = (validUiModel.power as DoubleValueEditorModel.Valid).parsedValue.kilocaloriesPerDay,
+        time = (validModel.time as TimeComponentModel.Valid).instant,
+        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        metadata = mapper.toLibMetadata(validModel.metadata),
+        basalMetabolicRate = (validModel.power as DoubleValueComponentModel.Valid).parsedValue.kilocaloriesPerDay,
     )
 
     override fun createDefault(): BasalMetabolicRateRecord = BasalMetabolicRateRecord(

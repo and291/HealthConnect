@@ -11,8 +11,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.editor.impl.ui.editor.Editor
 import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
-import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
+import com.example.healthconnect.editor.api.ui.model.Model
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import kotlinx.coroutines.Job
@@ -26,24 +26,24 @@ class InsertRecordViewModel(
     private val insert: Insert,
 ) : ViewModel() {
 
-    private val editor: Editor<Record, RecordEditorModel> = editorFactory.create(recordClass)
+    private val editor: Editor<Record, Model> = editorFactory.create(recordClass)
 
-    private var _state: State<RecordEditorModel> by mutableStateOf(
+    private var _state: State<Model> by mutableStateOf(
         State.Edition(
-            editorModel = editor.toModel(
+            model = editor.toModel(
                 record = editor.createDefault(),
-                metadataMapper = metadataMapper,
+                mapper = metadataMapper,
             )
         )
     )
-    val state: State<RecordEditorModel>
+    val state: State<Model>
         get() = _state
 
     private var insertJob: Job? = null
 
-    fun onEvent(event: RecordModificationEvent) {
-        (_state as? State.Edition<RecordEditorModel>)?.also {
-            _state = State.Edition(editor.update(it.editorModel, event))
+    fun onEvent(event: ModelModificationEvent) {
+        (_state as? State.Edition<Model>)?.also {
+            _state = State.Edition(editor.update(it.model, event))
         }
     }
 
@@ -59,30 +59,30 @@ class InsertRecordViewModel(
                     return
                 }
 
-                if (!currentState.editorModel.isValid()) {
+                if (!currentState.model.isValid()) {
                     _state = State.Edition(
-                        editorModel = currentState.editorModel,
+                        model = currentState.model,
                         errorCreatingEntity = "Invalid model"
                     )
                 }
 
                 val modifiedRecord = try {
-                    editor.toRecord(currentState.editorModel, metadataMapper)
+                    editor.toRecord(currentState.model, metadataMapper)
                 } catch (e: Exception) {
                     _state = State.Edition(
-                        editorModel = currentState.editorModel,
+                        model = currentState.model,
                         errorCreatingEntity = "Error creating record: ${e.toString()}"
                     )
                     return
                 }
 
                 _state = State.InsertInProgress(
-                    editorModel = currentState.editorModel,
+                    model = currentState.model,
                     record = modifiedRecord,
                 )
                 insertJob = viewModelScope.launch {
                     _state = State.InsertResult(
-                        editorModel = currentState.editorModel,
+                        model = currentState.model,
                         result = insert(modifiedRecord),
                     )
                 }
@@ -95,15 +95,15 @@ class InsertRecordViewModel(
         data object OnInsert : Event()
     }
 
-    sealed class State<T : RecordEditorModel> {
+    sealed class State<T : Model> {
 
-        abstract val editorModel: T
+        abstract val model: T
 
         /**
          * User able to modify values
          */
-        data class Edition<T : RecordEditorModel>(
-            override val editorModel: T,
+        data class Edition<T : Model>(
+            override val model: T,
             val errorCreatingEntity: String? = null,
             //validation and so on
         ) : State<T>()
@@ -111,8 +111,8 @@ class InsertRecordViewModel(
         /**
          * Show progress bar and stuff
          */
-        data class InsertInProgress<T : RecordEditorModel>(
-            override val editorModel: T,
+        data class InsertInProgress<T : Model>(
+            override val model: T,
             val record: Record,
         ) : State<T>()
 
@@ -120,8 +120,8 @@ class InsertRecordViewModel(
          * Display result of the update attempt
          * Allow to retry in case of failed attempt
          */
-        data class InsertResult<T : RecordEditorModel>(
-            override val editorModel: T,
+        data class InsertResult<T : Model>(
+            override val model: T,
             val result: Result, //result of interaction with lib
         ) : State<T>()
     }

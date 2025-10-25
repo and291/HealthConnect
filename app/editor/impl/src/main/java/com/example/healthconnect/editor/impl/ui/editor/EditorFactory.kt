@@ -7,7 +7,7 @@ import androidx.health.connect.client.records.BloodPressureRecord
 import androidx.health.connect.client.records.BodyFatRecord
 import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.Record
-import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
+import com.example.healthconnect.editor.api.ui.model.Model
 import kotlin.reflect.KClass
 
 class EditorFactory {
@@ -15,7 +15,7 @@ class EditorFactory {
     @Suppress("UNCHECKED_CAST")
     fun create(
         recordKClass: KClass<out Record>,
-    ): Editor<Record, RecordEditorModel> = when (recordKClass) {
+    ): Editor<Record, Model> = when (recordKClass) {
         BasalBodyTemperatureRecord::class -> BasalBodyTemperatureEditor()
         BodyTemperatureRecord::class -> BodyTemperatureEditor()
         BasalMetabolicRateRecord::class -> BasalMetabolicRateEditor()
@@ -23,5 +23,5 @@ class EditorFactory {
         BloodPressureRecord::class -> BloodPressureEditor()
         BodyFatRecord::class -> BodyFatEditor()
         else -> throw NotImplementedError()
-    } as Editor<Record, RecordEditorModel>
+    } as Editor<Record, Model>
 }

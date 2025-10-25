@@ -46,7 +46,7 @@ fun EditRecordScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        componentFactory.Create(viewModel.state.editorModel) {
+        componentFactory.Create(viewModel.state.model) {
             viewModel.onEvent(it)
         }
 
@@ -58,7 +58,7 @@ fun EditRecordScreen(
             when (val state = viewModel.state) {
                 is State.Edition, is State.UpdateResult -> Row {
                     Button(
-                        enabled = viewModel.isChanged && viewModel.state.editorModel.isValid(),
+                        enabled = viewModel.isChanged && viewModel.state.model.isValid(),
                         onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) }
                     ) {
                         Text("Save")

@@ -3,17 +3,17 @@ package com.example.healthconnect.editor.impl.ui.screen.record
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.api.ui.model.ComponentEditorModel
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
-import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
-import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
-import com.example.healthconnect.editor.api.ui.model.RecordEditorModel
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnDoubleValueChanged
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnMetadataChanged
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnTimeChanged
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent.OnValueSelected
+import com.example.healthconnect.components.api.ui.model.ComponentModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
+import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.editor.api.ui.model.Model
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnDoubleValueChanged
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnMetadataChanged
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnTimeChanged
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnValueSelected
 
 class ComponentFactory(
     private val componentProvider: ComponentProvider,
@@ -21,10 +21,10 @@ class ComponentFactory(
 
     @Composable
     fun Create(
-        recordEditorModel: RecordEditorModel,
+        model: Model,
         modifier: Modifier = Modifier,
-        eventHandler: (RecordModificationEvent) -> Unit,
-    ) = recordEditorModel.getComponents().forEach {
+        eventHandler: (ModelModificationEvent) -> Unit,
+    ) = model.getComponents().forEach {
         Create(
             editorModel = it,
             eventHandler = eventHandler,
@@ -34,27 +34,27 @@ class ComponentFactory(
 
     @Composable
     private fun Create(
-        editorModel: ComponentEditorModel,
-        eventHandler: (RecordModificationEvent) -> Unit,
+        editorModel: ComponentModel,
+        eventHandler: (ModelModificationEvent) -> Unit,
         modifier: Modifier,
     ) = when (editorModel) {
-        is TimeEditorModel.Valid -> componentProvider.TimeEditor(
+        is TimeComponentModel.Valid -> componentProvider.TimeEditor(
             time = editorModel.instant,
             zoneOffset = editorModel.zoneOffset,
             modifier = modifier,
         ) { eventHandler(OnTimeChanged(it)) }
 
-        is TimeEditorModel.Invalid -> TODO()
+        is TimeComponentModel.Invalid -> TODO()
 
-        is MetadataEditorModel -> componentProvider.MetadataEditor(editorModel, modifier) {
+        is MetadataComponentModel -> componentProvider.MetadataEditor(editorModel, modifier) {
             eventHandler(OnMetadataChanged(it))
         }
 
-        is DoubleValueEditorModel -> componentProvider.DoubleValueEditor(editorModel, modifier) {
+        is DoubleValueComponentModel -> componentProvider.DoubleValueEditor(editorModel, modifier) {
             eventHandler(OnDoubleValueChanged(it))
         }
 
-        is SelectorEditorModel -> componentProvider.Selector(editorModel, modifier) {
+        is SelectorComponentModel -> componentProvider.Selector(editorModel, modifier) {
             eventHandler(OnValueSelected(it))
         }
     }

@@ -1,6 +1,6 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class DoubleValueEditorModel : ComponentEditorModel() {
+sealed class DoubleValueComponentModel : ComponentModel() {
 
     abstract val value: String
     abstract val type: Type
@@ -9,7 +9,7 @@ sealed class DoubleValueEditorModel : ComponentEditorModel() {
         val parsedValue: Double,
         override val value: String = parsedValue.toString(),
         override val type: Type,
-    ) : DoubleValueEditorModel() {
+    ) : DoubleValueComponentModel() {
 
         init {
             require(value.toDouble() == parsedValue) {
@@ -21,7 +21,7 @@ sealed class DoubleValueEditorModel : ComponentEditorModel() {
     data class Invalid(
         override val value: String,
         override val type: Type,
-    ) : DoubleValueEditorModel()
+    ) : DoubleValueComponentModel()
 
     sealed class Type {
         abstract val label: String

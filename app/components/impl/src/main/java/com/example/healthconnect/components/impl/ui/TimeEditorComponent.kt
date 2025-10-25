@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel
 import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel.Event.OnTimeChanged
@@ -24,7 +24,7 @@ import java.util.TimeZone
 @Composable
 internal fun TimeEditorComponent(
     model: TimeEditorInternalModel,
-    onTimeChanged: (TimeEditorModel) -> Unit,
+    onChanged: (TimeComponentModel) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TimeEditorComponentViewModel = viewModel(
         factory = Di.componentViewModelFactory,
@@ -37,14 +37,14 @@ internal fun TimeEditorComponent(
     LaunchedEffect(viewModel.state) {
         Log.d(this::class.simpleName, "Time: ${viewModel.state}")
         val timeEditorModel = when (val t = viewModel.state.timeModel) {
-            is TimeEditorInternalModel.TimeModel.Invalid -> TimeEditorModel.Invalid
-            is TimeEditorInternalModel.TimeModel.Valid -> TimeEditorModel.Valid(
+            is TimeEditorInternalModel.TimeModel.Invalid -> TimeComponentModel.Invalid
+            is TimeEditorInternalModel.TimeModel.Valid -> TimeComponentModel.Valid(
                 instant = t.instant,
                 zoneOffset = viewModel.state.zoneId?.rules?.getOffset(t.instant)
             )
         }
 
-        onTimeChanged(timeEditorModel)
+        onChanged(timeEditorModel)
     }
 
     Row(
@@ -100,7 +100,7 @@ fun TimeEditorComponentPreview() {
 
     TimeEditorComponent(
         model = TimeEditorInternalModel.create(Instant.now(), null),
-        onTimeChanged = {},
+        onChanged = {},
         modifier = Modifier.padding(24.dp),
     )
 }

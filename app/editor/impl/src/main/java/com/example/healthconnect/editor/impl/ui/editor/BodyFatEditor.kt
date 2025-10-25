@@ -3,31 +3,31 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.BodyFatRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.percent
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.BodyFatRecordEditorModel
-import com.example.healthconnect.editor.api.ui.model.RecordModificationEvent
+import com.example.healthconnect.editor.api.ui.model.BodyFatModel
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import java.time.Instant
 import java.time.ZoneOffset
 
-class BodyFatEditor() : Editor<BodyFatRecord, BodyFatRecordEditorModel>() {
+class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: BodyFatRecordEditorModel,
-        event: RecordModificationEvent,
-    ): BodyFatRecordEditorModel = when (event) {
-        is RecordModificationEvent.OnMetadataChanged -> model.copy(
+        model: BodyFatModel,
+        event: ModelModificationEvent,
+    ): BodyFatModel = when (event) {
+        is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
 
-        is RecordModificationEvent.OnTimeChanged -> model.copy(
-            timeEditorModel = event.time
+        is ModelModificationEvent.OnTimeChanged -> model.copy(
+            time = event.time
         )
 
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueEditorModel.Type.PercentageBodyFat -> model.copy(
+        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
+            is DoubleValueComponentModel.Type.PercentageBodyFat -> model.copy(
                 percentage = event.value
             )
 
@@ -39,27 +39,27 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatRecordEditorModel>() {
 
     override fun toModel(
         record: BodyFatRecord,
-        metadataMapper: MetadataMapper,
-    ): BodyFatRecordEditorModel = BodyFatRecordEditorModel(
-        timeEditorModel = TimeEditorModel.Valid(
+        mapper: MetadataMapper,
+    ): BodyFatModel = BodyFatModel(
+        time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
-        metadata = metadataMapper.toEntity(record.metadata),
-        percentage = DoubleValueEditorModel.Valid(
+        metadata = mapper.toEntity(record.metadata),
+        percentage = DoubleValueComponentModel.Valid(
             parsedValue = record.percentage.value,
-            type = DoubleValueEditorModel.Type.PercentageBodyFat(),
+            type = DoubleValueComponentModel.Type.PercentageBodyFat(),
         )
     )
 
     override fun toRecord(
-        validUiModel: BodyFatRecordEditorModel,
-        metadataMapper: MetadataMapper,
+        validModel: BodyFatModel,
+        mapper: MetadataMapper,
     ): BodyFatRecord = BodyFatRecord(
-        time = (validUiModel.timeEditorModel as TimeEditorModel.Valid).instant,
-        zoneOffset = (validUiModel.timeEditorModel as TimeEditorModel.Valid).zoneOffset,
-        metadata = metadataMapper.toLibMetadata(validUiModel.metadata),
-        percentage = (validUiModel.percentage as DoubleValueEditorModel.Valid).parsedValue.percent,
+        time = (validModel.time as TimeComponentModel.Valid).instant,
+        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        metadata = mapper.toLibMetadata(validModel.metadata),
+        percentage = (validModel.percentage as DoubleValueComponentModel.Valid).parsedValue.percent,
     )
 
     override fun createDefault(): BodyFatRecord = BodyFatRecord(
