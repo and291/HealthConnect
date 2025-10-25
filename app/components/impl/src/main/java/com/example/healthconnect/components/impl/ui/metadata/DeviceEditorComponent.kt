@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.api.ui.model.DeviceEditorModel
+import com.example.healthconnect.components.api.ui.model.DeviceComponentModel
 import com.example.healthconnect.components.impl.ui.SelectorComponent
 import com.example.healthconnect.components.impl.ui.metadata.mapper.DeviceTypeMapper
 
 @Composable
 internal fun DeviceEditorComponent(
-    specifiedDeviceEditorModel: DeviceEditorModel.Specified,
+    specifiedDeviceComponentModel: DeviceComponentModel.Specified,
     onTypeItemSelected: (Pair<Int, String>) -> Unit,
     onManufacturerValueChanged: (String) -> Unit,
     onModelValueChanged: (String) -> Unit,
@@ -34,7 +34,7 @@ internal fun DeviceEditorComponent(
         SelectorComponent(
             title = "Type",
             supportText = "Client supplied type of the device",
-            selectedText = deviceTypeMapper.mapName(specifiedDeviceEditorModel.type),
+            selectedText = deviceTypeMapper.mapName(specifiedDeviceComponentModel.type),
             items = deviceTypeMapper.deviceTypes,
             itemComposable = { (_, name) ->
                 Text(text = name)
@@ -43,7 +43,7 @@ internal fun DeviceEditorComponent(
         )
 
         OutlinedTextField(
-            value = specifiedDeviceEditorModel.manufacturer,
+            value = specifiedDeviceComponentModel.manufacturer,
             enabled = true,
             singleLine = true,
             onValueChange = onManufacturerValueChanged,
@@ -57,7 +57,7 @@ internal fun DeviceEditorComponent(
         )
 
         OutlinedTextField(
-            value = specifiedDeviceEditorModel.model,
+            value = specifiedDeviceComponentModel.model,
             enabled = true,
             singleLine = true,
             onValueChange = onModelValueChanged,
@@ -79,14 +79,14 @@ internal fun DeviceEditorComponent(
 @Composable
 @Preview(showBackground = true)
 fun DeviceEditorScreenPreview() {
-    val sampleDevice = DeviceEditorModel.Specified(
+    val sampleDevice = DeviceComponentModel.Specified(
         type = 2,
         manufacturer = "Sample Manufacturer",
         model = "Sample Model"
     )
 
     DeviceEditorComponent(
-        specifiedDeviceEditorModel = sampleDevice,
+        specifiedDeviceComponentModel = sampleDevice,
         onTypeItemSelected = { },
         onManufacturerValueChanged = { },
         onModelValueChanged = { },
@@ -97,14 +97,14 @@ fun DeviceEditorScreenPreview() {
 @Composable
 @Preview(showBackground = true)
 fun EmptyDeviceEditorScreenPreview() {
-    val sampleDevice = DeviceEditorModel.Specified(
+    val sampleDevice = DeviceComponentModel.Specified(
         type = 0,
         manufacturer = "",
         model = ""
     )
 
     DeviceEditorComponent(
-        specifiedDeviceEditorModel = sampleDevice,
+        specifiedDeviceComponentModel = sampleDevice,
         onTypeItemSelected = { },
         onManufacturerValueChanged = { },
         onModelValueChanged = { },

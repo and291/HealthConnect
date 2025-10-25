@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.api.ui.model.DeviceEditorModel
-import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
+import com.example.healthconnect.components.api.ui.model.DeviceComponentModel
+import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.impl.ui.SelectorComponent
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorViewModel.Event
 import com.example.healthconnect.components.impl.ui.metadata.mapper.RecordingMethodMapper
@@ -25,22 +25,22 @@ import java.time.Instant
 
 @Composable
 internal fun MetadataEditorComponent(
-    metadataEditorModel: MetadataEditorModel,
-    onMetadataChanged: (MetadataEditorModel) -> Unit,
+    model: MetadataComponentModel,
+    onChanged: (MetadataComponentModel) -> Unit,
     modifier: Modifier = Modifier,
     recordingMethodMapper: RecordingMethodMapper = Di.recordingMethodMapper,
     viewModel: MetadataEditorViewModel = viewModel(
-        key = metadataEditorModel.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
+        key = model.id, //TODO double-check if this a correct key to use for new viewmodel instance creation
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(MetadataEditorViewModel.Companion.METADATA_ENTITY_KEY, metadataEditorModel)
+            set(MetadataEditorViewModel.Companion.MODEL_KEY, model)
         }
     ),
 ) {
 
     LaunchedEffect(viewModel.state) {
         Log.d(this::class.simpleName, "Metadata: ${viewModel.state}")
-        onMetadataChanged(viewModel.state)
+        onChanged(viewModel.state)
     }
 
     Column(
@@ -147,9 +147,9 @@ internal fun MetadataEditorComponent(
             .fillMaxWidth()
             .padding(16.dp)
 
-        when (val model = viewModel.state.deviceEditorModel) {
+        when (val deviceComponentModel = viewModel.state.deviceComponentModel) {
             //TODO create animation between these states changes
-            DeviceEditorModel.Empty -> Column(
+            DeviceComponentModel.Empty -> Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = commonModifier
             ) {
@@ -161,8 +161,8 @@ internal fun MetadataEditorComponent(
                 }
             }
 
-            is DeviceEditorModel.Specified -> DeviceEditorComponent(
-                specifiedDeviceEditorModel = model,
+            is DeviceComponentModel.Specified -> DeviceEditorComponent(
+                specifiedDeviceComponentModel = deviceComponentModel,
                 modifier = commonModifier,
                 onTypeItemSelected = { (type, _) -> viewModel.onEvent(Event.OnTypeSelected(type)) },
                 onManufacturerValueChanged = { viewModel.onEvent(Event.OnManufacturerChanged(it)) },
@@ -176,33 +176,33 @@ internal fun MetadataEditorComponent(
 @Composable
 @Preview(showBackground = true, heightDp = 1050)
 fun MetadataEditorComponentEmptyDevicePreview() {
-    val sampleMetadataEditorModel = MetadataEditorModel(
+    val metadataComponentModel = MetadataComponentModel(
         recordingMethod = 1, // Example value
         id = "sample-id",
         dataOriginPackageName = "com.example.app",
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
         clientRecordVersion = "1",
-        deviceEditorModel = DeviceEditorModel.Empty
+        deviceComponentModel = DeviceComponentModel.Empty
     )
 
     MetadataEditorComponent(
-        metadataEditorModel = sampleMetadataEditorModel,
-        onMetadataChanged = {},
+        model = metadataComponentModel,
+        onChanged = {},
     )
 }
 
 @Composable
 @Preview(showBackground = true, heightDp = 1300)
 fun MetadataEditorComponentSpecifiedDevicePreview() {
-    val sampleMetadataEditorModel = MetadataEditorModel(
+    val metadataComponentModel = MetadataComponentModel(
         recordingMethod = 1, // Example value
         id = "sample-id",
         dataOriginPackageName = "com.example.app",
         lastModifiedTime = Instant.now(),
         clientRecordId = "client-record-id-123",
         clientRecordVersion = "1",
-        deviceEditorModel = DeviceEditorModel.Specified(
+        deviceComponentModel = DeviceComponentModel.Specified(
             type = 1, // Example device type
             manufacturer = "Example Manufacturer",
             model = "Example Model"
@@ -210,7 +210,7 @@ fun MetadataEditorComponentSpecifiedDevicePreview() {
     )
 
     MetadataEditorComponent(
-        metadataEditorModel = sampleMetadataEditorModel,
-        onMetadataChanged = {},
+        model = metadataComponentModel,
+        onChanged = {},
     )
 }

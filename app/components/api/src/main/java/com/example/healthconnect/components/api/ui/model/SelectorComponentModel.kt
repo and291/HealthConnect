@@ -19,19 +19,19 @@ import androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN
 
-sealed class SelectorEditorModel() : ComponentEditorModel() {
+sealed class SelectorComponentModel() : ComponentModel() {
     abstract val value: Int
     abstract val type: Type
 
     data class Valid(
         override val value: Int,
         override val type: Type,
-    ) : SelectorEditorModel()
+    ) : SelectorComponentModel()
 
     data class Invalid(
         override val value: Int,
         override val type: Type,
-    ) : SelectorEditorModel()
+    ) : SelectorComponentModel()
 
     sealed class Type {
         abstract val title: String

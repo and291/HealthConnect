@@ -47,7 +47,7 @@ fun InsertRecordScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        componentFactory.Create(viewModel.state.editorModel) {
+        componentFactory.Create(viewModel.state.model) {
             viewModel.onEvent(it)
         }
 
@@ -56,7 +56,7 @@ fun InsertRecordScreen(
             when (val state = viewModel.state) {
                 is State.Edition, is State.InsertResult -> Row {
                     Button(
-                        enabled = viewModel.state.editorModel.isValid(),
+                        enabled = viewModel.state.model.isValid(),
                         onClick = { viewModel.onEvent(Event.OnInsert) }
                     ) {
                         Text("Insert")

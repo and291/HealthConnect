@@ -10,45 +10,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.DoubleValueEditorComponentViewModel.Event
 
 
 @Composable
 internal fun DoubleValueEditorComponent(
-    editorModel: DoubleValueEditorModel,
-    onChanged: (DoubleValueEditorModel) -> Unit,
+    model: DoubleValueComponentModel,
+    onChanged: (DoubleValueComponentModel) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DoubleValueEditorComponentViewModel = viewModel(
-        key = editorModel.type.toString(),
+        key = model.type.toString(),
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(DoubleValueEditorComponentViewModel.MODEL_KEY, editorModel)
+            set(DoubleValueEditorComponentViewModel.MODEL_KEY, model)
         }
     ),
 ) {
     LaunchedEffect(viewModel.state) {
-        Log.d(this::class.simpleName, "${editorModel.type.label}: ${viewModel.state}")
+        Log.d(this::class.simpleName, "${model.type.label}: ${viewModel.state}")
         onChanged(viewModel.state)
     }
 
     OutlinedTextField(
         value = viewModel.state.value,
         suffix = {
-            Text(editorModel.type.label) //TODO create more sophisticated view that will support other units
+            Text(model.type.label) //TODO create more sophisticated view that will support other units
         },
         enabled = true,
         singleLine = true,
-        isError = viewModel.state is DoubleValueEditorModel.Invalid,
+        isError = viewModel.state is DoubleValueComponentModel.Invalid,
         onValueChange = {
             viewModel.onEvent(Event.OnValueChanged(it))
         },
         label = {
-            Text(editorModel.type.label)
+            Text(model.type.label)
         },
         supportingText = {
-            Text(editorModel.type.supportingText)
+            Text(model.type.supportingText)
         },
         modifier = modifier.fillMaxWidth()
     )
@@ -58,9 +58,9 @@ internal fun DoubleValueEditorComponent(
 @Preview(showBackground = true)
 fun TemperatureEditorComponentValidPreview() {
     DoubleValueEditorComponent(
-        editorModel = DoubleValueEditorModel.Valid(
+        model = DoubleValueComponentModel.Valid(
             parsedValue = 123.0,
-            type = DoubleValueEditorModel.Type.Temperature(),
+            type = DoubleValueComponentModel.Type.Temperature(),
         ),
         onChanged = {},
     )
@@ -70,9 +70,9 @@ fun TemperatureEditorComponentValidPreview() {
 @Preview(showBackground = true)
 fun TemperatureEditorComponentInvalidPreview() {
     DoubleValueEditorComponent(
-        editorModel = DoubleValueEditorModel.Invalid(
+        model = DoubleValueComponentModel.Invalid(
             value = "231ed",
-            type = DoubleValueEditorModel.Type.Temperature(),
+            type = DoubleValueComponentModel.Type.Temperature(),
         ),
         onChanged = {},
     )

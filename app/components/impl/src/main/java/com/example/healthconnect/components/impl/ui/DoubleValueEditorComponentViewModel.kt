@@ -6,22 +6,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
 
 //TODO pass a Record's valid range and validate input inside the component?
 internal class DoubleValueEditorComponentViewModel(
-    private val editorModel: DoubleValueEditorModel,
+    private val editorModel: DoubleValueComponentModel,
 ) : ViewModel() {
 
     private var _state by mutableStateOf(editorModel)
 
-    val state: DoubleValueEditorModel
+    val state: DoubleValueComponentModel
         get() = _state
 
     fun onEvent(event: Event) {
         _state = when (event) {
             is Event.OnValueChanged -> try {
-                DoubleValueEditorModel.Valid(
+                DoubleValueComponentModel.Valid(
                     parsedValue = event.text.toDouble(),
                     value = event.text,
                     type = editorModel.type,
@@ -32,7 +32,7 @@ internal class DoubleValueEditorComponentViewModel(
                     "Failed to parse Double ${editorModel.type.suffix}: ${event.text}",
                     e
                 )
-                DoubleValueEditorModel.Invalid(
+                DoubleValueComponentModel.Invalid(
                     value = event.text,
                     type = editorModel.type,
                 )
@@ -49,6 +49,6 @@ internal class DoubleValueEditorComponentViewModel(
 
     companion object {
 
-        val MODEL_KEY: CreationExtras.Key<DoubleValueEditorModel> = CreationExtras.Companion.Key()
+        val MODEL_KEY: CreationExtras.Key<DoubleValueComponentModel> = CreationExtras.Companion.Key()
     }
 }

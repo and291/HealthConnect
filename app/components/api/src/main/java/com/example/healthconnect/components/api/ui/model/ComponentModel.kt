@@ -1,3 +1,3 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class ComponentEditorModel
+sealed class ComponentModel

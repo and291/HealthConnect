@@ -2,10 +2,10 @@ package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.healthconnect.components.api.ui.model.DoubleValueEditorModel
-import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
-import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
-import com.example.healthconnect.components.api.ui.model.TimeEditorModel
+import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
+import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -16,27 +16,27 @@ interface ComponentProvider {
         time: Instant,
         zoneOffset: ZoneOffset?,
         modifier: Modifier,
-        onChanged: (TimeEditorModel) -> Unit,
+        onChanged: (TimeComponentModel) -> Unit,
     )
 
     @Composable
     fun MetadataEditor(
-        metadataEditorModel: MetadataEditorModel,
+        metadata: MetadataComponentModel,
         modifier: Modifier,
-        onChanged: (MetadataEditorModel) -> Unit,
+        onChanged: (MetadataComponentModel) -> Unit,
     )
 
     @Composable
     fun DoubleValueEditor(
-        editorModel: DoubleValueEditorModel,
+        value: DoubleValueComponentModel,
         modifier: Modifier,
-        onChanged: (DoubleValueEditorModel) -> Unit,
+        onChanged: (DoubleValueComponentModel) -> Unit,
     )
 
     @Composable
     fun Selector(
-        editor: SelectorEditorModel,
+        selector: SelectorComponentModel,
         modifier: Modifier,
-        onChanged: (SelectorEditorModel) -> Unit,
+        onChanged: (SelectorComponentModel) -> Unit,
     )
 }
