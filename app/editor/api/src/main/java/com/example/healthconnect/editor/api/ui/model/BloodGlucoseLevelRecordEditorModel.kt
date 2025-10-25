@@ -6,52 +6,53 @@ import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
 data class BloodGlucoseLevelRecordEditorModel(
-    val timeEditorModel: TimeEditorModel,
-    override val metadataEditorModel: MetadataEditorModel,
+    val time: TimeEditorModel,
+    override val metadata: MetadataEditorModel,
     val level: DoubleValueEditorModel,
     val specimenSource: SelectorEditorModel,
     val mealType: SelectorEditorModel,
     val relationToMeals: SelectorEditorModel,
 ) : RecordEditorModel() {
 
-    override fun isValid(): Boolean = timeEditorModel is TimeEditorModel.Valid &&
+    override fun isValid(): Boolean = time is TimeEditorModel.Valid &&
             level is DoubleValueEditorModel.Valid &&
-            metadataEditorModel.isValid()
+            metadata.isValid()
 
+    @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(event: RecordModificationEvent): RecordEditorModel = when (event) {
-        is RecordModificationEvent.OnValueSelected -> when (event.editorModel.type) {
+        is RecordModificationEvent.OnValueSelected -> when (event.selector.type) {
             is SelectorEditorModel.Type.MealType -> copy(
-                mealType = event.editorModel,
+                mealType = event.selector,
             )
 
             is SelectorEditorModel.Type.RelationToMeal -> copy(
-                relationToMeals = event.editorModel,
+                relationToMeals = event.selector,
             )
 
             is SelectorEditorModel.Type.SpecimenSource -> copy(
-                specimenSource = event.editorModel,
+                specimenSource = event.selector,
             )
 
-            else -> TODO()
+            else -> throw NotImplementedError()
         }
 
         is RecordModificationEvent.OnMetadataChanged -> copy(
-            metadataEditorModel = event.metadata
+            metadata = event.metadata
         )
 
-        is RecordModificationEvent.OnDoubleValueChanged -> when (event.editorModel.type) {
+        is RecordModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
             is DoubleValueEditorModel.Type.BloodGlucoseLevel -> copy(
-                level = event.editorModel
+                level = event.value
             )
 
-            else -> TODO()
+            else -> throw NotImplementedError()
         }
 
         is RecordModificationEvent.OnTimeChanged -> copy(
-            timeEditorModel = event.timeEditorModel
+            time = event.time
         )
 
-        else -> TODO()
+        else -> throw NotImplementedError()
     }
 
 }

@@ -5,6 +5,7 @@ import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.BloodPressureRecord
 import androidx.health.connect.client.records.BodyFatRecord
+import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.BloodGlucose
@@ -21,6 +22,13 @@ class InsertRecordFactory {
     fun createDefault(recordClass: KClass<Record>): Record = when (recordClass) {
 
         BasalBodyTemperatureRecord::class -> BasalBodyTemperatureRecord(
+            time = Instant.now(),
+            zoneOffset = ZoneOffset.UTC,
+            metadata = Metadata.Companion.unknownRecordingMethod(),
+            temperature = Temperature.Companion.celsius(36.6)
+        )
+
+        BodyTemperatureRecord::class -> BodyTemperatureRecord(
             time = Instant.now(),
             zoneOffset = ZoneOffset.UTC,
             metadata = Metadata.Companion.unknownRecordingMethod(),

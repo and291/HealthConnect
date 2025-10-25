@@ -5,7 +5,7 @@ import com.example.healthconnect.components.api.ui.model.MetadataEditorModel
 import com.example.healthconnect.components.api.ui.model.SelectorEditorModel
 import com.example.healthconnect.components.api.ui.model.TimeEditorModel
 
-data class BasalBodyTemperatureRecordEditorModel(
+data class BodyTemperatureRecordEditorModel(
     val time: TimeEditorModel,
     override val metadata: MetadataEditorModel,
     val temperature: DoubleValueEditorModel,

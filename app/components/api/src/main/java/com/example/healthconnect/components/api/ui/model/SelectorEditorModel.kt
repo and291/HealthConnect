@@ -45,7 +45,7 @@ sealed class SelectorEditorModel() : ComponentEditorModel() {
 
         data class MeasurementLocationBodyTemperature(
             override val title: String = "Measurement Location",
-            override val supportText: String = "Where on the user's basal body the temperature measurement was taken from. Optional field.",
+            override val supportText: String = "Where on the user's body the temperature measurement was taken from. Optional field.",
             override val items: List<Pair<Int, String>> = listOf(
                 BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN to "UNKNOWN",
                 BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_ARMPIT to "ARMPIT",
