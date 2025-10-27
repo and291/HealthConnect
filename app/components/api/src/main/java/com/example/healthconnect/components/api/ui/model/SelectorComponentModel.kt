@@ -13,6 +13,7 @@ import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY
 import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY_POSITION_STANDING_UP
 import androidx.health.connect.client.records.BloodPressureRecord.Companion.BODY_POSITION_UNKNOWN
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
+import androidx.health.connect.client.records.CervicalMucusRecord
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_BREAKFAST
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH
@@ -120,6 +121,31 @@ sealed class SelectorComponentModel() : ComponentModel() {
                 BloodPressureRecord.MEASUREMENT_LOCATION_RIGHT_WRIST to "RIGHT_WRIST",
                 BloodPressureRecord.MEASUREMENT_LOCATION_LEFT_UPPER_ARM to "LEFT_UPPER_ARM",
                 BloodPressureRecord.MEASUREMENT_LOCATION_RIGHT_UPPER_ARM to "RIGHT_UPPER_ARM",
+            ),
+        ) : Type()
+
+        data class Appearance(
+            override val title: String = "Appearance",
+            override val supportText: String = "The consistency of the user's cervical mucus.",
+            override val items: List<Pair<Int, String>> = listOf(
+                CervicalMucusRecord.APPEARANCE_UNKNOWN to "UNKNOWN",
+                CervicalMucusRecord.APPEARANCE_DRY to "DRY",
+                CervicalMucusRecord.APPEARANCE_STICKY to "STICKY",
+                CervicalMucusRecord.APPEARANCE_CREAMY to "CREAMY",
+                CervicalMucusRecord.APPEARANCE_WATERY to "WATERY",
+                CervicalMucusRecord.APPEARANCE_EGG_WHITE to "EGG_WHITE",
+                CervicalMucusRecord.APPEARANCE_UNUSUAL to "UNUSUAL",
+            ),
+        ) : Type()
+
+        data class Sensation(
+            override val title: String = "Sensation",
+            override val supportText: String = "The feel of the user's cervical mucus.",
+            override val items: List<Pair<Int, String>> = listOf(
+                CervicalMucusRecord.SENSATION_UNKNOWN to "UNKNOWN",
+                CervicalMucusRecord.SENSATION_LIGHT to "LIGHT",
+                CervicalMucusRecord.SENSATION_MEDIUM to "MEDIUM",
+                CervicalMucusRecord.SENSATION_HEAVY to "HEAVY",
             ),
         ) : Type()
     }
