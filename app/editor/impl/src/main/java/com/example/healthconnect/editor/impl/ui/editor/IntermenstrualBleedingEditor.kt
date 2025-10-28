@@ -1,23 +1,21 @@
 package com.example.healthconnect.editor.impl.ui.editor
 
-import androidx.health.connect.client.records.HeightRecord
+import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import androidx.health.connect.client.units.meters
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.HeightModel
+import com.example.healthconnect.editor.api.ui.model.IntermenstrualBleedingModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import java.time.Instant
 import java.time.ZoneOffset
 
-class HeightEditor() : Editor<HeightRecord, HeightModel>() {
+class IntermenstrualBleedingEditor() : Editor<IntermenstrualBleedingRecord, IntermenstrualBleedingModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: HeightModel,
+        model: IntermenstrualBleedingModel,
         event: ModelModificationEvent,
-    ): HeightModel = when (event) {
+    ): IntermenstrualBleedingModel = when (event) {
         is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
@@ -26,46 +24,34 @@ class HeightEditor() : Editor<HeightRecord, HeightModel>() {
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Length -> model.copy(
-                height = event.value
-            )
-
-            else -> throw NotImplementedError()
-        }
+        is ModelModificationEvent.OnDoubleValueChanged -> throw NotImplementedError()
 
         else -> throw NotImplementedError()
     }
 
     override fun toModel(
-        record: HeightRecord,
+        record: IntermenstrualBleedingRecord,
         mapper: MetadataMapper,
-    ): HeightModel = HeightModel(
+    ): IntermenstrualBleedingModel = IntermenstrualBleedingModel(
         time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        height = DoubleValueComponentModel.Valid(
-            parsedValue = record.height.inMeters,
-            type = DoubleValueComponentModel.Type.Length(),
-        ),
     )
 
     override fun toRecord(
-        validModel: HeightModel,
+        validModel: IntermenstrualBleedingModel,
         mapper: MetadataMapper,
-    ): HeightRecord = HeightRecord(
+    ): IntermenstrualBleedingRecord = IntermenstrualBleedingRecord(
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        height = (validModel.height as DoubleValueComponentModel.Valid).parsedValue.meters,
     )
 
-    override fun createDefault(): HeightRecord = HeightRecord(
+    override fun createDefault(): IntermenstrualBleedingRecord = IntermenstrualBleedingRecord(
         time = Instant.now(),
         zoneOffset = ZoneOffset.UTC,
         metadata = Metadata.Companion.unknownRecordingMethod(),
-        height = 1.85.meters,
     )
 }
