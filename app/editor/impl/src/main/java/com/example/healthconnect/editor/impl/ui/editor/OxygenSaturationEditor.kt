@@ -1,23 +1,23 @@
 package com.example.healthconnect.editor.impl.ui.editor
 
-import androidx.health.connect.client.records.BodyFatRecord
+import androidx.health.connect.client.records.OxygenSaturationRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.percent
 import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.BodyFatModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
+import com.example.healthconnect.editor.api.ui.model.OxygenSaturationModel
 import java.time.Instant
 import java.time.ZoneOffset
 
-class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
+class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturationModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: BodyFatModel,
+        model: OxygenSaturationModel,
         event: ModelModificationEvent,
-    ): BodyFatModel = when (event) {
+    ): OxygenSaturationModel = when (event) {
         is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
@@ -38,9 +38,9 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
     }
 
     override fun toModel(
-        record: BodyFatRecord,
+        record: OxygenSaturationRecord,
         mapper: MetadataMapper,
-    ): BodyFatModel = BodyFatModel(
+    ): OxygenSaturationModel = OxygenSaturationModel(
         time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
@@ -53,16 +53,16 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
     )
 
     override fun toRecord(
-        validModel: BodyFatModel,
+        validModel: OxygenSaturationModel,
         mapper: MetadataMapper,
-    ): BodyFatRecord = BodyFatRecord(
+    ): OxygenSaturationRecord = OxygenSaturationRecord(
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
         percentage = (validModel.percentage as DoubleValueComponentModel.Valid).parsedValue.percent,
     )
 
-    override fun createDefault(): BodyFatRecord = BodyFatRecord(
+    override fun createDefault(): OxygenSaturationRecord = OxygenSaturationRecord(
         time = Instant.now(),
         zoneOffset = ZoneOffset.UTC,
         metadata = Metadata.Companion.unknownRecordingMethod(),

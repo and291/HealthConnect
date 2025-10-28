@@ -1,23 +1,22 @@
 package com.example.healthconnect.editor.impl.ui.editor
 
-import androidx.health.connect.client.records.BodyFatRecord
+import androidx.health.connect.client.records.RespiratoryRateRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import androidx.health.connect.client.units.percent
 import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.BodyFatModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
+import com.example.healthconnect.editor.api.ui.model.RespiratoryRateModel
 import java.time.Instant
 import java.time.ZoneOffset
 
-class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
+class RespiratoryRateEditor() : Editor<RespiratoryRateRecord, RespiratoryRateModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: BodyFatModel,
+        model: RespiratoryRateModel,
         event: ModelModificationEvent,
-    ): BodyFatModel = when (event) {
+    ): RespiratoryRateModel = when (event) {
         is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
@@ -27,8 +26,8 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
         )
 
         is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Percentage -> model.copy(
-                percentage = event.value
+            is DoubleValueComponentModel.Type.RespiratoryRate -> model.copy(
+                rate = event.value
             )
 
             else -> throw NotImplementedError()
@@ -38,34 +37,34 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
     }
 
     override fun toModel(
-        record: BodyFatRecord,
+        record: RespiratoryRateRecord,
         mapper: MetadataMapper,
-    ): BodyFatModel = BodyFatModel(
+    ): RespiratoryRateModel = RespiratoryRateModel(
         time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        percentage = DoubleValueComponentModel.Valid(
-            parsedValue = record.percentage.value,
-            type = DoubleValueComponentModel.Type.Percentage(),
+        rate = DoubleValueComponentModel.Valid(
+            parsedValue = record.rate,
+            type = DoubleValueComponentModel.Type.RespiratoryRate(),
         )
     )
 
     override fun toRecord(
-        validModel: BodyFatModel,
+        validModel: RespiratoryRateModel,
         mapper: MetadataMapper,
-    ): BodyFatRecord = BodyFatRecord(
+    ): RespiratoryRateRecord = RespiratoryRateRecord(
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        percentage = (validModel.percentage as DoubleValueComponentModel.Valid).parsedValue.percent,
+        rate = (validModel.rate as DoubleValueComponentModel.Valid).parsedValue,
     )
 
-    override fun createDefault(): BodyFatRecord = BodyFatRecord(
+    override fun createDefault(): RespiratoryRateRecord = RespiratoryRateRecord(
         time = Instant.now(),
         zoneOffset = ZoneOffset.UTC,
         metadata = Metadata.Companion.unknownRecordingMethod(),
-        percentage = 20.percent,
+        rate = 30.0,
     )
 }

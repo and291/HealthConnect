@@ -1,23 +1,23 @@
 package com.example.healthconnect.editor.impl.ui.editor
 
-import androidx.health.connect.client.records.BodyFatRecord
+import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import androidx.health.connect.client.units.percent
+import androidx.health.connect.client.units.kilograms
 import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.BodyFatModel
+import com.example.healthconnect.editor.api.ui.model.WeightModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import java.time.Instant
 import java.time.ZoneOffset
 
-class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
+class WeightEditor() : Editor<WeightRecord, WeightModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: BodyFatModel,
+        model: WeightModel,
         event: ModelModificationEvent,
-    ): BodyFatModel = when (event) {
+    ): WeightModel = when (event) {
         is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
@@ -27,8 +27,8 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
         )
 
         is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Percentage -> model.copy(
-                percentage = event.value
+            is DoubleValueComponentModel.Type.Mass -> model.copy(
+                weight = event.value
             )
 
             else -> throw NotImplementedError()
@@ -38,34 +38,34 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
     }
 
     override fun toModel(
-        record: BodyFatRecord,
+        record: WeightRecord,
         mapper: MetadataMapper,
-    ): BodyFatModel = BodyFatModel(
+    ): WeightModel = WeightModel(
         time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        percentage = DoubleValueComponentModel.Valid(
-            parsedValue = record.percentage.value,
-            type = DoubleValueComponentModel.Type.Percentage(),
-        )
+        weight = DoubleValueComponentModel.Valid(
+            parsedValue = record.weight.inKilograms,
+            type = DoubleValueComponentModel.Type.Mass(),
+        ),
     )
 
     override fun toRecord(
-        validModel: BodyFatModel,
+        validModel: WeightModel,
         mapper: MetadataMapper,
-    ): BodyFatRecord = BodyFatRecord(
+    ): WeightRecord = WeightRecord(
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        percentage = (validModel.percentage as DoubleValueComponentModel.Valid).parsedValue.percent,
+        weight = (validModel.weight as DoubleValueComponentModel.Valid).parsedValue.kilograms,
     )
 
-    override fun createDefault(): BodyFatRecord = BodyFatRecord(
+    override fun createDefault(): WeightRecord = WeightRecord(
         time = Instant.now(),
         zoneOffset = ZoneOffset.UTC,
         metadata = Metadata.Companion.unknownRecordingMethod(),
-        percentage = 20.percent,
+        weight = 60.kilograms,
     )
 }
