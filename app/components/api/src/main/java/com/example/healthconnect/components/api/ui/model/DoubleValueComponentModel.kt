@@ -72,7 +72,7 @@ sealed class DoubleValueComponentModel : ComponentModel() {
         ) : Type()
 
         data class HeartRateVariabilityRmssd(
-            override val label: String = "Heart rate variability",
+            override val label: String = "HRV",
             override val supportingText: String = "Heart rate variability in milliseconds. Required field. Valid Range: 1-200.",
             override val suffix: String = "milliseconds",
         ) : Type()
