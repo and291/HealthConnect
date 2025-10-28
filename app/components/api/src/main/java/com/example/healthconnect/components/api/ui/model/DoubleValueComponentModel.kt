@@ -82,5 +82,11 @@ sealed class DoubleValueComponentModel : ComponentModel() {
             override val supportingText: String = "Height in Length unit. Required field. Valid range: 0-3 meters.",
             override val suffix: String = "meters",
         ) : Type()
+
+        data class RespiratoryRate(
+            override val label: String = "Respiratory rate",
+            override val supportingText: String = "Respiratory rate in breaths per minute. Required field. Valid range: 0-1000.",
+            override val suffix: String = "breaths per minute",
+        ) : Type()
     }
 }
