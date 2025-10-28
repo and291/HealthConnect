@@ -70,5 +70,11 @@ sealed class DoubleValueComponentModel : ComponentModel() {
             override val supportingText: String = "Mass in Mass unit. Required field. Valid range: 0-1000 kilograms.",
             override val suffix: String = "kilograms",
         ) : Type()
+
+        data class HeartRateVariabilityRmssd(
+            override val label: String = "Heart rate variability",
+            override val supportingText: String = "Heart rate variability in milliseconds. Required field. Valid Range: 1-200.",
+            override val suffix: String = "milliseconds",
+        ) : Type()
     }
 }
