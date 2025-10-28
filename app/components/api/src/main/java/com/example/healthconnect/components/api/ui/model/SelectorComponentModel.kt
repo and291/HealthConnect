@@ -19,6 +19,9 @@ import androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN
+import androidx.health.connect.client.records.MenstruationFlowRecord
+import androidx.health.connect.client.records.OvulationTestRecord
+import androidx.health.connect.client.records.SexualActivityRecord
 
 sealed class SelectorComponentModel() : ComponentModel() {
     abstract val value: Int
@@ -146,6 +149,39 @@ sealed class SelectorComponentModel() : ComponentModel() {
                 CervicalMucusRecord.SENSATION_LIGHT to "LIGHT",
                 CervicalMucusRecord.SENSATION_MEDIUM to "MEDIUM",
                 CervicalMucusRecord.SENSATION_HEAVY to "HEAVY",
+            ),
+        ) : Type()
+
+        data class Flow(
+            override val title: String = "Flow",
+            override val supportText: String = "How heavy the user's menstrual flow was. Optional field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                MenstruationFlowRecord.FLOW_UNKNOWN to "UNKNOWN",
+                MenstruationFlowRecord.FLOW_LIGHT to "LIGHT",
+                MenstruationFlowRecord.FLOW_MEDIUM to "MEDIUM",
+                MenstruationFlowRecord.FLOW_HEAVY to "HEAVY",
+            ),
+        ) : Type()
+
+        data class Result(
+            override val title: String = "Result of an ovulation test",
+            override val supportText: String = "The result of a user's ovulation test, which shows if they're ovulating or not. Required field.",
+            //TODO add extended description (from javadoc)
+            override val items: List<Pair<Int, String>> = listOf(
+                OvulationTestRecord.RESULT_POSITIVE to "POSITIVE",
+                OvulationTestRecord.RESULT_HIGH to "HIGH",
+                OvulationTestRecord.RESULT_NEGATIVE to "NEGATIVE",
+                OvulationTestRecord.RESULT_INCONCLUSIVE to "INCONCLUSIVE"
+            ),
+        ) : Type()
+
+        data class ProtectionUsed(
+            override val title: String = "Protection",
+            override val supportText: String = "Whether protection was used during sexual activity. Optional field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                SexualActivityRecord.PROTECTION_USED_UNKNOWN to "UNKNOWN",
+                SexualActivityRecord.PROTECTION_USED_PROTECTED to "PROTECTED",
+                SexualActivityRecord.PROTECTION_USED_UNPROTECTED to "UNPROTECTED",
             ),
         ) : Type()
     }
