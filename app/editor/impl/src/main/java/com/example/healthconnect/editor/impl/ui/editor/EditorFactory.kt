@@ -13,6 +13,7 @@ import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.HeightRecord
 import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.LeanBodyMassRecord
+import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.RespiratoryRateRecord
@@ -42,6 +43,7 @@ class EditorFactory {
         WeightRecord::class -> WeightEditor()
         OxygenSaturationRecord::class -> OxygenSaturationEditor()
         RespiratoryRateRecord::class -> RespiratoryRateEditor()
+        MenstruationFlowRecord::class -> MenstruationFlowEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }
