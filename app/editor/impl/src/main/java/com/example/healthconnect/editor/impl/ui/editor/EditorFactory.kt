@@ -14,6 +14,7 @@ import androidx.health.connect.client.records.HeightRecord
 import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.LeanBodyMassRecord
 import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.records.WeightRecord
 import com.example.healthconnect.editor.api.ui.model.Model
 import kotlin.reflect.KClass
 
@@ -36,6 +37,7 @@ class EditorFactory {
         HeightRecord::class -> HeightEditor()
         IntermenstrualBleedingRecord::class -> IntermenstrualBleedingEditor()
         LeanBodyMassRecord::class -> LeanBodyMassEditor()
+        WeightRecord::class -> WeightEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }
