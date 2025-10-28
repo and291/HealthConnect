@@ -36,7 +36,7 @@ internal fun DoubleValueEditorComponent(
     OutlinedTextField(
         value = viewModel.state.value,
         suffix = {
-            Text(model.type.label) //TODO create more sophisticated view that will support other units
+            Text(model.type.suffix) //TODO create more sophisticated view that will support other units
         },
         enabled = true,
         singleLine = true,
