@@ -27,7 +27,7 @@ class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturation
         )
 
         is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.PercentageBodyFat -> model.copy(
+            is DoubleValueComponentModel.Type.Percentage -> model.copy(
                 percentage = event.value
             )
 
@@ -48,7 +48,7 @@ class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturation
         metadata = mapper.toEntity(record.metadata),
         percentage = DoubleValueComponentModel.Valid(
             parsedValue = record.percentage.value,
-            type = DoubleValueComponentModel.Type.PercentageBodyFat(),
+            type = DoubleValueComponentModel.Type.Percentage(),
         )
     )
 

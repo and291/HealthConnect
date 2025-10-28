@@ -59,7 +59,7 @@ sealed class DoubleValueComponentModel : ComponentModel() {
             override val suffix: String = "millimeters of Mercury (mmHg)",
         ) : Type()
 
-        data class PercentageBodyFat(
+        data class Percentage(
             override val label: String = "Percentage",
             override val supportingText: String = "Percentage. Required field. Valid range: 0-100.",
             override val suffix: String = "%",
