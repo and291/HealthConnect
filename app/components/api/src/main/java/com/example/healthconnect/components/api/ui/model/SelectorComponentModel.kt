@@ -21,6 +21,7 @@ import androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.OvulationTestRecord
+import androidx.health.connect.client.records.SexualActivityRecord
 
 sealed class SelectorComponentModel() : ComponentModel() {
     abstract val value: Int
@@ -171,6 +172,16 @@ sealed class SelectorComponentModel() : ComponentModel() {
                 OvulationTestRecord.RESULT_HIGH to "HIGH",
                 OvulationTestRecord.RESULT_NEGATIVE to "NEGATIVE",
                 OvulationTestRecord.RESULT_INCONCLUSIVE to "INCONCLUSIVE"
+            ),
+        ) : Type()
+
+        data class ProtectionUsed(
+            override val title: String = "Protection",
+            override val supportText: String = "Whether protection was used during sexual activity. Optional field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                SexualActivityRecord.PROTECTION_USED_UNKNOWN to "UNKNOWN",
+                SexualActivityRecord.PROTECTION_USED_PROTECTED to "PROTECTED",
+                SexualActivityRecord.PROTECTION_USED_UNPROTECTED to "UNPROTECTED",
             ),
         ) : Type()
     }
