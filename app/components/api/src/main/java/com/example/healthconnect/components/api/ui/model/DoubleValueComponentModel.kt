@@ -76,5 +76,11 @@ sealed class DoubleValueComponentModel : ComponentModel() {
             override val supportingText: String = "Heart rate variability in milliseconds. Required field. Valid Range: 1-200.",
             override val suffix: String = "milliseconds",
         ) : Type()
+
+        data class Length(
+            override val label: String = "Height",
+            override val supportingText: String = "Height in Length unit. Required field. Valid range: 0-3 meters.",
+            override val suffix: String = "meters",
+        ) : Type()
     }
 }
