@@ -20,6 +20,7 @@ import androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN
 import androidx.health.connect.client.records.MenstruationFlowRecord
+import androidx.health.connect.client.records.OvulationTestRecord
 
 sealed class SelectorComponentModel() : ComponentModel() {
     abstract val value: Int
@@ -158,6 +159,18 @@ sealed class SelectorComponentModel() : ComponentModel() {
                 MenstruationFlowRecord.FLOW_LIGHT to "LIGHT",
                 MenstruationFlowRecord.FLOW_MEDIUM to "MEDIUM",
                 MenstruationFlowRecord.FLOW_HEAVY to "HEAVY",
+            ),
+        ) : Type()
+
+        data class Result(
+            override val title: String = "Result of an ovulation test",
+            override val supportText: String = "The result of a user's ovulation test, which shows if they're ovulating or not. Required field.",
+            //TODO add extended description (from javadoc)
+            override val items: List<Pair<Int, String>> = listOf(
+                OvulationTestRecord.RESULT_POSITIVE to "POSITIVE",
+                OvulationTestRecord.RESULT_HIGH to "HIGH",
+                OvulationTestRecord.RESULT_NEGATIVE to "NEGATIVE",
+                OvulationTestRecord.RESULT_INCONCLUSIVE to "INCONCLUSIVE"
             ),
         ) : Type()
     }
