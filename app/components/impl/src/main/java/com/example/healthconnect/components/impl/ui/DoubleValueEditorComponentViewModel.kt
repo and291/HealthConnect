@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
 
 //TODO pass a Record's valid range and validate input inside the component?
+// keep in mind: some Records rely on platform's instance validation inside init{}
 internal class DoubleValueEditorComponentViewModel(
     private val editorModel: DoubleValueComponentModel,
 ) : ViewModel() {
