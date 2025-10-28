@@ -19,6 +19,7 @@ import androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN
+import androidx.health.connect.client.records.MenstruationFlowRecord
 
 sealed class SelectorComponentModel() : ComponentModel() {
     abstract val value: Int
@@ -146,6 +147,17 @@ sealed class SelectorComponentModel() : ComponentModel() {
                 CervicalMucusRecord.SENSATION_LIGHT to "LIGHT",
                 CervicalMucusRecord.SENSATION_MEDIUM to "MEDIUM",
                 CervicalMucusRecord.SENSATION_HEAVY to "HEAVY",
+            ),
+        ) : Type()
+
+        data class Flow(
+            override val title: String = "Flow",
+            override val supportText: String = "How heavy the user's menstrual flow was. Optional field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                MenstruationFlowRecord.FLOW_UNKNOWN to "UNKNOWN",
+                MenstruationFlowRecord.FLOW_LIGHT to "LIGHT",
+                MenstruationFlowRecord.FLOW_MEDIUM to "MEDIUM",
+                MenstruationFlowRecord.FLOW_HEAVY to "HEAVY",
             ),
         ) : Type()
     }
