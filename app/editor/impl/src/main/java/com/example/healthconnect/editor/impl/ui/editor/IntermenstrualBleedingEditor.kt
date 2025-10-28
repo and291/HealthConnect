@@ -34,7 +34,8 @@ class IntermenstrualBleedingEditor() : Editor<IntermenstrualBleedingRecord, Inte
         mapper: MetadataMapper,
     ): IntermenstrualBleedingModel = IntermenstrualBleedingModel(
         time = TimeComponentModel.Valid(
-            instant = record.time, zoneOffset = record.zoneOffset
+            instant = record.time,
+            zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
     )

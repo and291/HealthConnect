@@ -42,7 +42,8 @@ class HeightEditor() : Editor<HeightRecord, HeightModel>() {
         mapper: MetadataMapper,
     ): HeightModel = HeightModel(
         time = TimeComponentModel.Valid(
-            instant = record.time, zoneOffset = record.zoneOffset
+            instant = record.time,
+            zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
         height = DoubleValueComponentModel.Valid(
