@@ -88,5 +88,11 @@ sealed class DoubleValueComponentModel : ComponentModel() {
             override val supportingText: String = "Respiratory rate in breaths per minute. Required field. Valid range: 0-1000.",
             override val suffix: String = "breaths per minute",
         ) : Type()
+
+        data class Vo2Max(
+            override val label: String = "VO2 max",
+            override val supportingText: String = "Maximal aerobic capacity (VO2 max) in milliliters. Required field. Valid range: 0-100.",
+            override val suffix: String = "milliliters per minute kilogram",
+        ) : Type()
     }
 }

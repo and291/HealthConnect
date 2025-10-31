@@ -22,6 +22,7 @@ import androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.SexualActivityRecord
+import androidx.health.connect.client.records.Vo2MaxRecord
 
 sealed class SelectorComponentModel() : ComponentModel() {
     abstract val value: Int
@@ -182,6 +183,19 @@ sealed class SelectorComponentModel() : ComponentModel() {
                 SexualActivityRecord.PROTECTION_USED_UNKNOWN to "UNKNOWN",
                 SexualActivityRecord.PROTECTION_USED_PROTECTED to "PROTECTED",
                 SexualActivityRecord.PROTECTION_USED_UNPROTECTED to "UNPROTECTED",
+            ),
+        ) : Type()
+
+        data class Vo2MaxMeasurementMethod(
+            override val title: String = "Measurement method",
+            override val supportText: String = "VO2 max measurement method. Optional field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                Vo2MaxRecord.MEASUREMENT_METHOD_OTHER to "OTHER",
+                Vo2MaxRecord.MEASUREMENT_METHOD_METABOLIC_CART to "METABOLIC CART",
+                Vo2MaxRecord.MEASUREMENT_METHOD_HEART_RATE_RATIO to "HEART RATE RATIO",
+                Vo2MaxRecord.MEASUREMENT_METHOD_COOPER_TEST to "COOPER TEST",
+                Vo2MaxRecord.MEASUREMENT_METHOD_MULTISTAGE_FITNESS_TEST to "MULTISTAGE FITNESS TEST",
+                Vo2MaxRecord.MEASUREMENT_METHOD_ROCKPORT_FITNESS_TEST to "ROCKPORT FITNESS TEST",
             ),
         ) : Type()
     }
