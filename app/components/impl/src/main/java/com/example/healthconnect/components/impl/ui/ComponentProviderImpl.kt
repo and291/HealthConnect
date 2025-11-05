@@ -38,7 +38,7 @@ internal class ComponentProviderImpl : ComponentProvider {
     )
 
     @Composable
-    override fun DoubleValueEditor(
+    override fun ValueEditor(
         value: ValueComponentModel,
         modifier: Modifier,
         onChanged: (ValueComponentModel) -> Unit,

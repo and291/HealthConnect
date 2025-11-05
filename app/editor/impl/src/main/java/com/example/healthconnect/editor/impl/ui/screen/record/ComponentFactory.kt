@@ -50,7 +50,7 @@ class ComponentFactory(
             eventHandler(OnMetadataChanged(it))
         }
 
-        is ValueComponentModel -> componentProvider.DoubleValueEditor(editorModel, modifier) {
+        is ValueComponentModel -> componentProvider.ValueEditor(editorModel, modifier) {
             eventHandler(OnValueChanged(it))
         }
 

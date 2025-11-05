@@ -27,7 +27,7 @@ interface ComponentProvider {
     )
 
     @Composable
-    fun DoubleValueEditor(
+    fun ValueEditor(
         value: ValueComponentModel,
         modifier: Modifier,
         onChanged: (ValueComponentModel) -> Unit,
