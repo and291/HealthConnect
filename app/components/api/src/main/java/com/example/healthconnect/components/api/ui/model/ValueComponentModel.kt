@@ -112,5 +112,12 @@ sealed class ValueComponentModel : ComponentModel() {
             override val supportingText: String = "Maximal aerobic capacity (VO2 max) in milliliters. Required field. Valid range: 0-100.",
             override val suffix: String = "milliliters per minute kilogram",
         ) : Type()
+
+        data class BeatsPerMinute(
+            override val label: String = "Heart beats per minute",
+            override val supportingText: String = "Heart beats per minute. Required field. Validation range: 1-300.",
+            override val suffix: String = "bpm",
+            override val valueType: ValueType =  ValueType.Long,
+        ) : Type()
     }
 }

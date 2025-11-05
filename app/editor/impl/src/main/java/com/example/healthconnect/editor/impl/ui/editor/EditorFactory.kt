@@ -18,6 +18,7 @@ import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.RespiratoryRateRecord
+import androidx.health.connect.client.records.RestingHeartRateRecord
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.WeightRecord
@@ -50,6 +51,7 @@ class EditorFactory {
         OvulationTestRecord::class -> OvulationTestEditor()
         SexualActivityRecord::class -> SexualActivityEditor()
         Vo2MaxRecord::class -> Vo2MaxEditor()
+        RestingHeartRateRecord::class -> RestingHeartRateEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }
