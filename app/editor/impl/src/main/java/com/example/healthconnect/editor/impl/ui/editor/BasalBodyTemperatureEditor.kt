@@ -4,7 +4,7 @@ import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Temperature
 import androidx.health.connect.client.units.celsius
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
@@ -32,8 +32,8 @@ class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBod
             metadata = event.metadata
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Temperature -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.Temperature -> model.copy(
                 temperature = event.value
             )
 
@@ -56,9 +56,9 @@ class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBod
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        temperature = DoubleValueComponentModel.Valid(
+        temperature = ValueComponentModel.ValidDouble(
             parsedValue = record.temperature.inCelsius,
-            type = DoubleValueComponentModel.Type.Temperature(),
+            type = ValueComponentModel.Type.Temperature(),
         ),
         measurementLocation = SelectorComponentModel.Valid(
             value = record.measurementLocation, //TODO validate data from lib
@@ -73,7 +73,7 @@ class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBod
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        temperature = (validModel.temperature as DoubleValueComponentModel.Valid).parsedValue.celsius,
+        temperature = (validModel.temperature as ValueComponentModel.ValidDouble).parsedValue.celsius,
         measurementLocation = (validModel.measurementLocation as SelectorComponentModel.Valid).value
     )
 

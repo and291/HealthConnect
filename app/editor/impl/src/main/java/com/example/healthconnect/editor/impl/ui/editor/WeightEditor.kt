@@ -3,7 +3,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.kilograms
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.WeightModel
@@ -26,8 +26,8 @@ class WeightEditor() : Editor<WeightRecord, WeightModel>() {
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Mass -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.Mass -> model.copy(
                 weight = event.value
             )
 
@@ -46,9 +46,9 @@ class WeightEditor() : Editor<WeightRecord, WeightModel>() {
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        weight = DoubleValueComponentModel.Valid(
+        weight = ValueComponentModel.ValidDouble(
             parsedValue = record.weight.inKilograms,
-            type = DoubleValueComponentModel.Type.Mass(),
+            type = ValueComponentModel.Type.Mass(),
         ),
     )
 
@@ -59,7 +59,7 @@ class WeightEditor() : Editor<WeightRecord, WeightModel>() {
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        weight = (validModel.weight as DoubleValueComponentModel.Valid).parsedValue.kilograms,
+        weight = (validModel.weight as ValueComponentModel.ValidDouble).parsedValue.kilograms,
     )
 
     override fun createDefault(): WeightRecord = WeightRecord(

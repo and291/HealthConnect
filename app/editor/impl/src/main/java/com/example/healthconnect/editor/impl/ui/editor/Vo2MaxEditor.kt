@@ -2,7 +2,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
@@ -38,8 +38,8 @@ class Vo2MaxEditor() : Editor<Vo2MaxRecord, Vo2MaxModel>() {
             else -> throw NotImplementedError()
         }
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Vo2Max -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.Vo2Max -> model.copy(
                 vo2MillilitersPerMinuteKilogram = event.value
             )
 
@@ -58,9 +58,9 @@ class Vo2MaxEditor() : Editor<Vo2MaxRecord, Vo2MaxModel>() {
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        vo2MillilitersPerMinuteKilogram = DoubleValueComponentModel.Valid(
+        vo2MillilitersPerMinuteKilogram = ValueComponentModel.ValidDouble(
             parsedValue = record.vo2MillilitersPerMinuteKilogram,
-            type = DoubleValueComponentModel.Type.Vo2Max(),
+            type = ValueComponentModel.Type.Vo2Max(),
         ),
         measurementMethod = SelectorComponentModel.Valid(
             value = record.measurementMethod,
@@ -75,7 +75,7 @@ class Vo2MaxEditor() : Editor<Vo2MaxRecord, Vo2MaxModel>() {
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        vo2MillilitersPerMinuteKilogram = (validModel.vo2MillilitersPerMinuteKilogram as DoubleValueComponentModel.Valid).parsedValue,
+        vo2MillilitersPerMinuteKilogram = (validModel.vo2MillilitersPerMinuteKilogram as ValueComponentModel.ValidDouble).parsedValue,
         measurementMethod = (validModel.measurementMethod as SelectorComponentModel.Valid).value,
     )
 

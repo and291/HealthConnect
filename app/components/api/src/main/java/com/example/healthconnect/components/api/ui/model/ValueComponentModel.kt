@@ -1,15 +1,15 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class DoubleValueComponentModel : ComponentModel() {
+sealed class ValueComponentModel : ComponentModel() {
 
     abstract val value: String
     abstract val type: Type
 
-    data class Valid(
+    data class ValidDouble(
         val parsedValue: Double,
         override val value: String = parsedValue.toString(),
         override val type: Type,
-    ) : DoubleValueComponentModel() {
+    ) : ValueComponentModel() {
 
         init {
             require(value.toDouble() == parsedValue) {
@@ -18,15 +18,33 @@ sealed class DoubleValueComponentModel : ComponentModel() {
         }
     }
 
+    data class ValidLong(
+        val parsedValue: Long,
+        override val value: String = parsedValue.toString(),
+        override val type: Type,
+    ) : ValueComponentModel() {
+
+        init {
+            require(value.toLong() == parsedValue) {
+                "Different values for Valid ${type.label} model"
+            }
+        }
+    }
+
     data class Invalid(
         override val value: String,
         override val type: Type,
-    ) : DoubleValueComponentModel()
+    ) : ValueComponentModel()
 
     sealed class Type {
         abstract val label: String
         abstract val supportingText: String
         abstract val suffix: String
+        open val valueType: ValueType = ValueType.Double
+
+        enum class ValueType {
+            Double, Long
+        }
 
         data class Temperature(
             override val label: String = "Temperature",

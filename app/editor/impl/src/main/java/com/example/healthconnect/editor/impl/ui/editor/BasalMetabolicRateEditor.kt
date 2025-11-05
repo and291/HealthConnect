@@ -4,7 +4,7 @@ import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Power
 import androidx.health.connect.client.units.kilocaloriesPerDay
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateModel
@@ -24,8 +24,8 @@ class BasalMetabolicRateEditor() :
             metadata = event.metadata
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Power -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.Power -> model.copy(
                 power = event.value
             )
 
@@ -48,9 +48,9 @@ class BasalMetabolicRateEditor() :
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        power = DoubleValueComponentModel.Valid(
+        power = ValueComponentModel.ValidDouble(
             parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay,
-            type = DoubleValueComponentModel.Type.Power(),
+            type = ValueComponentModel.Type.Power(),
         )
     )
 
@@ -61,7 +61,7 @@ class BasalMetabolicRateEditor() :
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        basalMetabolicRate = (validModel.power as DoubleValueComponentModel.Valid).parsedValue.kilocaloriesPerDay,
+        basalMetabolicRate = (validModel.power as ValueComponentModel.ValidDouble).parsedValue.kilocaloriesPerDay,
     )
 
     override fun createDefault(): BasalMetabolicRateRecord = BasalMetabolicRateRecord(

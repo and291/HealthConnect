@@ -2,7 +2,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.RespiratoryRateRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
@@ -25,8 +25,8 @@ class RespiratoryRateEditor() : Editor<RespiratoryRateRecord, RespiratoryRateMod
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.RespiratoryRate -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.RespiratoryRate -> model.copy(
                 rate = event.value
             )
 
@@ -45,9 +45,9 @@ class RespiratoryRateEditor() : Editor<RespiratoryRateRecord, RespiratoryRateMod
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        rate = DoubleValueComponentModel.Valid(
+        rate = ValueComponentModel.ValidDouble(
             parsedValue = record.rate,
-            type = DoubleValueComponentModel.Type.RespiratoryRate(),
+            type = ValueComponentModel.Type.RespiratoryRate(),
         )
     )
 
@@ -58,7 +58,7 @@ class RespiratoryRateEditor() : Editor<RespiratoryRateRecord, RespiratoryRateMod
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        rate = (validModel.rate as DoubleValueComponentModel.Valid).parsedValue,
+        rate = (validModel.rate as ValueComponentModel.ValidDouble).parsedValue,
     )
 
     override fun createDefault(): RespiratoryRateRecord = RespiratoryRateRecord(

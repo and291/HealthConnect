@@ -24,7 +24,7 @@ class IntermenstrualBleedingEditor() : Editor<IntermenstrualBleedingRecord, Inte
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> throw NotImplementedError()
+        is ModelModificationEvent.OnValueChanged -> throw NotImplementedError()
 
         else -> throw NotImplementedError()
     }
