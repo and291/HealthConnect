@@ -60,16 +60,15 @@ object LibraryRecords {
         HeartRateVariabilityRmssdRecord::class,
         HeightRecord::class,
         IntermenstrualBleedingRecord::class,
-        ///////////////////////////////////
-        LeanBodyMassRecord::class, //1
-        MenstruationFlowRecord::class, //2
-        OvulationTestRecord::class, //2
-        OxygenSaturationRecord::class, //1
-        RespiratoryRateRecord::class, //1
+        LeanBodyMassRecord::class,
+        MenstruationFlowRecord::class,
+        OvulationTestRecord::class,
+        OxygenSaturationRecord::class,
+        RespiratoryRateRecord::class,
         RestingHeartRateRecord::class,
-        SexualActivityRecord::class, //2
-        Vo2MaxRecord::class, //3
-        WeightRecord::class, //1
+        SexualActivityRecord::class,
+        Vo2MaxRecord::class,
+        WeightRecord::class,
     )
 
     //start, endTime + offset
