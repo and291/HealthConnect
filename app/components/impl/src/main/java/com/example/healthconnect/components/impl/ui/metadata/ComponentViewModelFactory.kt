@@ -23,7 +23,7 @@ internal class ComponentViewModelFactory : ViewModelProvider.Factory {
         )
 
         ValueEditorComponentViewModel::class -> ValueEditorComponentViewModel(
-            editorModel = checkNotNull(extras[ValueEditorComponentViewModel.MODEL_KEY])
+            model = checkNotNull(extras[ValueEditorComponentViewModel.MODEL_KEY])
         )
 
         else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.simpleName)

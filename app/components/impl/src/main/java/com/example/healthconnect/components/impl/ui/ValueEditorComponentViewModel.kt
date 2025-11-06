@@ -11,10 +11,10 @@ import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 //TODO pass a Record's valid range and validate input inside the component?
 // keep in mind: some Records rely on platform's instance validation inside init{}
 internal class ValueEditorComponentViewModel(
-    private val editorModel: ValueComponentModel,
+    private val model: ValueComponentModel,
 ) : ViewModel() {
 
-    private var _state by mutableStateOf(editorModel)
+    private var _state by mutableStateOf(model)
 
     val state: ValueComponentModel
         get() = _state
@@ -22,28 +22,28 @@ internal class ValueEditorComponentViewModel(
     fun onEvent(event: Event) {
         _state = when (event) {
             is Event.OnValueChanged -> try {
-                when (editorModel.type.valueType) {
+                when (model.type.valueType) {
                     ValueComponentModel.Type.ValueType.Double -> ValueComponentModel.ValidDouble(
                         parsedValue = event.text.toDouble(),
                         value = event.text,
-                        type = editorModel.type,
+                        type = model.type,
                     )
                     ValueComponentModel.Type.ValueType.Long -> ValueComponentModel.ValidLong(
                         parsedValue = event.text.toLong(),
                         value = event.text,
-                        type = editorModel.type,
+                        type = model.type,
                     )
                 }
 
             } catch (e: Exception) {
                 Log.d(
                     this::class.simpleName,
-                    "Failed to parse Double ${editorModel.type.suffix}: ${event.text}",
+                    "Failed to parse Double ${model.type.suffix}: ${event.text}",
                     e
                 )
                 ValueComponentModel.Invalid(
                     value = event.text,
-                    type = editorModel.type,
+                    type = model.type,
                 )
             }
         }
