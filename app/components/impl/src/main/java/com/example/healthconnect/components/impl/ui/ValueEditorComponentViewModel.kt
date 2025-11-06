@@ -34,7 +34,6 @@ internal class ValueEditorComponentViewModel(
                         type = model.type,
                     )
                 }
-
             } catch (e: Exception) {
                 Log.d(
                     this::class.simpleName,
