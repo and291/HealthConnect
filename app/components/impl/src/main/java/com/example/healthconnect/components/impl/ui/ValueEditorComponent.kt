@@ -10,21 +10,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.impl.ui.DoubleValueEditorComponentViewModel.Event
+import com.example.healthconnect.components.impl.ui.ValueEditorComponentViewModel.Event
 
 
 @Composable
-internal fun DoubleValueEditorComponent(
-    model: DoubleValueComponentModel,
-    onChanged: (DoubleValueComponentModel) -> Unit,
+internal fun ValueEditorComponent(
+    model: ValueComponentModel,
+    onChanged: (ValueComponentModel) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: DoubleValueEditorComponentViewModel = viewModel(
+    viewModel: ValueEditorComponentViewModel = viewModel(
         key = model.type.toString(),
         factory = Di.componentViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(DoubleValueEditorComponentViewModel.MODEL_KEY, model)
+            set(ValueEditorComponentViewModel.MODEL_KEY, model)
         }
     ),
 ) {
@@ -40,7 +40,7 @@ internal fun DoubleValueEditorComponent(
         },
         enabled = true,
         singleLine = true,
-        isError = viewModel.state is DoubleValueComponentModel.Invalid,
+        isError = viewModel.state is ValueComponentModel.Invalid,
         onValueChange = {
             viewModel.onEvent(Event.OnValueChanged(it))
         },
@@ -56,11 +56,11 @@ internal fun DoubleValueEditorComponent(
 
 @Composable
 @Preview(showBackground = true)
-fun TemperatureEditorComponentValidPreview() {
-    DoubleValueEditorComponent(
-        model = DoubleValueComponentModel.Valid(
+fun ValueEditorComponentValidPreview() {
+    ValueEditorComponent(
+        model = ValueComponentModel.ValidDouble(
             parsedValue = 123.0,
-            type = DoubleValueComponentModel.Type.Temperature(),
+            type = ValueComponentModel.Type.Temperature(),
         ),
         onChanged = {},
     )
@@ -68,11 +68,11 @@ fun TemperatureEditorComponentValidPreview() {
 
 @Composable
 @Preview(showBackground = true)
-fun TemperatureEditorComponentInvalidPreview() {
-    DoubleValueEditorComponent(
-        model = DoubleValueComponentModel.Invalid(
+fun ValueEditorComponentInvalidPreview() {
+    ValueEditorComponent(
+        model = ValueComponentModel.Invalid(
             value = "231ed",
-            type = DoubleValueComponentModel.Type.Temperature(),
+            type = ValueComponentModel.Type.Temperature(),
         ),
         onChanged = {},
     )

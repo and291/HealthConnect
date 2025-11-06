@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.ComponentModel
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.model.Model
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
-import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnDoubleValueChanged
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnValueChanged
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnMetadataChanged
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnTimeChanged
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnValueSelected
@@ -50,8 +50,8 @@ class ComponentFactory(
             eventHandler(OnMetadataChanged(it))
         }
 
-        is DoubleValueComponentModel -> componentProvider.DoubleValueEditor(editorModel, modifier) {
-            eventHandler(OnDoubleValueChanged(it))
+        is ValueComponentModel -> componentProvider.ValueEditor(editorModel, modifier) {
+            eventHandler(OnValueChanged(it))
         }
 
         is SelectorComponentModel -> componentProvider.Selector(editorModel, modifier) {

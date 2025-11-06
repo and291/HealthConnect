@@ -1,21 +1,22 @@
 package com.example.healthconnect.editor.impl.ui.editor
 
-import androidx.health.connect.client.records.IntermenstrualBleedingRecord
+import androidx.health.connect.client.records.RestingHeartRateRecord
 import androidx.health.connect.client.records.metadata.Metadata
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.IntermenstrualBleedingModel
+import com.example.healthconnect.editor.api.ui.model.RestingHeartRateModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import java.time.Instant
 import java.time.ZoneOffset
 
-class IntermenstrualBleedingEditor() : Editor<IntermenstrualBleedingRecord, IntermenstrualBleedingModel>() {
+class RestingHeartRateEditor() : Editor<RestingHeartRateRecord, RestingHeartRateModel>() {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun update(
-        model: IntermenstrualBleedingModel,
+        model: RestingHeartRateModel,
         event: ModelModificationEvent,
-    ): IntermenstrualBleedingModel = when (event) {
+    ): RestingHeartRateModel = when (event) {
         is ModelModificationEvent.OnMetadataChanged -> model.copy(
             metadata = event.metadata
         )
@@ -24,34 +25,46 @@ class IntermenstrualBleedingEditor() : Editor<IntermenstrualBleedingRecord, Inte
             time = event.time
         )
 
-        is ModelModificationEvent.OnValueChanged -> throw NotImplementedError()
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.BeatsPerMinute -> model.copy(
+                beatsPerMinute = event.value
+            )
+
+            else -> throw NotImplementedError()
+        }
 
         else -> throw NotImplementedError()
     }
 
     override fun toModel(
-        record: IntermenstrualBleedingRecord,
+        record: RestingHeartRateRecord,
         mapper: MetadataMapper,
-    ): IntermenstrualBleedingModel = IntermenstrualBleedingModel(
+    ): RestingHeartRateModel = RestingHeartRateModel(
         time = TimeComponentModel.Valid(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
+        beatsPerMinute = ValueComponentModel.ValidLong(
+            parsedValue = record.beatsPerMinute,
+            type = ValueComponentModel.Type.BeatsPerMinute(),
+        ),
     )
 
     override fun toRecord(
-        validModel: IntermenstrualBleedingModel,
+        validModel: RestingHeartRateModel,
         mapper: MetadataMapper,
-    ): IntermenstrualBleedingRecord = IntermenstrualBleedingRecord(
+    ): RestingHeartRateRecord = RestingHeartRateRecord(
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
+        beatsPerMinute = (validModel.beatsPerMinute as ValueComponentModel.ValidLong).parsedValue,
     )
 
-    override fun createDefault(): IntermenstrualBleedingRecord = IntermenstrualBleedingRecord(
+    override fun createDefault(): RestingHeartRateRecord = RestingHeartRateRecord(
         time = Instant.now(),
         zoneOffset = ZoneOffset.UTC,
         metadata = Metadata.Companion.unknownRecordingMethod(),
+        beatsPerMinute = 80,
     )
 }

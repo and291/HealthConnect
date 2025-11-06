@@ -2,7 +2,7 @@ package com.example.healthconnect.components.api.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
@@ -27,10 +27,10 @@ interface ComponentProvider {
     )
 
     @Composable
-    fun DoubleValueEditor(
-        value: DoubleValueComponentModel,
+    fun ValueEditor(
+        value: ValueComponentModel,
         modifier: Modifier,
-        onChanged: (DoubleValueComponentModel) -> Unit,
+        onChanged: (ValueComponentModel) -> Unit,
     )
 
     @Composable

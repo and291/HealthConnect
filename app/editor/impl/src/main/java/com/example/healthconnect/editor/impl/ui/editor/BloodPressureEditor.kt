@@ -3,7 +3,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.BloodPressureRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Pressure
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
@@ -27,12 +27,12 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.DiastolicPressure -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.DiastolicPressure -> model.copy(
                 diastolic = event.value
             )
 
-            is DoubleValueComponentModel.Type.SystolicPressure -> model.copy(
+            is ValueComponentModel.Type.SystolicPressure -> model.copy(
                 systolic = event.value
             )
 
@@ -63,13 +63,13 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        systolic = DoubleValueComponentModel.Valid(
+        systolic = ValueComponentModel.ValidDouble(
             parsedValue = record.systolic.inMillimetersOfMercury,
-            type = DoubleValueComponentModel.Type.SystolicPressure()
+            type = ValueComponentModel.Type.SystolicPressure()
         ),
-        diastolic = DoubleValueComponentModel.Valid(
+        diastolic = ValueComponentModel.ValidDouble(
             parsedValue = record.diastolic.inMillimetersOfMercury,
-            type = DoubleValueComponentModel.Type.DiastolicPressure()
+            type = ValueComponentModel.Type.DiastolicPressure()
         ),
         bodyPosition = SelectorComponentModel.Valid(
             value = record.bodyPosition,
@@ -88,8 +88,8 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        systolic = Pressure.Companion.millimetersOfMercury((validModel.systolic as DoubleValueComponentModel.Valid).parsedValue),
-        diastolic = Pressure.Companion.millimetersOfMercury((validModel.diastolic as DoubleValueComponentModel.Valid).parsedValue),
+        systolic = Pressure.millimetersOfMercury((validModel.systolic as ValueComponentModel.ValidDouble).parsedValue),
+        diastolic = Pressure.millimetersOfMercury((validModel.diastolic as ValueComponentModel.ValidDouble).parsedValue),
         bodyPosition = (validModel.bodyPosition as SelectorComponentModel.Valid).value,
         measurementLocation = (validModel.measurementLocation as SelectorComponentModel.Valid).value,
     )
@@ -97,8 +97,8 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
     override fun createDefault(): BloodPressureRecord = BloodPressureRecord(
         time = Instant.now(),
         zoneOffset = ZoneOffset.UTC,
-        metadata = Metadata.Companion.unknownRecordingMethod(),
-        systolic = Pressure.Companion.millimetersOfMercury(120.0),
-        diastolic = Pressure.Companion.millimetersOfMercury(80.0)
+        metadata = Metadata.unknownRecordingMethod(),
+        systolic = Pressure.millimetersOfMercury(120.0),
+        diastolic = Pressure.millimetersOfMercury(80.0)
     )
 }

@@ -2,7 +2,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.HeartRateVariabilityRmssdModel
@@ -25,8 +25,8 @@ class HeartRateVariabilityRmssdEditor() : Editor<HeartRateVariabilityRmssdRecord
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.HeartRateVariabilityRmssd -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.HeartRateVariabilityRmssd -> model.copy(
                 heartRateVariabilityMillis = event.value
             )
 
@@ -45,9 +45,9 @@ class HeartRateVariabilityRmssdEditor() : Editor<HeartRateVariabilityRmssdRecord
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        heartRateVariabilityMillis = DoubleValueComponentModel.Valid(
+        heartRateVariabilityMillis = ValueComponentModel.ValidDouble(
             parsedValue = record.heartRateVariabilityMillis,
-            type = DoubleValueComponentModel.Type.HeartRateVariabilityRmssd(),
+            type = ValueComponentModel.Type.HeartRateVariabilityRmssd(),
         ),
     )
 
@@ -58,7 +58,7 @@ class HeartRateVariabilityRmssdEditor() : Editor<HeartRateVariabilityRmssdRecord
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        heartRateVariabilityMillis = (validModel.heartRateVariabilityMillis as DoubleValueComponentModel.Valid).parsedValue,
+        heartRateVariabilityMillis = (validModel.heartRateVariabilityMillis as ValueComponentModel.ValidDouble).parsedValue,
     )
 
     override fun createDefault(): HeartRateVariabilityRmssdRecord = HeartRateVariabilityRmssdRecord(

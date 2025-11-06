@@ -3,7 +3,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.HeightRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.meters
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.HeightModel
@@ -26,8 +26,8 @@ class HeightEditor() : Editor<HeightRecord, HeightModel>() {
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Length -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.Length -> model.copy(
                 height = event.value
             )
 
@@ -46,9 +46,9 @@ class HeightEditor() : Editor<HeightRecord, HeightModel>() {
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        height = DoubleValueComponentModel.Valid(
+        height = ValueComponentModel.ValidDouble(
             parsedValue = record.height.inMeters,
-            type = DoubleValueComponentModel.Type.Length(),
+            type = ValueComponentModel.Type.Length(),
         ),
     )
 
@@ -59,7 +59,7 @@ class HeightEditor() : Editor<HeightRecord, HeightModel>() {
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        height = (validModel.height as DoubleValueComponentModel.Valid).parsedValue.meters,
+        height = (validModel.height as ValueComponentModel.ValidDouble).parsedValue.meters,
     )
 
     override fun createDefault(): HeightRecord = HeightRecord(

@@ -3,7 +3,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.BloodGlucose
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
@@ -39,8 +39,8 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseModel>() {
             metadata = event.metadata
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.BloodGlucoseLevel -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.BloodGlucoseLevel -> model.copy(
                 level = event.value
             )
 
@@ -63,9 +63,9 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseModel>() {
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        level = DoubleValueComponentModel.Valid(
+        level = ValueComponentModel.ValidDouble(
             parsedValue = record.level.inMillimolesPerLiter,
-            type = DoubleValueComponentModel.Type.BloodGlucoseLevel(),
+            type = ValueComponentModel.Type.BloodGlucoseLevel(),
         ),
         specimenSource = SelectorComponentModel.Valid(
             value = record.specimenSource,
@@ -88,7 +88,7 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseModel>() {
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        level = BloodGlucose.Companion.millimolesPerLiter((validModel.level as DoubleValueComponentModel.Valid).parsedValue),
+        level = BloodGlucose.Companion.millimolesPerLiter((validModel.level as ValueComponentModel.ValidDouble).parsedValue),
         specimenSource = (validModel.specimenSource as SelectorComponentModel.Valid).value,
         mealType = (validModel.mealType as SelectorComponentModel.Valid).value,
         relationToMeal = (validModel.relationToMeals as SelectorComponentModel.Valid).value

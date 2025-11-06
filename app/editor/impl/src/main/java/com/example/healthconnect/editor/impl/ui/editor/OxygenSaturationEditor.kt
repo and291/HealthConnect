@@ -3,7 +3,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.OxygenSaturationRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.percent
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
@@ -26,8 +26,8 @@ class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturation
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Percentage -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.Percentage -> model.copy(
                 percentage = event.value
             )
 
@@ -46,9 +46,9 @@ class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturation
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        percentage = DoubleValueComponentModel.Valid(
+        percentage = ValueComponentModel.ValidDouble(
             parsedValue = record.percentage.value,
-            type = DoubleValueComponentModel.Type.Percentage(),
+            type = ValueComponentModel.Type.Percentage(),
         )
     )
 
@@ -59,7 +59,7 @@ class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturation
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        percentage = (validModel.percentage as DoubleValueComponentModel.Valid).parsedValue.percent,
+        percentage = (validModel.percentage as ValueComponentModel.ValidDouble).parsedValue.percent,
     )
 
     override fun createDefault(): OxygenSaturationRecord = OxygenSaturationRecord(

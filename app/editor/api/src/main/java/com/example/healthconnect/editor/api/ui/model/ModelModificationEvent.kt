@@ -1,6 +1,6 @@
 package com.example.healthconnect.editor.api.ui.model
 
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
@@ -19,7 +19,7 @@ sealed class ModelModificationEvent {
         val metadata: MetadataComponentModel
     ) : ModelModificationEvent()
 
-    data class OnDoubleValueChanged(
-        val value: DoubleValueComponentModel,
+    data class OnValueChanged(
+        val value: ValueComponentModel,
     ) : ModelModificationEvent()
 }

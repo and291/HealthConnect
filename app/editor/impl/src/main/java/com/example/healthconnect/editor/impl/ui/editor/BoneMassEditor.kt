@@ -3,7 +3,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.BoneMassRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.kilograms
-import com.example.healthconnect.components.api.ui.model.DoubleValueComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.BoneMassModel
@@ -26,8 +26,8 @@ class BoneMassEditor() : Editor<BoneMassRecord, BoneMassModel>() {
             time = event.time
         )
 
-        is ModelModificationEvent.OnDoubleValueChanged -> when (event.value.type) {
-            is DoubleValueComponentModel.Type.Mass -> model.copy(
+        is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
+            is ValueComponentModel.Type.Mass -> model.copy(
                 mass = event.value
             )
 
@@ -46,9 +46,9 @@ class BoneMassEditor() : Editor<BoneMassRecord, BoneMassModel>() {
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        mass = DoubleValueComponentModel.Valid(
+        mass = ValueComponentModel.ValidDouble(
             parsedValue = record.mass.inKilograms,
-            type = DoubleValueComponentModel.Type.Mass(),
+            type = ValueComponentModel.Type.Mass(),
         ),
     )
 
@@ -59,7 +59,7 @@ class BoneMassEditor() : Editor<BoneMassRecord, BoneMassModel>() {
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        mass = (validModel.mass as DoubleValueComponentModel.Valid).parsedValue.kilograms,
+        mass = (validModel.mass as ValueComponentModel.ValidDouble).parsedValue.kilograms,
     )
 
     override fun createDefault(): BoneMassRecord = BoneMassRecord(
