@@ -7,7 +7,7 @@ import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 data class RestingHeartRateModel(
     val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
-    //User's weight in kilograms. Required field. Valid range: 0-1000 kilograms.
+    //Heart beats per minute. Required field. Validation range: 1-300.
     val beatsPerMinute: ValueComponentModel,
 ) : Model() {
 
