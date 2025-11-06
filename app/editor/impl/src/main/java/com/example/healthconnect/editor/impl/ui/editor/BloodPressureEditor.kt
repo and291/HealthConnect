@@ -88,8 +88,8 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
         time = (validModel.time as TimeComponentModel.Valid).instant,
         zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        systolic = Pressure.Companion.millimetersOfMercury((validModel.systolic as ValueComponentModel.ValidDouble).parsedValue),
-        diastolic = Pressure.Companion.millimetersOfMercury((validModel.diastolic as ValueComponentModel.ValidDouble).parsedValue),
+        systolic = Pressure.millimetersOfMercury((validModel.systolic as ValueComponentModel.ValidDouble).parsedValue),
+        diastolic = Pressure.millimetersOfMercury((validModel.diastolic as ValueComponentModel.ValidDouble).parsedValue),
         bodyPosition = (validModel.bodyPosition as SelectorComponentModel.Valid).value,
         measurementLocation = (validModel.measurementLocation as SelectorComponentModel.Valid).value,
     )
@@ -97,8 +97,8 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
     override fun createDefault(): BloodPressureRecord = BloodPressureRecord(
         time = Instant.now(),
         zoneOffset = ZoneOffset.UTC,
-        metadata = Metadata.Companion.unknownRecordingMethod(),
-        systolic = Pressure.Companion.millimetersOfMercury(120.0),
-        diastolic = Pressure.Companion.millimetersOfMercury(80.0)
+        metadata = Metadata.unknownRecordingMethod(),
+        systolic = Pressure.millimetersOfMercury(120.0),
+        diastolic = Pressure.millimetersOfMercury(80.0)
     )
 }
