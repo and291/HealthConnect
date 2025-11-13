@@ -5,10 +5,10 @@ import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class OxygenSaturationModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val percentage: ValueComponentModel,
-) : Model() {
+) : Instantaneous() {
 
     override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
             percentage is ValueComponentModel.ValidDouble &&

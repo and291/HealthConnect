@@ -6,13 +6,13 @@ import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class BloodPressureModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val systolic: ValueComponentModel,
     val diastolic: ValueComponentModel,
     val bodyPosition: SelectorComponentModel,
     val measurementLocation: SelectorComponentModel,
-) : Model() {
+) : Instantaneous() {
 
     override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
             systolic is ValueComponentModel.ValidDouble &&

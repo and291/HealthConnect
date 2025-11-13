@@ -6,11 +6,11 @@ import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class Vo2MaxModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val vo2MillilitersPerMinuteKilogram: ValueComponentModel,
     val measurementMethod: SelectorComponentModel,
-) : Model() {
+) : Instantaneous() {
 
     override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
             vo2MillilitersPerMinuteKilogram is ValueComponentModel.ValidDouble &&

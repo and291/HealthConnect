@@ -5,11 +5,11 @@ import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class CervicalMucusModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val appearance: SelectorComponentModel,
     val sensation: SelectorComponentModel,
-) : Model() {
+) : Instantaneous() {
 
     override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
             appearance is SelectorComponentModel.Valid &&

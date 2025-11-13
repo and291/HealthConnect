@@ -5,10 +5,10 @@ import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class SexualActivityModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val protectionUsed: SelectorComponentModel,
-) : Model() {
+) : Instantaneous() {
 
     override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
             protectionUsed is SelectorComponentModel.Valid &&

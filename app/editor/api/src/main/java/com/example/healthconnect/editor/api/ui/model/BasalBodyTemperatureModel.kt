@@ -6,11 +6,11 @@ import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class BasalBodyTemperatureModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val temperature: ValueComponentModel,
     val measurementLocation: SelectorComponentModel,
-) : Model() {
+) : Instantaneous() {
 
     override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
             temperature is ValueComponentModel.ValidDouble &&
