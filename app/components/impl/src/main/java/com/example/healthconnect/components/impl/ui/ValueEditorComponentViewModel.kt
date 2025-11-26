@@ -21,26 +21,12 @@ internal class ValueEditorComponentViewModel(
 
     fun onEvent(event: Event) {
         _state = when (event) {
-            is Event.OnValueChanged -> try {
-                when (model.type.valueType) {
-                    ValueComponentModel.Type.ValueType.Double -> ValueComponentModel.ValidDouble(
-                        parsedValue = event.text.toDouble(),
-                        value = event.text,
-                        type = model.type,
-                    )
-                    ValueComponentModel.Type.ValueType.Long -> ValueComponentModel.ValidLong(
-                        parsedValue = event.text.toLong(),
-                        value = event.text,
-                        type = model.type,
-                    )
-                }
-            } catch (e: Exception) {
-                Log.d(
-                    this::class.simpleName,
-                    "Failed to parse Double ${model.type.suffix}: ${event.text}",
-                    e
+            is Event.OnValueChanged -> when (model.type.valueType) {
+                ValueComponentModel.Type.ValueType.Double -> ValueComponentModel.Dbl(
+                    value = event.text,
+                    type = model.type,
                 )
-                ValueComponentModel.Invalid(
+                ValueComponentModel.Type.ValueType.Long -> ValueComponentModel.Lng(
                     value = event.text,
                     type = model.type,
                 )

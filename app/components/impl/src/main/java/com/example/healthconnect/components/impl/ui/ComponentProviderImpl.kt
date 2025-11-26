@@ -8,20 +8,16 @@ import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
-import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel
-import java.time.Instant
-import java.time.ZoneOffset
 
 internal class ComponentProviderImpl : ComponentProvider {
 
     @Composable
     override fun TimeEditor(
-        time: Instant,
-        zoneOffset: ZoneOffset?,
+        time: TimeComponentModel,
         modifier: Modifier,
         onChanged: (TimeComponentModel) -> Unit,
     ) = TimeEditorComponent(
-        model = TimeEditorInternalModel.create(time, zoneOffset),
+        model = time,
         onChanged = onChanged,
         modifier = modifier,
     )

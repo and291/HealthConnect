@@ -17,7 +17,7 @@ object Di {
 
     val componentFactory by lazy {
         ComponentFactory(
-            componentProvider = componentProvider
+            provider = componentProvider
         )
     }
 

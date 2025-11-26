@@ -7,23 +7,23 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel
-import com.example.healthconnect.components.impl.ui.model.TimeEditorInternalModel.TimeModel
+import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.TimeModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.Instant
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeParseException
 
 internal class TimeEditorComponentViewModel(
-    timeEditorInternalModel: TimeEditorInternalModel
+    model: TimeComponentModel,
 ) : ViewModel() {
 
-    private var _state by mutableStateOf(timeEditorInternalModel)
+    private var _state by mutableStateOf(model)
 
-    val state: TimeEditorInternalModel
+    val state: TimeComponentModel
         get() = _state
 
     private val _effect = MutableStateFlow<Effect?>(null)
@@ -31,75 +31,106 @@ internal class TimeEditorComponentViewModel(
     private var onTimeChangedJob: Job? = null
 
     fun onEvent(event: Event) {
-        when (event) {
-            is Event.OnTimeChanged -> {
-                onTimeChangedJob?.takeIf { it.isActive }?.cancel() //TODO check if this threadsafe?!
-                onTimeChangedJob = viewModelScope.launch {
-                    val startTimeTrace = System.currentTimeMillis()
-                    val timeModel = try {
-                        TimeModel.Valid(Instant.parse(event.value))
-                    } catch (e: DateTimeParseException) {
-                        TimeModel.Invalid(
-                            input = event.value,
-                            parseErrorMessage = "Failed to parse Instant: ${event.value}".also {
-                                Log.e(this::class.simpleName, it, e)
-                            }
-                        )
-                    }
-                    Log.d(this::class.simpleName, "Time handling took ${System.currentTimeMillis() - startTimeTrace} ms")
+        onTimeChangedJob?.takeIf { it.isActive }?.cancel() //TODO check if this threadsafe?!
+        onTimeChangedJob = viewModelScope.launch {
+            val model = when (event) {
+                is Event.OnInstantaneousTimeChanged -> TimeComponentModel.Instantaneous(
+                    time = timeModel(
+                        instantValue = event.value,
+                        zoneValue = event.zoneId,
+                    )
+                )
 
-                    //
-                    //
-                    //
-                    val startZoneTrace = System.currentTimeMillis()
-                    var zoneErrorMessage: String? = null
-                    val newZoneId = try {
-                        ZoneId.of(event.zoneId)
-                    } catch (e: Exception) {
-                        zoneErrorMessage = "Failed to select ZoneId: ${event.zoneId}"
-                        Log.e(this::class.simpleName, zoneErrorMessage, e)
-                        _effect.emit(Effect.ZoneSelectionError(zoneErrorMessage))
-                        null
-                    }
-                    Log.d(this::class.simpleName, "Zone handling took ${System.currentTimeMillis() - startZoneTrace} ms")
+                is Event.OnEndTimeChanged -> (_state as TimeComponentModel.Interval).copy(
+                    end = timeModel(
+                        instantValue = event.value,
+                        zoneValue = event.zoneId,
+                    )
+                )
 
-                    if(this.isActive) {
-                        //update zone only on success
-                        _state = if (newZoneId != null) {
-                            _state.copy(
-                                timeModel = timeModel,
-                                zoneId = newZoneId,
-                                setZoneAttemptErrorMessage = null,
-                            )
-                        } else {
-                            _state.copy(
-                                timeModel = timeModel,
-                                setZoneAttemptErrorMessage = zoneErrorMessage,
-                            )
-                        }
-                    }
-                }
+                is Event.OnStartTimeChanged -> (_state as TimeComponentModel.Interval).copy(
+                    start = timeModel(
+                        instantValue = event.value,
+                        zoneValue = event.zoneId,
+                    )
+                )
             }
+
+            if (this.isActive) {
+                _state = model
+            }
+        }
+    }
+
+    private suspend fun zoneOffset(inputString: String): Result<ZoneOffset> = runCatching {
+        val startZoneTrace = System.currentTimeMillis()
+        ZoneOffset.of(inputString).also {
+            Log.d(
+                this::class.simpleName,
+                "ZoneOffset handling took ${System.currentTimeMillis() - startZoneTrace} ms"
+            )
+        }
+    }.also {
+        if (it.isFailure) {
+            val zoneErrorMessage = "Failed to select ZoneId: $inputString"
+            Log.e(this::class.simpleName, zoneErrorMessage, it.exceptionOrNull())
+            _effect.emit(Effect.ZoneSelectionError(zoneErrorMessage))
+        }
+    }
+
+    private suspend fun timeModel(
+        instantValue: String,
+        zoneValue: String?,
+    ): TimeModel = try {
+        val startTimeTrace = System.currentTimeMillis()
+        TimeModel.Valid(
+            instant = Instant.parse(instantValue).also {
+                Log.d(
+                    this::class.simpleName,
+                    "Instant.parse took ${System.currentTimeMillis() - startTimeTrace} ms"
+                )
+            },
+            zoneOffset = zoneValue?.let { zoneOffset(it).getOrNull() },
+        )
+    } catch (e: DateTimeParseException) {
+        TimeModel.Invalid(
+            input = instantValue,
+            zoneOffset = zoneValue?.let { zoneOffset(it).getOrNull() },
+        ).also {
+            Log.e(this::class.simpleName, it.getParseErrorMessage(), e)
         }
     }
 
     sealed class Effect {
 
         data class ZoneSelectionError(
-            val message: String
+            val message: String,
         ) : Effect()
     }
 
     sealed class Event {
 
-        data class OnTimeChanged(
-            val value: String,
-            val zoneId: String?,
+        abstract val value: String
+        abstract val zoneId: String?
+
+        data class OnInstantaneousTimeChanged(
+            override val value: String,
+            override val zoneId: String?,
+        ) : Event()
+
+        data class OnStartTimeChanged(
+            override val value: String,
+            override val zoneId: String?,
+        ) : Event()
+
+        data class OnEndTimeChanged(
+            override val value: String,
+            override val zoneId: String?,
         ) : Event()
     }
 
     companion object {
 
-        val TIME_MODEL_KEY: CreationExtras.Key<TimeEditorInternalModel> = CreationExtras.Companion.Key()
+        val TIME_MODEL_KEY: CreationExtras.Key<TimeComponentModel> = CreationExtras.Companion.Key()
     }
 }

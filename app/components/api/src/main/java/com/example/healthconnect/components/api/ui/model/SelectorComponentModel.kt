@@ -24,29 +24,24 @@ import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 
-sealed class SelectorComponentModel() : ComponentModel() {
-    abstract val value: Int
-    abstract val type: Type
+data class SelectorComponentModel(
+    val value: Int,
+    val type: Type,
+) : ComponentModel() {
 
-    data class Valid(
-        override val value: Int,
-        override val type: Type,
-    ) : SelectorComponentModel()
+    override fun isValid(): Boolean  = type.items.any { it.first == value }
 
-    data class Invalid(
-        override val value: Int,
-        override val type: Type,
-    ) : SelectorComponentModel()
+    fun map(item: Int): String {
+        val foundItem = type.items.find { it.first == item }
+        return requireNotNull(foundItem?.second) {
+            "${type.title} = $item not found among available items: ${type.items}"
+        }
+    }
 
     sealed class Type {
         abstract val title: String
         abstract val supportText: String
         abstract val items: List<Pair<Int, String>>
-
-        fun map(item: Int): String {
-            val foundItem = items.find { x -> x.first == item }
-            return requireNotNull(foundItem?.second) { "$title = $item not found among available items: $items" }
-        }
 
         data class MeasurementLocationBodyTemperature(
             override val title: String = "Measurement Location",
