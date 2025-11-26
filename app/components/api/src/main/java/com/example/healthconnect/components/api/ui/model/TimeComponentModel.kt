@@ -22,6 +22,16 @@ sealed class TimeComponentModel : ComponentModel() {
         val end: TimeModel,
     ) : TimeComponentModel() {
 
+        constructor(
+            startTime: Instant,
+            startZoneOffset: ZoneOffset?,
+            endTime: Instant,
+            endZoneOffset: ZoneOffset?,
+        ) : this(
+            start = TimeModel.Valid(startTime, startZoneOffset),
+            end = TimeModel.Valid(endTime, endZoneOffset)
+        )
+
         override fun isValid(): Boolean = start is TimeModel.Valid && end is TimeModel.Valid
     }
 }

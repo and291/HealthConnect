@@ -1,7 +1,5 @@
 package com.example.healthconnect.components.api.ui.model
 
-import com.example.healthconnect.components.api.ui.model.ValueComponentModel.Dbl
-
 sealed class ValueComponentModel : ComponentModel() {
 
     abstract val value: String
@@ -57,6 +55,12 @@ sealed class ValueComponentModel : ComponentModel() {
             override val label: String = "Temperature",
             override val supportingText: String = "Temperature in \"Temperature\" unit.",
             override val suffix: String = "Celsius",
+        ) : Type()
+
+        data class Energy(
+            override val label: String = "Energy",
+            override val supportingText: String = "Energy in \"Energy\" unit. Required field. Valid range: 0-1000000 kcal.",
+            override val suffix: String = "kilocalories",
         ) : Type()
 
         data class Power(
