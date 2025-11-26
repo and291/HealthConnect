@@ -8,9 +8,4 @@ data class OvulationTestModel(
     override val metadata: MetadataComponentModel,
     override val time: TimeComponentModel,
     val result: SelectorComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            result is SelectorComponentModel.Valid &&
-            metadata.isValid()
-}
+) : Instantaneous()

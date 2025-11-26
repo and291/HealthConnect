@@ -8,9 +8,4 @@ data class WeightModel(
     override val metadata: MetadataComponentModel,
     override val time: TimeComponentModel,
     val weight: ValueComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            weight is ValueComponentModel.ValidDouble &&
-            metadata.isValid()
-}
+) : Instantaneous()

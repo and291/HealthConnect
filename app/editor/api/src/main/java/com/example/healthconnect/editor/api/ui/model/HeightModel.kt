@@ -8,9 +8,4 @@ data class HeightModel(
     override val metadata: MetadataComponentModel,
     override val time: TimeComponentModel,
     val height: ValueComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            height is ValueComponentModel.ValidDouble &&
-            metadata.isValid()
-}
+) : Instantaneous()

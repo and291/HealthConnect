@@ -8,9 +8,4 @@ data class SexualActivityModel(
     override val metadata: MetadataComponentModel,
     override val time: TimeComponentModel,
     val protectionUsed: SelectorComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            protectionUsed is SelectorComponentModel.Valid &&
-            metadata.isValid()
-}
+) : Instantaneous()

@@ -9,10 +9,4 @@ data class CervicalMucusModel(
     override val time: TimeComponentModel,
     val appearance: SelectorComponentModel,
     val sensation: SelectorComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            appearance is SelectorComponentModel.Valid &&
-            sensation is SelectorComponentModel.Valid &&
-            metadata.isValid()
-}
+) : Instantaneous()

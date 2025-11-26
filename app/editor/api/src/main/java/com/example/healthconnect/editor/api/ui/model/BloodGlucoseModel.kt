@@ -12,9 +12,4 @@ data class BloodGlucoseModel(
     val specimenSource: SelectorComponentModel,
     val mealType: SelectorComponentModel,
     val relationToMeals: SelectorComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            level is ValueComponentModel.ValidDouble &&
-            metadata.isValid()
-}
+) : Instantaneous()

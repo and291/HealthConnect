@@ -8,9 +8,4 @@ data class BodyFatModel(
     override val metadata: MetadataComponentModel,
     override val time: TimeComponentModel,
     val percentage: ValueComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            percentage is ValueComponentModel.ValidDouble &&
-            metadata.isValid()
-}
+) : Instantaneous()

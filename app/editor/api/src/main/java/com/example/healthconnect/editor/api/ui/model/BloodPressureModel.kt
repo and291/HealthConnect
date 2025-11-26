@@ -12,12 +12,4 @@ data class BloodPressureModel(
     val diastolic: ValueComponentModel,
     val bodyPosition: SelectorComponentModel,
     val measurementLocation: SelectorComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            systolic is ValueComponentModel.ValidDouble &&
-            diastolic is ValueComponentModel.ValidDouble &&
-            bodyPosition is SelectorComponentModel.Valid &&
-            measurementLocation is SelectorComponentModel.Valid &&
-            metadata.isValid()
-}
+) : Instantaneous()

@@ -9,9 +9,4 @@ data class RestingHeartRateModel(
     override val time: TimeComponentModel,
     //Heart beats per minute. Required field. Validation range: 1-300.
     val beatsPerMinute: ValueComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            beatsPerMinute is ValueComponentModel.ValidLong &&
-            metadata.isValid()
-}
+) : Instantaneous()

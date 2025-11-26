@@ -9,7 +9,7 @@ sealed class Model {
 
     abstract val metadata: MetadataComponentModel
 
-    abstract fun isValid(): Boolean
+    fun isValid(): Boolean = getComponents().all { it.isValid() }
 
     fun getComponents(): List<ComponentModel> {
         val kClass = this::class as KClass<Model>

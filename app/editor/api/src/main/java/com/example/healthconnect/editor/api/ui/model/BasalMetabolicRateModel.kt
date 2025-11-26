@@ -8,9 +8,4 @@ data class BasalMetabolicRateModel(
     override val metadata: MetadataComponentModel,
     override val time: TimeComponentModel,
     val power: ValueComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            power is ValueComponentModel.ValidDouble &&
-            metadata.isValid()
-}
+) : Instantaneous()

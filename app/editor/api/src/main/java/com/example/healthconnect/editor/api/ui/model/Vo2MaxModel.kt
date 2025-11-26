@@ -10,10 +10,4 @@ data class Vo2MaxModel(
     override val time: TimeComponentModel,
     val vo2MillilitersPerMinuteKilogram: ValueComponentModel,
     val measurementMethod: SelectorComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            vo2MillilitersPerMinuteKilogram is ValueComponentModel.ValidDouble &&
-            measurementMethod is SelectorComponentModel.Valid &&
-            metadata.isValid()
-}
+) : Instantaneous()

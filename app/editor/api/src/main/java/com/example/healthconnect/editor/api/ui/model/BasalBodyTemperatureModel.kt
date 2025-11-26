@@ -10,10 +10,4 @@ data class BasalBodyTemperatureModel(
     override val time: TimeComponentModel,
     val temperature: ValueComponentModel,
     val measurementLocation: SelectorComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            temperature is ValueComponentModel.ValidDouble &&
-            measurementLocation is SelectorComponentModel.Valid &&
-            metadata.isValid()
-}
+) : Instantaneous()

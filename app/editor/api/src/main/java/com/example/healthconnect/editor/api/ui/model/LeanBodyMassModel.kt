@@ -8,9 +8,4 @@ data class LeanBodyMassModel(
     override val metadata: MetadataComponentModel,
     override val time: TimeComponentModel,
     val mass: ValueComponentModel,
-) : Instantaneous() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            mass is ValueComponentModel.ValidDouble &&
-            metadata.isValid()
-}
+) : Instantaneous()
