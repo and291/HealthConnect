@@ -40,12 +40,12 @@ class RespiratoryRateEditor() : Editor<RespiratoryRateRecord, RespiratoryRateMod
         record: RespiratoryRateRecord,
         mapper: MetadataMapper,
     ): RespiratoryRateModel = RespiratoryRateModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        rate = ValueComponentModel.ValidDouble(
+        rate = ValueComponentModel.Dbl(
             parsedValue = record.rate,
             type = ValueComponentModel.Type.RespiratoryRate(),
         )
@@ -55,10 +55,10 @@ class RespiratoryRateEditor() : Editor<RespiratoryRateRecord, RespiratoryRateMod
         validModel: RespiratoryRateModel,
         mapper: MetadataMapper,
     ): RespiratoryRateRecord = RespiratoryRateRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        rate = (validModel.rate as ValueComponentModel.ValidDouble).parsedValue,
+        rate = (validModel.rate as ValueComponentModel.Dbl).parsedValue!!,
     )
 
     override fun createDefault(): RespiratoryRateRecord = RespiratoryRateRecord(

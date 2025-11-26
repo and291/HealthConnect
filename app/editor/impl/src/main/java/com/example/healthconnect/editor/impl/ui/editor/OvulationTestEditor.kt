@@ -28,7 +28,7 @@ class OvulationTestEditor() : Editor<OvulationTestRecord, OvulationTestModel>() 
         is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
 
             is SelectorComponentModel.Type.Result -> model.copy(
-                result = SelectorComponentModel.Valid(
+                result = SelectorComponentModel(
                     value = event.selector.value,
                     type = event.selector.type,
                 )
@@ -44,12 +44,12 @@ class OvulationTestEditor() : Editor<OvulationTestRecord, OvulationTestModel>() 
         record: OvulationTestRecord,
         mapper: MetadataMapper,
     ): OvulationTestModel = OvulationTestModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        result = SelectorComponentModel.Valid(
+        result = SelectorComponentModel(
             value = record.result,
             type = SelectorComponentModel.Type.Result(),
         ),
@@ -59,8 +59,8 @@ class OvulationTestEditor() : Editor<OvulationTestRecord, OvulationTestModel>() 
         validModel: OvulationTestModel,
         mapper: MetadataMapper,
     ): OvulationTestRecord = OvulationTestRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
         result = validModel.result.value,
     )

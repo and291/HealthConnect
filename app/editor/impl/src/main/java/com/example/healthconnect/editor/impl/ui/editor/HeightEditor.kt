@@ -41,12 +41,12 @@ class HeightEditor() : Editor<HeightRecord, HeightModel>() {
         record: HeightRecord,
         mapper: MetadataMapper,
     ): HeightModel = HeightModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        height = ValueComponentModel.ValidDouble(
+        height = ValueComponentModel.Dbl(
             parsedValue = record.height.inMeters,
             type = ValueComponentModel.Type.Length(),
         ),
@@ -56,10 +56,10 @@ class HeightEditor() : Editor<HeightRecord, HeightModel>() {
         validModel: HeightModel,
         mapper: MetadataMapper,
     ): HeightRecord = HeightRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        height = (validModel.height as ValueComponentModel.ValidDouble).parsedValue.meters,
+        height = (validModel.height as ValueComponentModel.Dbl).parsedValue!!.meters,
     )
 
     override fun createDefault(): HeightRecord = HeightRecord(

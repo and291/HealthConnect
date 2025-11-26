@@ -40,12 +40,12 @@ class HeartRateVariabilityRmssdEditor() : Editor<HeartRateVariabilityRmssdRecord
         record: HeartRateVariabilityRmssdRecord,
         mapper: MetadataMapper,
     ): HeartRateVariabilityRmssdModel = HeartRateVariabilityRmssdModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        heartRateVariabilityMillis = ValueComponentModel.ValidDouble(
+        heartRateVariabilityMillis = ValueComponentModel.Dbl(
             parsedValue = record.heartRateVariabilityMillis,
             type = ValueComponentModel.Type.HeartRateVariabilityRmssd(),
         ),
@@ -55,10 +55,10 @@ class HeartRateVariabilityRmssdEditor() : Editor<HeartRateVariabilityRmssdRecord
         validModel: HeartRateVariabilityRmssdModel,
         mapper: MetadataMapper,
     ): HeartRateVariabilityRmssdRecord = HeartRateVariabilityRmssdRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        heartRateVariabilityMillis = (validModel.heartRateVariabilityMillis as ValueComponentModel.ValidDouble).parsedValue,
+        heartRateVariabilityMillis = (validModel.heartRateVariabilityMillis as ValueComponentModel.Dbl).parsedValue!!,
     )
 
     override fun createDefault(): HeartRateVariabilityRmssdRecord = HeartRateVariabilityRmssdRecord(

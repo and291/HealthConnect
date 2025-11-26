@@ -4,9 +4,9 @@ import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Temperature
 import androidx.health.connect.client.units.celsius
-import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.BasalBodyTemperatureModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
@@ -51,16 +51,16 @@ class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBod
         record: BasalBodyTemperatureRecord,
         mapper: MetadataMapper,
     ): BasalBodyTemperatureModel = BasalBodyTemperatureModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        temperature = ValueComponentModel.ValidDouble(
+        temperature = ValueComponentModel.Dbl(
             parsedValue = record.temperature.inCelsius,
             type = ValueComponentModel.Type.Temperature(),
         ),
-        measurementLocation = SelectorComponentModel.Valid(
+        measurementLocation = SelectorComponentModel(
             value = record.measurementLocation, //TODO validate data from lib
             type = SelectorComponentModel.Type.MeasurementLocationBodyTemperature(),
         )
@@ -70,11 +70,11 @@ class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBod
         validModel: BasalBodyTemperatureModel,
         mapper: MetadataMapper,
     ): BasalBodyTemperatureRecord = BasalBodyTemperatureRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        temperature = (validModel.temperature as ValueComponentModel.ValidDouble).parsedValue.celsius,
-        measurementLocation = (validModel.measurementLocation as SelectorComponentModel.Valid).value
+        temperature = (validModel.temperature as ValueComponentModel.Dbl).parsedValue!!.celsius,
+        measurementLocation = validModel.measurementLocation.value
     )
 
     override fun createDefault(): BasalBodyTemperatureRecord = BasalBodyTemperatureRecord(

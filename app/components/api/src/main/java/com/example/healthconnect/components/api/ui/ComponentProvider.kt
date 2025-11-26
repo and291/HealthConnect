@@ -6,15 +6,12 @@ import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
-import java.time.Instant
-import java.time.ZoneOffset
 
 interface ComponentProvider {
 
     @Composable
     fun TimeEditor(
-        time: Instant,
-        zoneOffset: ZoneOffset?,
+        time: TimeComponentModel,
         modifier: Modifier,
         onChanged: (TimeComponentModel) -> Unit,
     )

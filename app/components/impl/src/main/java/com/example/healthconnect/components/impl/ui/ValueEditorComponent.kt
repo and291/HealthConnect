@@ -40,7 +40,7 @@ internal fun ValueEditorComponent(
         },
         enabled = true,
         singleLine = true,
-        isError = viewModel.state is ValueComponentModel.Invalid,
+        isError = !viewModel.state.isValid(),
         onValueChange = {
             viewModel.onEvent(Event.OnValueChanged(it))
         },
@@ -58,7 +58,7 @@ internal fun ValueEditorComponent(
 @Preview(showBackground = true)
 fun ValueEditorComponentValidPreview() {
     ValueEditorComponent(
-        model = ValueComponentModel.ValidDouble(
+        model = ValueComponentModel.Dbl(
             parsedValue = 123.0,
             type = ValueComponentModel.Type.Temperature(),
         ),
@@ -70,7 +70,7 @@ fun ValueEditorComponentValidPreview() {
 @Preview(showBackground = true)
 fun ValueEditorComponentInvalidPreview() {
     ValueEditorComponent(
-        model = ValueComponentModel.Invalid(
+        model = ValueComponentModel.Dbl(
             value = "231ed",
             type = ValueComponentModel.Type.Temperature(),
         ),

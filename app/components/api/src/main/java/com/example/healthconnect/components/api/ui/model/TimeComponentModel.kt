@@ -5,10 +5,23 @@ import java.time.ZoneOffset
 
 sealed class TimeComponentModel : ComponentModel() {
 
-    data class Valid(
-        val instant: Instant,
-        val zoneOffset: ZoneOffset?
-    ) : TimeComponentModel()
+    data class Instantaneous(
+        val time: TimeModel,
+    ) : TimeComponentModel() {
 
-    data object Invalid : TimeComponentModel()
+        constructor(
+            instant: Instant,
+            zoneOffset: ZoneOffset?,
+        ) : this(TimeModel.Valid(instant, zoneOffset))
+
+        override fun isValid(): Boolean = time is TimeModel.Valid
+    }
+
+    data class Interval(
+        val start: TimeModel,
+        val end: TimeModel,
+    ) : TimeComponentModel() {
+
+        override fun isValid(): Boolean = start is TimeModel.Valid && end is TimeModel.Valid
+    }
 }

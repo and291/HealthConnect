@@ -29,7 +29,7 @@ class Vo2MaxEditor() : Editor<Vo2MaxRecord, Vo2MaxModel>() {
         is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
 
             is SelectorComponentModel.Type.Vo2MaxMeasurementMethod -> model.copy(
-                measurementMethod = SelectorComponentModel.Valid(
+                measurementMethod = SelectorComponentModel(
                     value = event.selector.value,
                     type = event.selector.type,
                 )
@@ -53,16 +53,16 @@ class Vo2MaxEditor() : Editor<Vo2MaxRecord, Vo2MaxModel>() {
         record: Vo2MaxRecord,
         mapper: MetadataMapper,
     ): Vo2MaxModel = Vo2MaxModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        vo2MillilitersPerMinuteKilogram = ValueComponentModel.ValidDouble(
+        vo2MillilitersPerMinuteKilogram = ValueComponentModel.Dbl(
             parsedValue = record.vo2MillilitersPerMinuteKilogram,
             type = ValueComponentModel.Type.Vo2Max(),
         ),
-        measurementMethod = SelectorComponentModel.Valid(
+        measurementMethod = SelectorComponentModel(
             value = record.measurementMethod,
             type = SelectorComponentModel.Type.Vo2MaxMeasurementMethod(),
         ),
@@ -72,11 +72,11 @@ class Vo2MaxEditor() : Editor<Vo2MaxRecord, Vo2MaxModel>() {
         validModel: Vo2MaxModel,
         mapper: MetadataMapper,
     ): Vo2MaxRecord = Vo2MaxRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        vo2MillilitersPerMinuteKilogram = (validModel.vo2MillilitersPerMinuteKilogram as ValueComponentModel.ValidDouble).parsedValue,
-        measurementMethod = (validModel.measurementMethod as SelectorComponentModel.Valid).value,
+        vo2MillilitersPerMinuteKilogram = (validModel.vo2MillilitersPerMinuteKilogram as ValueComponentModel.Dbl).parsedValue!!,
+        measurementMethod = validModel.measurementMethod.value,
     )
 
     override fun createDefault(): Vo2MaxRecord = Vo2MaxRecord(

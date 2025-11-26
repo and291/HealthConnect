@@ -41,12 +41,12 @@ class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturation
         record: OxygenSaturationRecord,
         mapper: MetadataMapper,
     ): OxygenSaturationModel = OxygenSaturationModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        percentage = ValueComponentModel.ValidDouble(
+        percentage = ValueComponentModel.Dbl(
             parsedValue = record.percentage.value,
             type = ValueComponentModel.Type.Percentage(),
         )
@@ -56,10 +56,10 @@ class OxygenSaturationEditor() : Editor<OxygenSaturationRecord, OxygenSaturation
         validModel: OxygenSaturationModel,
         mapper: MetadataMapper,
     ): OxygenSaturationRecord = OxygenSaturationRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        percentage = (validModel.percentage as ValueComponentModel.ValidDouble).parsedValue.percent,
+        percentage = (validModel.percentage as ValueComponentModel.Dbl).parsedValue!!.percent,
     )
 
     override fun createDefault(): OxygenSaturationRecord = OxygenSaturationRecord(

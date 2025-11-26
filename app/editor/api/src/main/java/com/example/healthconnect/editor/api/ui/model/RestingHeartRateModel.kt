@@ -5,13 +5,8 @@ import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class RestingHeartRateModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     //Heart beats per minute. Required field. Validation range: 1-300.
     val beatsPerMinute: ValueComponentModel,
-) : Model() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            beatsPerMinute is ValueComponentModel.ValidLong &&
-            metadata.isValid()
-}
+) : Instantaneous()

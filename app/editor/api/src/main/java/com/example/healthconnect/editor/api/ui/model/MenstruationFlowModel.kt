@@ -5,12 +5,7 @@ import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class MenstruationFlowModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val flow: SelectorComponentModel,
-) : Model() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            flow is SelectorComponentModel.Valid &&
-            metadata.isValid()
-}
+) : Instantaneous()

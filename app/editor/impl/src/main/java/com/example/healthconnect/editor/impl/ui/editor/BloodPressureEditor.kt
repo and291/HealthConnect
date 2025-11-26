@@ -58,24 +58,24 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
         record: BloodPressureRecord,
         mapper: MetadataMapper,
     ): BloodPressureModel = BloodPressureModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        systolic = ValueComponentModel.ValidDouble(
+        systolic = ValueComponentModel.Dbl(
             parsedValue = record.systolic.inMillimetersOfMercury,
             type = ValueComponentModel.Type.SystolicPressure()
         ),
-        diastolic = ValueComponentModel.ValidDouble(
+        diastolic = ValueComponentModel.Dbl(
             parsedValue = record.diastolic.inMillimetersOfMercury,
             type = ValueComponentModel.Type.DiastolicPressure()
         ),
-        bodyPosition = SelectorComponentModel.Valid(
+        bodyPosition = SelectorComponentModel(
             value = record.bodyPosition,
             type = SelectorComponentModel.Type.BodyPosition()
         ),
-        measurementLocation = SelectorComponentModel.Valid(
+        measurementLocation = SelectorComponentModel(
             value = record.measurementLocation,
             type = SelectorComponentModel.Type.MeasurementLocationBloodPressure()
         )
@@ -85,13 +85,13 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressureModel>() 
         validModel: BloodPressureModel,
         mapper: MetadataMapper,
     ): BloodPressureRecord = BloodPressureRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        systolic = Pressure.millimetersOfMercury((validModel.systolic as ValueComponentModel.ValidDouble).parsedValue),
-        diastolic = Pressure.millimetersOfMercury((validModel.diastolic as ValueComponentModel.ValidDouble).parsedValue),
-        bodyPosition = (validModel.bodyPosition as SelectorComponentModel.Valid).value,
-        measurementLocation = (validModel.measurementLocation as SelectorComponentModel.Valid).value,
+        systolic = Pressure.millimetersOfMercury((validModel.systolic as ValueComponentModel.Dbl).parsedValue!!),
+        diastolic = Pressure.millimetersOfMercury((validModel.diastolic as ValueComponentModel.Dbl).parsedValue!!),
+        bodyPosition = validModel.bodyPosition.value,
+        measurementLocation = validModel.measurementLocation.value,
     )
 
     override fun createDefault(): BloodPressureRecord = BloodPressureRecord(

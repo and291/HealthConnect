@@ -6,15 +6,10 @@ import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 data class BloodGlucoseModel(
-    val time: TimeComponentModel,
     override val metadata: MetadataComponentModel,
+    override val time: TimeComponentModel,
     val level: ValueComponentModel,
     val specimenSource: SelectorComponentModel,
     val mealType: SelectorComponentModel,
     val relationToMeals: SelectorComponentModel,
-) : Model() {
-
-    override fun isValid(): Boolean = time is TimeComponentModel.Valid &&
-            level is ValueComponentModel.ValidDouble &&
-            metadata.isValid()
-}
+) : Instantaneous()

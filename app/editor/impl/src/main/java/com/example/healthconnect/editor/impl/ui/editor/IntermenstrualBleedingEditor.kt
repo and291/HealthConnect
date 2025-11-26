@@ -33,7 +33,7 @@ class IntermenstrualBleedingEditor() : Editor<IntermenstrualBleedingRecord, Inte
         record: IntermenstrualBleedingRecord,
         mapper: MetadataMapper,
     ): IntermenstrualBleedingModel = IntermenstrualBleedingModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
@@ -44,8 +44,8 @@ class IntermenstrualBleedingEditor() : Editor<IntermenstrualBleedingRecord, Inte
         validModel: IntermenstrualBleedingModel,
         mapper: MetadataMapper,
     ): IntermenstrualBleedingRecord = IntermenstrualBleedingRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
     )
 

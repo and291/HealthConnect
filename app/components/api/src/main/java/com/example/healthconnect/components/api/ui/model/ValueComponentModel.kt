@@ -1,40 +1,47 @@
 package com.example.healthconnect.components.api.ui.model
 
+import com.example.healthconnect.components.api.ui.model.ValueComponentModel.Dbl
+
 sealed class ValueComponentModel : ComponentModel() {
 
     abstract val value: String
     abstract val type: Type
 
-    data class ValidDouble(
-        val parsedValue: Double,
-        override val value: String = parsedValue.toString(),
-        override val type: Type,
-    ) : ValueComponentModel() {
-
-        init {
-            require(value.toDouble() == parsedValue) {
-                "Different values for Valid ${type.label} model"
-            }
-        }
-    }
-
-    data class ValidLong(
-        val parsedValue: Long,
-        override val value: String = parsedValue.toString(),
-        override val type: Type,
-    ) : ValueComponentModel() {
-
-        init {
-            require(value.toLong() == parsedValue) {
-                "Different values for Valid ${type.label} model"
-            }
-        }
-    }
-
-    data class Invalid(
+    data class Dbl(
         override val value: String,
         override val type: Type,
-    ) : ValueComponentModel()
+    ) : ValueComponentModel() {
+
+        constructor(
+            parsedValue: Double,
+            type: Type,
+        ) : this(
+            value = parsedValue.toString(),
+            type = type
+        )
+
+        val parsedValue: Double? = value.toDoubleOrNull()
+
+        override fun isValid(): Boolean  = parsedValue != null
+    }
+
+    data class Lng(
+        override val value: String,
+        override val type: Type,
+    ) : ValueComponentModel() {
+
+        constructor(
+            parsedValue: Long,
+            type: Type,
+        ) : this(
+            value = parsedValue.toString(),
+            type = type
+        )
+
+        val parsedValue: Long? = value.toLongOrNull()
+
+        override fun isValid(): Boolean  = parsedValue != null
+    }
 
     sealed class Type {
         abstract val label: String

@@ -13,7 +13,7 @@ data class MetadataComponentModel(
     val deviceComponentModel: DeviceComponentModel = DeviceComponentModel.Empty
 ) : ComponentModel() {
 
-    fun isValid(): Boolean {
+    override fun isValid(): Boolean {
         //TODO add recording method validity check?
         return try {
             clientRecordVersion.toLong()

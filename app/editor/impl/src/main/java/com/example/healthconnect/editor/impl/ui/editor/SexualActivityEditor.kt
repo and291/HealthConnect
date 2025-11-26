@@ -28,7 +28,7 @@ class SexualActivityEditor() : Editor<SexualActivityRecord, SexualActivityModel>
         is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
 
             is SelectorComponentModel.Type.ProtectionUsed -> model.copy(
-                protectionUsed = SelectorComponentModel.Valid(
+                protectionUsed = SelectorComponentModel(
                     value = event.selector.value,
                     type = event.selector.type,
                 )
@@ -44,12 +44,12 @@ class SexualActivityEditor() : Editor<SexualActivityRecord, SexualActivityModel>
         record: SexualActivityRecord,
         mapper: MetadataMapper,
     ): SexualActivityModel = SexualActivityModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        protectionUsed = SelectorComponentModel.Valid(
+        protectionUsed = SelectorComponentModel(
             value = record.protectionUsed,
             type = SelectorComponentModel.Type.ProtectionUsed(),
         ),
@@ -59,8 +59,8 @@ class SexualActivityEditor() : Editor<SexualActivityRecord, SexualActivityModel>
         validModel: SexualActivityModel,
         mapper: MetadataMapper,
     ): SexualActivityRecord = SexualActivityRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
         protectionUsed = validModel.protectionUsed.value,
     )
