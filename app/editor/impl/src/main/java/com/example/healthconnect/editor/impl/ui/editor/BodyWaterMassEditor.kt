@@ -41,12 +41,12 @@ class BodyWaterMassEditor() : Editor<BodyWaterMassRecord, BodyWaterMassModel>() 
         record: BodyWaterMassRecord,
         mapper: MetadataMapper,
     ): BodyWaterMassModel = BodyWaterMassModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        mass = ValueComponentModel.ValidDouble(
+        mass = ValueComponentModel.Dbl(
             parsedValue = record.mass.inKilograms,
             type = ValueComponentModel.Type.Mass(),
         ),
@@ -56,10 +56,10 @@ class BodyWaterMassEditor() : Editor<BodyWaterMassRecord, BodyWaterMassModel>() 
         validModel: BodyWaterMassModel,
         mapper: MetadataMapper,
     ): BodyWaterMassRecord = BodyWaterMassRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        mass = (validModel.mass as ValueComponentModel.ValidDouble).parsedValue.kilograms,
+        mass = (validModel.mass as ValueComponentModel.Dbl).parsedValue!!.kilograms,
     )
 
     override fun createDefault(): BodyWaterMassRecord = BodyWaterMassRecord(

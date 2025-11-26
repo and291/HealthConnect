@@ -58,24 +58,24 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseModel>() {
         record: BloodGlucoseRecord,
         mapper: MetadataMapper,
     ): BloodGlucoseModel = BloodGlucoseModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        level = ValueComponentModel.ValidDouble(
+        level = ValueComponentModel.Dbl(
             parsedValue = record.level.inMillimolesPerLiter,
             type = ValueComponentModel.Type.BloodGlucoseLevel(),
         ),
-        specimenSource = SelectorComponentModel.Valid(
+        specimenSource = SelectorComponentModel(
             value = record.specimenSource,
             type = SelectorComponentModel.Type.SpecimenSource()
         ),
-        mealType = SelectorComponentModel.Valid(
+        mealType = SelectorComponentModel(
             value = record.mealType,
             type = SelectorComponentModel.Type.MealType()
         ),
-        relationToMeals = SelectorComponentModel.Valid(
+        relationToMeals = SelectorComponentModel(
             value = record.relationToMeal,
             type = SelectorComponentModel.Type.RelationToMeal()
         ),
@@ -85,13 +85,13 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseModel>() {
         validModel: BloodGlucoseModel,
         mapper: MetadataMapper,
     ): BloodGlucoseRecord = BloodGlucoseRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        level = BloodGlucose.Companion.millimolesPerLiter((validModel.level as ValueComponentModel.ValidDouble).parsedValue),
-        specimenSource = (validModel.specimenSource as SelectorComponentModel.Valid).value,
-        mealType = (validModel.mealType as SelectorComponentModel.Valid).value,
-        relationToMeal = (validModel.relationToMeals as SelectorComponentModel.Valid).value
+        level = BloodGlucose.Companion.millimolesPerLiter((validModel.level as ValueComponentModel.Dbl).parsedValue!!),
+        specimenSource = validModel.specimenSource.value,
+        mealType = validModel.mealType.value,
+        relationToMeal = validModel.relationToMeals.value,
     )
 
     override fun createDefault(): BloodGlucoseRecord = BloodGlucoseRecord(

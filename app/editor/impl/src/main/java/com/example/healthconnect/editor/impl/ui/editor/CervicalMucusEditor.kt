@@ -28,13 +28,13 @@ class CervicalMucusEditor() : Editor<CervicalMucusRecord, CervicalMucusModel>() 
         is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
 
             is SelectorComponentModel.Type.Appearance -> model.copy(
-                appearance = SelectorComponentModel.Valid(
+                appearance = SelectorComponentModel(
                     value = event.selector.value,
                     type = event.selector.type,
                 )
             )
             is SelectorComponentModel.Type.Sensation -> model.copy(
-                sensation = SelectorComponentModel.Valid(
+                sensation = SelectorComponentModel(
                     value = event.selector.value,
                     type = event.selector.type,
                 )
@@ -49,16 +49,16 @@ class CervicalMucusEditor() : Editor<CervicalMucusRecord, CervicalMucusModel>() 
         record: CervicalMucusRecord,
         mapper: MetadataMapper,
     ): CervicalMucusModel = CervicalMucusModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        appearance = SelectorComponentModel.Valid(
+        appearance = SelectorComponentModel(
             value = record.appearance,
             type = SelectorComponentModel.Type.Appearance(),
         ),
-        sensation = SelectorComponentModel.Valid(
+        sensation = SelectorComponentModel(
             value = record.sensation,
             type = SelectorComponentModel.Type.Sensation(),
         ),
@@ -68,8 +68,8 @@ class CervicalMucusEditor() : Editor<CervicalMucusRecord, CervicalMucusModel>() 
         validModel: CervicalMucusModel,
         mapper: MetadataMapper,
     ): CervicalMucusRecord = CervicalMucusRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
         appearance = validModel.appearance.value,
         sensation = validModel.sensation.value

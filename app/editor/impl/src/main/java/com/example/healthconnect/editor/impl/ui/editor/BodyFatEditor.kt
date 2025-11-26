@@ -41,12 +41,12 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
         record: BodyFatRecord,
         mapper: MetadataMapper,
     ): BodyFatModel = BodyFatModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        percentage = ValueComponentModel.ValidDouble(
+        percentage = ValueComponentModel.Dbl(
             parsedValue = record.percentage.value,
             type = ValueComponentModel.Type.Percentage(),
         )
@@ -56,10 +56,10 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFatModel>() {
         validModel: BodyFatModel,
         mapper: MetadataMapper,
     ): BodyFatRecord = BodyFatRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        percentage = (validModel.percentage as ValueComponentModel.ValidDouble).parsedValue.percent,
+        percentage = (validModel.percentage as ValueComponentModel.Dbl).parsedValue!!.percent,
     )
 
     override fun createDefault(): BodyFatRecord = BodyFatRecord(

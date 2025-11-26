@@ -41,12 +41,12 @@ class WeightEditor() : Editor<WeightRecord, WeightModel>() {
         record: WeightRecord,
         mapper: MetadataMapper,
     ): WeightModel = WeightModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        weight = ValueComponentModel.ValidDouble(
+        weight = ValueComponentModel.Dbl(
             parsedValue = record.weight.inKilograms,
             type = ValueComponentModel.Type.Mass(),
         ),
@@ -56,10 +56,10 @@ class WeightEditor() : Editor<WeightRecord, WeightModel>() {
         validModel: WeightModel,
         mapper: MetadataMapper,
     ): WeightRecord = WeightRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        weight = (validModel.weight as ValueComponentModel.ValidDouble).parsedValue.kilograms,
+        weight = (validModel.weight as ValueComponentModel.Dbl).parsedValue!!.kilograms,
     )
 
     override fun createDefault(): WeightRecord = WeightRecord(

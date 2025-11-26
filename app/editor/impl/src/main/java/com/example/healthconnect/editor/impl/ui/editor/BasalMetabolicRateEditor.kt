@@ -43,12 +43,12 @@ class BasalMetabolicRateEditor() :
         record: BasalMetabolicRateRecord,
         mapper: MetadataMapper,
     ): BasalMetabolicRateModel = BasalMetabolicRateModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        power = ValueComponentModel.ValidDouble(
+        power = ValueComponentModel.Dbl(
             parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay,
             type = ValueComponentModel.Type.Power(),
         )
@@ -58,10 +58,10 @@ class BasalMetabolicRateEditor() :
         validModel: BasalMetabolicRateModel,
         mapper: MetadataMapper,
     ): BasalMetabolicRateRecord = BasalMetabolicRateRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        basalMetabolicRate = (validModel.power as ValueComponentModel.ValidDouble).parsedValue.kilocaloriesPerDay,
+        basalMetabolicRate = (validModel.power as ValueComponentModel.Dbl).parsedValue!!.kilocaloriesPerDay,
     )
 
     override fun createDefault(): BasalMetabolicRateRecord = BasalMetabolicRateRecord(

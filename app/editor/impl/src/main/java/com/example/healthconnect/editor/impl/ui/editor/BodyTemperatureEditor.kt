@@ -51,16 +51,16 @@ class BodyTemperatureEditor() : Editor<BodyTemperatureRecord, BodyTemperatureMod
         record: BodyTemperatureRecord,
         mapper: MetadataMapper,
     ): BodyTemperatureModel = BodyTemperatureModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        temperature = ValueComponentModel.ValidDouble(
+        temperature = ValueComponentModel.Dbl(
             parsedValue = record.temperature.inCelsius,
             type = ValueComponentModel.Type.Temperature(),
         ),
-        measurementLocation = SelectorComponentModel.Valid(
+        measurementLocation = SelectorComponentModel(
             value = record.measurementLocation, //TODO validate data from lib
             type = SelectorComponentModel.Type.MeasurementLocationBodyTemperature(),
         )
@@ -70,11 +70,11 @@ class BodyTemperatureEditor() : Editor<BodyTemperatureRecord, BodyTemperatureMod
         validModel: BodyTemperatureModel,
         mapper: MetadataMapper,
     ): BodyTemperatureRecord = BodyTemperatureRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        temperature = (validModel.temperature as ValueComponentModel.ValidDouble).parsedValue.celsius,
-        measurementLocation = (validModel.measurementLocation as SelectorComponentModel.Valid).value
+        temperature = (validModel.temperature as ValueComponentModel.Dbl).parsedValue!!.celsius,
+        measurementLocation = validModel.measurementLocation.value
     )
 
     override fun createDefault(): BodyTemperatureRecord = BodyTemperatureRecord(

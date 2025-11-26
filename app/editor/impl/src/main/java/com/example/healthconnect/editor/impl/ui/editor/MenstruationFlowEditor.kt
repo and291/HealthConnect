@@ -28,7 +28,7 @@ class MenstruationFlowEditor() : Editor<MenstruationFlowRecord, MenstruationFlow
         is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
 
             is SelectorComponentModel.Type.Flow -> model.copy(
-                flow = SelectorComponentModel.Valid(
+                flow = SelectorComponentModel(
                     value = event.selector.value,
                     type = event.selector.type,
                 )
@@ -43,12 +43,12 @@ class MenstruationFlowEditor() : Editor<MenstruationFlowRecord, MenstruationFlow
         record: MenstruationFlowRecord,
         mapper: MetadataMapper,
     ): MenstruationFlowModel = MenstruationFlowModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        flow = SelectorComponentModel.Valid(
+        flow = SelectorComponentModel(
             value = record.flow,
             type = SelectorComponentModel.Type.Flow(),
         ),
@@ -58,8 +58,8 @@ class MenstruationFlowEditor() : Editor<MenstruationFlowRecord, MenstruationFlow
         validModel: MenstruationFlowModel,
         mapper: MetadataMapper,
     ): MenstruationFlowRecord = MenstruationFlowRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
         flow = validModel.flow.value,
     )

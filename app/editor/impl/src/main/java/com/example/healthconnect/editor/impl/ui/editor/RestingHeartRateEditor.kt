@@ -40,12 +40,12 @@ class RestingHeartRateEditor() : Editor<RestingHeartRateRecord, RestingHeartRate
         record: RestingHeartRateRecord,
         mapper: MetadataMapper,
     ): RestingHeartRateModel = RestingHeartRateModel(
-        time = TimeComponentModel.Valid(
+        time = TimeComponentModel.Instantaneous(
             instant = record.time,
             zoneOffset = record.zoneOffset
         ),
         metadata = mapper.toEntity(record.metadata),
-        beatsPerMinute = ValueComponentModel.ValidLong(
+        beatsPerMinute = ValueComponentModel.Lng(
             parsedValue = record.beatsPerMinute,
             type = ValueComponentModel.Type.BeatsPerMinute(),
         ),
@@ -55,10 +55,10 @@ class RestingHeartRateEditor() : Editor<RestingHeartRateRecord, RestingHeartRate
         validModel: RestingHeartRateModel,
         mapper: MetadataMapper,
     ): RestingHeartRateRecord = RestingHeartRateRecord(
-        time = (validModel.time as TimeComponentModel.Valid).instant,
-        zoneOffset = (validModel.time as TimeComponentModel.Valid).zoneOffset,
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
         metadata = mapper.toLibMetadata(validModel.metadata),
-        beatsPerMinute = (validModel.beatsPerMinute as ValueComponentModel.ValidLong).parsedValue,
+        beatsPerMinute = (validModel.beatsPerMinute as ValueComponentModel.Lng).parsedValue!!,
     )
 
     override fun createDefault(): RestingHeartRateRecord = RestingHeartRateRecord(
