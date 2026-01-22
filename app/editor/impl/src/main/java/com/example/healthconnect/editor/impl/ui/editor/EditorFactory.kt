@@ -10,8 +10,11 @@ import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.BodyWaterMassRecord
 import androidx.health.connect.client.records.BoneMassRecord
 import androidx.health.connect.client.records.CervicalMucusRecord
+import androidx.health.connect.client.records.DistanceRecord
+import androidx.health.connect.client.records.ElevationGainedRecord
 import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.HeightRecord
+import androidx.health.connect.client.records.HydrationRecord
 import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.LeanBodyMassRecord
 import androidx.health.connect.client.records.MenstruationFlowRecord
@@ -54,6 +57,9 @@ class EditorFactory {
         Vo2MaxRecord::class -> Vo2MaxEditor()
         RestingHeartRateRecord::class -> RestingHeartRateEditor()
         ActiveCaloriesBurnedRecord::class -> ActiveCaloriesBurnedEditor()
+        DistanceRecord::class -> DistanceEditor()
+        ElevationGainedRecord::class -> ElevationGainedEditor()
+        HydrationRecord::class -> HydrationEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }
