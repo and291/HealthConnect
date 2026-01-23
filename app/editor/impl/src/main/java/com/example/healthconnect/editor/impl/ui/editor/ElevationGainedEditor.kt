@@ -27,7 +27,7 @@ class ElevationGainedEditor() : Editor<ElevationGainedRecord, ElevationGainedMod
         )
 
         is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
-            is ValueComponentModel.Type.ElevationGained -> model.copy(
+            is ValueComponentModel.Type.Elevation -> model.copy(
                 elevation = event.value
             )
 
@@ -50,7 +50,7 @@ class ElevationGainedEditor() : Editor<ElevationGainedRecord, ElevationGainedMod
         metadata = mapper.toEntity(record.metadata),
         elevation = ValueComponentModel.Dbl(
             parsedValue = record.elevation.inMeters,
-            type = ValueComponentModel.Type.ElevationGained(),
+            type = ValueComponentModel.Type.Elevation(),
         ),
     )
 

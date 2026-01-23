@@ -118,15 +118,15 @@ sealed class ValueComponentModel : ComponentModel() {
             override val suffix: String = "meters",
         ) : Type()
 
-        data class ElevationGained(
-            override val label: String = "Elevation gained",
+        data class Elevation(
+            override val label: String = "Elevation",
             override val supportingText: String = "Elevation in Length units. Required field. Valid range: -1000000-1000000 meters.",
             override val suffix: String = "meters",
         ) : Type()
 
-        data class Volume(
-            override val label: String = "Volume",
-            override val supportingText: String = "Volume in Volume unit. Required field. Valid range: 0-100 liters.",
+        data class VolumeOfWater(
+            override val label: String = "Volume of water",
+            override val supportingText: String = "Volume of water in Volume unit. Required field. Valid range: 0-100 liters.",
             override val suffix: String = "liters",
         ) : Type()
 

@@ -27,7 +27,7 @@ class HydrationEditor() : Editor<HydrationRecord, HydrationModel>() {
         )
 
         is ModelModificationEvent.OnValueChanged -> when (event.value.type) {
-            is ValueComponentModel.Type.Volume -> model.copy(
+            is ValueComponentModel.Type.VolumeOfWater -> model.copy(
                 volume = event.value
             )
 
@@ -50,7 +50,7 @@ class HydrationEditor() : Editor<HydrationRecord, HydrationModel>() {
         metadata = mapper.toEntity(record.metadata),
         volume = ValueComponentModel.Dbl(
             parsedValue = record.volume.inLiters,
-            type = ValueComponentModel.Type.Volume(),
+            type = ValueComponentModel.Type.VolumeOfWater(),
         ),
     )
 
