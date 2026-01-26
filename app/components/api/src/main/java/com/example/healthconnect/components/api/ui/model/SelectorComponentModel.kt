@@ -1,5 +1,6 @@
 package com.example.healthconnect.components.api.ui.model
 
+import androidx.health.connect.client.records.ActivityIntensityRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord.Companion.RELATION_TO_MEAL_AFTER_MEAL
 import androidx.health.connect.client.records.BloodGlucoseRecord.Companion.RELATION_TO_MEAL_BEFORE_MEAL
@@ -191,6 +192,15 @@ data class SelectorComponentModel(
                 Vo2MaxRecord.MEASUREMENT_METHOD_COOPER_TEST to "COOPER TEST",
                 Vo2MaxRecord.MEASUREMENT_METHOD_MULTISTAGE_FITNESS_TEST to "MULTISTAGE FITNESS TEST",
                 Vo2MaxRecord.MEASUREMENT_METHOD_ROCKPORT_FITNESS_TEST to "ROCKPORT FITNESS TEST",
+            ),
+        ) : Type()
+
+        data class ActivityIntensityType(
+            override val title: String = "Activity Intensity",
+            override val supportText: String = "The intensity of the activity. Required field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                ActivityIntensityRecord.ACTIVITY_INTENSITY_TYPE_MODERATE to "MODERATE",
+                ActivityIntensityRecord.ACTIVITY_INTENSITY_TYPE_VIGOROUS to "VIGOROUS",
             ),
         ) : Type()
     }

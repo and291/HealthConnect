@@ -1,6 +1,7 @@
 package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
+import androidx.health.connect.client.records.ActivityIntensityRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
@@ -60,6 +61,7 @@ class EditorFactory {
         DistanceRecord::class -> DistanceEditor()
         ElevationGainedRecord::class -> ElevationGainedEditor()
         HydrationRecord::class -> HydrationEditor()
+        ActivityIntensityRecord::class -> ActivityIntensityEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }
