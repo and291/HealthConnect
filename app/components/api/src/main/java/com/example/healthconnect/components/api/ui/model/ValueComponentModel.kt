@@ -124,6 +124,12 @@ sealed class ValueComponentModel : ComponentModel() {
             override val suffix: String = "meters",
         ) : Type()
 
+        data class FloorsClimbed(
+            override val label: String = "Floors climbed",
+            override val supportingText: String = "Number of floors climbed. Required field. Valid range: 0-1000000.",
+            override val suffix: String = "floors",
+        ) : Type()
+
         data class VolumeOfWater(
             override val label: String = "Volume of water",
             override val supportingText: String = "Volume of water in Volume unit. Required field. Valid range: 0-100 liters.",
