@@ -6,6 +6,7 @@ import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.StringComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
 
@@ -52,5 +53,16 @@ internal class ComponentProviderImpl : ComponentProvider {
     ): Unit = SelectorComponent(
         editor = selector,
         onItemSelected = { onChanged(it) }
+    )
+
+    @Composable
+    override fun StringEditor(
+        value: StringComponentModel,
+        modifier: Modifier,
+        onChanged: (StringComponentModel) -> Unit,
+    ) = StringEditorComponent(
+        model = value,
+        onChanged = onChanged,
+        modifier = modifier
     )
 }

@@ -21,6 +21,7 @@ import androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK
 import androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN
 import androidx.health.connect.client.records.MenstruationFlowRecord
+import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
@@ -201,6 +202,19 @@ data class SelectorComponentModel(
             override val items: List<Pair<Int, String>> = listOf(
                 ActivityIntensityRecord.ACTIVITY_INTENSITY_TYPE_MODERATE to "MODERATE",
                 ActivityIntensityRecord.ACTIVITY_INTENSITY_TYPE_VIGOROUS to "VIGOROUS",
+            ),
+        ) : Type()
+
+        data class MindfulnessSessionType(
+            override val title: String = "Mindfulness Session Type",
+            override val supportText: String = "The type of the mindfulness session. Required field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                MindfulnessSessionRecord.MINDFULNESS_SESSION_TYPE_UNKNOWN to "UNKNOWN",
+                MindfulnessSessionRecord.MINDFULNESS_SESSION_TYPE_BREATHING to "BREATHING",
+                MindfulnessSessionRecord.MINDFULNESS_SESSION_TYPE_MEDITATION to "MEDITATION",
+                MindfulnessSessionRecord.MINDFULNESS_SESSION_TYPE_MOVEMENT to "MOVEMENT",
+                MindfulnessSessionRecord.MINDFULNESS_SESSION_TYPE_MUSIC to "MUSIC",
+                MindfulnessSessionRecord.MINDFULNESS_SESSION_TYPE_UNGUIDED to "UNGUIDED",
             ),
         ) : Type()
     }
