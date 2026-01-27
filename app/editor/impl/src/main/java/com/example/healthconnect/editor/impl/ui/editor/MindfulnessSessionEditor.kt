@@ -27,13 +27,15 @@ class MindfulnessSessionEditor() : Editor<MindfulnessSessionRecord, MindfulnessS
         )
 
         is ModelModificationEvent.OnStringValueChanged -> when (event.value.type) {
-            is StringComponentModel.Type.Title -> model.copy(
+            is StringComponentModel.Type.MindfulnessSessionTitle -> model.copy(
                 title = event.value
             )
 
-            is StringComponentModel.Type.Notes -> model.copy(
+            is StringComponentModel.Type.MindfulnessSessionNotes -> model.copy(
                 notes = event.value
             )
+
+            else -> throw NotImplementedError()
         }
 
         is ModelModificationEvent.OnValueSelected -> when (event.selector.type) {
@@ -60,11 +62,11 @@ class MindfulnessSessionEditor() : Editor<MindfulnessSessionRecord, MindfulnessS
         metadata = mapper.toEntity(record.metadata),
         title = StringComponentModel(
             value = record.title ?: "",
-            type = StringComponentModel.Type.Title()
+            type = StringComponentModel.Type.MindfulnessSessionTitle()
         ),
         notes = StringComponentModel(
             value = record.notes ?: "",
-            type = StringComponentModel.Type.Notes()
+            type = StringComponentModel.Type.MindfulnessSessionNotes()
         ),
         mindfulnessSessionType = SelectorComponentModel(
             value = record.mindfulnessSessionType,
