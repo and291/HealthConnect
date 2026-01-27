@@ -21,6 +21,7 @@ import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.LeanBodyMassRecord
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.MenstruationPeriodRecord
+import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
 import androidx.health.connect.client.records.Record
@@ -66,6 +67,7 @@ class EditorFactory {
         ActivityIntensityRecord::class -> ActivityIntensityEditor()
         FloorsClimbedRecord::class -> FloorsClimbedEditor()
         MenstruationPeriodRecord::class -> MenstruationPeriodEditor()
+        MindfulnessSessionRecord::class -> MindfulnessSessionEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }

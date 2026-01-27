@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.model.ValueComponentModel
 import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.StringComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
 
 interface ComponentProvider {
@@ -35,5 +36,12 @@ interface ComponentProvider {
         selector: SelectorComponentModel,
         modifier: Modifier,
         onChanged: (SelectorComponentModel) -> Unit,
+    )
+
+    @Composable
+    fun StringEditor(
+        value: StringComponentModel,
+        modifier: Modifier,
+        onChanged: (StringComponentModel) -> Unit,
     )
 }
