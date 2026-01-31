@@ -1,6 +1,8 @@
 package com.example.healthconnect.components.api.ui.model
 
-sealed class ValueComponentModel : ComponentModel() {
+import java.util.UUID
+
+sealed class ValueComponentModel(override val presentationId: UUID) : ComponentModel(presentationId) {
 
     abstract val value: String
     abstract val type: Type
@@ -8,14 +10,17 @@ sealed class ValueComponentModel : ComponentModel() {
     data class Dbl(
         override val value: String,
         override val type: Type,
-    ) : ValueComponentModel() {
+        override val presentationId: UUID = UUID.randomUUID(),
+    ) : ValueComponentModel(presentationId) {
 
         constructor(
             parsedValue: Double,
             type: Type,
+            id: UUID = UUID.randomUUID(),
         ) : this(
             value = parsedValue.toString(),
-            type = type
+            type = type,
+            presentationId = id
         )
 
         val parsedValue: Double? = value.toDoubleOrNull()
@@ -26,14 +31,17 @@ sealed class ValueComponentModel : ComponentModel() {
     data class Lng(
         override val value: String,
         override val type: Type,
-    ) : ValueComponentModel() {
+        override val presentationId: UUID = UUID.randomUUID(),
+    ) : ValueComponentModel(presentationId) {
 
         constructor(
             parsedValue: Long,
             type: Type,
+            id: UUID = UUID.randomUUID(),
         ) : this(
             value = parsedValue.toString(),
-            type = type
+            type = type,
+            presentationId = id
         )
 
         val parsedValue: Long? = value.toLongOrNull()

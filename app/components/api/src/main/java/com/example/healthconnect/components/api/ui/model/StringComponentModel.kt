@@ -1,9 +1,12 @@
 package com.example.healthconnect.components.api.ui.model
 
+import java.util.UUID
+
 data class StringComponentModel(
     val value: String,
     val type: Type,
-) : ComponentModel() {
+    override val presentationId: UUID = UUID.randomUUID(),
+) : ComponentModel(presentationId) {
 
     override fun isValid(): Boolean = true
 
