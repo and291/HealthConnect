@@ -14,10 +14,10 @@ sealed class TimeComponentModel(override val presentationId: UUID) : ComponentMo
         constructor(
             instant: Instant,
             zoneOffset: ZoneOffset?,
-            id: UUID = UUID.randomUUID(),
+            presentationId: UUID = UUID.randomUUID(),
         ) : this(
             time = TimeModel.Valid(instant, zoneOffset),
-            presentationId = id
+            presentationId = presentationId
         )
 
         override fun isValid(): Boolean = time is TimeModel.Valid
@@ -34,11 +34,11 @@ sealed class TimeComponentModel(override val presentationId: UUID) : ComponentMo
             startZoneOffset: ZoneOffset?,
             endTime: Instant,
             endZoneOffset: ZoneOffset?,
-            id: UUID = UUID.randomUUID(),
+            presentationId: UUID = UUID.randomUUID(),
         ) : this(
             start = TimeModel.Valid(startTime, startZoneOffset),
             end = TimeModel.Valid(endTime, endZoneOffset),
-            presentationId = id
+            presentationId = presentationId
         )
 
         override fun isValid(): Boolean = start is TimeModel.Valid && end is TimeModel.Valid

@@ -16,11 +16,11 @@ sealed class ValueComponentModel(override val presentationId: UUID) : ComponentM
         constructor(
             parsedValue: Double,
             type: Type,
-            id: UUID = UUID.randomUUID(),
+            presentationId: UUID = UUID.randomUUID(),
         ) : this(
             value = parsedValue.toString(),
             type = type,
-            presentationId = id
+            presentationId = presentationId
         )
 
         val parsedValue: Double? = value.toDoubleOrNull()
@@ -37,11 +37,11 @@ sealed class ValueComponentModel(override val presentationId: UUID) : ComponentM
         constructor(
             parsedValue: Long,
             type: Type,
-            id: UUID = UUID.randomUUID(),
+            presentationId: UUID = UUID.randomUUID(),
         ) : this(
             value = parsedValue.toString(),
             type = type,
-            presentationId = id
+            presentationId = presentationId
         )
 
         val parsedValue: Long? = value.toLongOrNull()
