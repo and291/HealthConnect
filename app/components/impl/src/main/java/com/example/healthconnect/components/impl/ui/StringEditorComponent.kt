@@ -5,6 +5,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.healthconnect.components.api.ui.model.StringComponentModel
 
 @Composable
@@ -25,5 +26,17 @@ internal fun StringEditorComponent(
             Text(model.type.supportingText)
         },
         modifier = modifier.fillMaxWidth()
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StringEditorComponentPreview() {
+    StringEditorComponent(
+        model = StringComponentModel(
+            value = "Sample text",
+            type = StringComponentModel.Type.MindfulnessSessionTitle()
+        ),
+        onChanged = {}
     )
 }
