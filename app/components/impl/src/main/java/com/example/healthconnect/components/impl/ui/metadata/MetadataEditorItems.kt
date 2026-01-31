@@ -33,7 +33,7 @@ fun LazyListScope.metadataEditorItems(
     onChanged: (MetadataComponentModel) -> Unit,
     recordingMethodMapper: RecordingMethodMapper = Di.recordingMethodMapper
 ) {
-    item(key = "metadata_header_${model.id}") {
+    item(key = "metadata_header_${model.presentationId}") {
         Text(
             text = "Metadata",
             style = MaterialTheme.typography.titleMedium,
@@ -41,7 +41,7 @@ fun LazyListScope.metadataEditorItems(
         )
     }
 
-    item(key = "metadata_recording_${model.id}") {
+    item(key = "metadata_recording_${model.presentationId}") {
         SelectorComponent(
             title = "Recording Method",
             supportText = "Client supplied data recording method to help to understand how the data was recorded",
@@ -57,7 +57,7 @@ fun LazyListScope.metadataEditorItems(
         )
     }
 
-    item(key = "metadata_id_${model.id}") {
+    item(key = "metadata_id_${model.presentationId}") {
         StringEditorComponent(
             model = StringComponentModel(
                 value = model.id,
@@ -69,7 +69,7 @@ fun LazyListScope.metadataEditorItems(
         )
     }
 
-    item(key = "metadata_origin_${model.id}") {
+    item(key = "metadata_origin_${model.presentationId}") {
         StringEditorComponent(
             model = StringComponentModel(
                 value = model.dataOriginPackageName,
@@ -81,7 +81,7 @@ fun LazyListScope.metadataEditorItems(
         )
     }
 
-    item(key = "metadata_modified_${model.id}") {
+    item(key = "metadata_modified_${model.presentationId}") {
         StringEditorComponent(
             model = StringComponentModel(
                 value = model.lastModifiedTime.toString(),
@@ -93,7 +93,7 @@ fun LazyListScope.metadataEditorItems(
         )
     }
 
-    item(key = "metadata_client_record_id_${model.id}") {
+    item(key = "metadata_client_record_id_${model.presentationId}") {
         StringEditorComponent(
             model = StringComponentModel(
                 value = model.clientRecordId,
@@ -106,7 +106,7 @@ fun LazyListScope.metadataEditorItems(
         )
     }
 
-    item(key = "metadata_client_record_version_${model.id}") {
+    item(key = "metadata_client_record_version_${model.presentationId}") {
         StringEditorComponent(
             model = StringComponentModel(
                 value = model.clientRecordVersion,
@@ -119,7 +119,7 @@ fun LazyListScope.metadataEditorItems(
         )
     }
 
-    item(key = "metadata_device_${model.id}") {
+    item(key = "metadata_device_${model.presentationId}") {
         when (val deviceComponentModel = model.deviceComponentModel) {
             DeviceComponentModel.Empty -> Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -172,7 +172,7 @@ fun LazyListScope.metadataEditorItems(
         }
     }
 
-    item(key = "metadata_divider_${model.id}") {
+    item(key = "metadata_divider_${model.presentationId}") {
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
     }
 }
