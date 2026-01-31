@@ -26,29 +26,36 @@ class ComponentFactory(
         eventHandler: (ModelModificationEvent) -> Unit,
     ) {
         model.getComponents().forEach { componentModel ->
-            item(key = componentModel.presentationId) {
-                when (componentModel) {
-                    is TimeComponentModel -> provider.TimeEditor(
+            when (componentModel) {
+                is TimeComponentModel -> item(key = componentModel.presentationId) {
+                    provider.TimeEditor(
                         time = componentModel,
                         modifier = modifier,
                     ) { eventHandler(OnTimeChanged(it)) }
+                }
 
-                    is MetadataComponentModel -> provider.MetadataEditor(
+                is MetadataComponentModel -> with(provider) {
+                    metadataEditor(
                         metadata = componentModel,
-                        modifier = modifier,
                     ) { eventHandler(OnMetadataChanged(it)) }
+                }
 
-                    is ValueComponentModel -> provider.ValueEditor(
+                is ValueComponentModel -> item(key = componentModel.presentationId) {
+                    provider.ValueEditor(
                         value = componentModel,
                         modifier = modifier
                     ) { eventHandler(OnValueChanged(it)) }
+                }
 
-                    is SelectorComponentModel -> provider.Selector(
+                is SelectorComponentModel -> item(key = componentModel.presentationId) {
+                    provider.Selector(
                         selector = componentModel,
                         modifier = modifier
                     ) { eventHandler(OnValueSelected(it)) }
+                }
 
-                    is StringComponentModel -> provider.StringEditor(
+                is StringComponentModel -> item(key = componentModel.presentationId) {
+                    provider.StringEditor(
                         value = componentModel,
                         modifier = modifier
                     ) { eventHandler(OnStringValueChanged(it)) }

@@ -16,8 +16,11 @@ internal fun StringEditorComponent(
 ) {
     OutlinedTextField(
         value = model.value,
+        enabled = !model.readOnly,
         onValueChange = {
-            onChanged(model.copy(value = it))
+            if (!model.readOnly) {
+                onChanged(model.copy(value = it))
+            }
         },
         label = {
             Text(model.type.label)
@@ -36,6 +39,19 @@ fun StringEditorComponentPreview() {
         model = StringComponentModel(
             value = "Sample text",
             type = StringComponentModel.Type.MindfulnessSessionTitle()
+        ),
+        onChanged = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StringEditorComponentReadOnlyPreview() {
+    StringEditorComponent(
+        model = StringComponentModel(
+            value = "Read only text",
+            type = StringComponentModel.Type.MindfulnessSessionTitle(),
+            readOnly = true
         ),
         onChanged = {}
     )

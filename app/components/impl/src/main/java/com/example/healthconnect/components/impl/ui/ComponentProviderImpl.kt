@@ -1,5 +1,6 @@
 package com.example.healthconnect.components.impl.ui
 
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.ComponentProvider
@@ -8,7 +9,7 @@ import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
 import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
 import com.example.healthconnect.components.api.ui.model.StringComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeComponentModel
-import com.example.healthconnect.components.impl.ui.metadata.MetadataEditorComponent
+import com.example.healthconnect.components.impl.ui.metadata.metadataEditorItems
 
 internal class ComponentProviderImpl : ComponentProvider {
 
@@ -23,15 +24,12 @@ internal class ComponentProviderImpl : ComponentProvider {
         modifier = modifier,
     )
 
-    @Composable
-    override fun MetadataEditor(
+    override fun LazyListScope.metadataEditor(
         metadata: MetadataComponentModel,
-        modifier: Modifier,
         onChanged: (MetadataComponentModel) -> Unit,
-    ) = MetadataEditorComponent(
+    ) = metadataEditorItems(
         model = metadata,
-        onChanged = onChanged,
-        modifier = modifier,
+        onChanged = onChanged
     )
 
     @Composable

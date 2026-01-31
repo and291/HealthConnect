@@ -2,7 +2,7 @@ package com.example.healthconnect.components.impl.di
 
 import com.example.healthconnect.components.api.ui.ComponentProvider
 import com.example.healthconnect.components.impl.ui.ComponentProviderImpl
-import com.example.healthconnect.components.impl.ui.metadata.ComponentViewModelFactory
+import com.example.healthconnect.components.impl.ui.ComponentViewModelFactory
 import com.example.healthconnect.components.impl.ui.metadata.mapper.DeviceTypeMapper
 import com.example.healthconnect.components.impl.ui.metadata.mapper.RecordingMethodMapper
 import kotlin.getValue
