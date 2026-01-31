@@ -1,5 +1,6 @@
 package com.example.healthconnect.components.api.ui
 
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.model.ValueComponentModel
@@ -17,10 +18,8 @@ interface ComponentProvider {
         onChanged: (TimeComponentModel) -> Unit,
     )
 
-    @Composable
-    fun MetadataEditor(
+    fun LazyListScope.metadataEditor(
         metadata: MetadataComponentModel,
-        modifier: Modifier,
         onChanged: (MetadataComponentModel) -> Unit,
     )
 

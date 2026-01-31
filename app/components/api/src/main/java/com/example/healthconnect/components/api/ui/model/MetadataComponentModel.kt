@@ -2,6 +2,7 @@ package com.example.healthconnect.components.api.ui.model
 
 import android.util.Log
 import java.time.Instant
+import java.util.UUID
 
 data class MetadataComponentModel(
     val recordingMethod: Int,
@@ -10,8 +11,9 @@ data class MetadataComponentModel(
     val lastModifiedTime: Instant = Instant.EPOCH,
     val clientRecordId: String = "",
     val clientRecordVersion: String = "",
-    val deviceComponentModel: DeviceComponentModel = DeviceComponentModel.Empty
-) : ComponentModel() {
+    val deviceComponentModel: DeviceComponentModel = DeviceComponentModel.Empty,
+    override val presentationId: UUID = UUID.randomUUID(),
+) : ComponentModel(presentationId) {
 
     override fun isValid(): Boolean {
         //TODO add recording method validity check?

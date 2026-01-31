@@ -4,8 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -41,39 +40,39 @@ fun InsertRecordScreen(
     ),
 ) {
 
-    Column(
+    LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
-        componentFactory.Create(viewModel.state.model) {
-            viewModel.onEvent(it)
+        with(componentFactory) {
+            create(viewModel.state.model) {
+                viewModel.onEvent(it)
+            }
         }
 
-        Column {
+        item {
+            Column {
+                when (val state = viewModel.state) {
+                    is State.Edition, is State.InsertResult -> Row {
+                        Button(
+                            enabled = viewModel.state.model.isValid(),
+                            onClick = { viewModel.onEvent(Event.OnInsert) }
+                        ) {
+                            Text("Insert")
+                        }
+                        if (state is State.InsertResult) {
+                            Text("Insert Result: ${state.result}")
+                        }
+                        if (state is State.Edition && state.errorCreatingEntity != null) {
+                            Text("Error creating entity: ${state.errorCreatingEntity}")
+                        }
+                    }
 
-            when (val state = viewModel.state) {
-                is State.Edition, is State.InsertResult -> Row {
-                    Button(
-                        enabled = viewModel.state.model.isValid(),
-                        onClick = { viewModel.onEvent(Event.OnInsert) }
-                    ) {
-                        Text("Insert")
+                    is State.InsertInProgress -> {
+                        CircularProgressIndicator()
                     }
-                    if (state is State.InsertResult) {
-                        Text("Insert Result: ${state.result}")
-                    }
-                    if (state is State.Edition && state.errorCreatingEntity != null) {
-                        Text("Error creating entity: ${state.errorCreatingEntity}")
-                    }
-                }
-
-                is State.InsertInProgress -> {
-                    CircularProgressIndicator()
                 }
             }
-
         }
     }
 }

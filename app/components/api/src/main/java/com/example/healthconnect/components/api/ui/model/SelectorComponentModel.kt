@@ -25,11 +25,13 @@ import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
+import java.util.UUID
 
 data class SelectorComponentModel(
     val value: Int,
     val type: Type,
-) : ComponentModel() {
+    override val presentationId: UUID = UUID.randomUUID(),
+) : ComponentModel(presentationId) {
 
     override fun isValid(): Boolean  = type.items.any { it.first == value }
 

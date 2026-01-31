@@ -4,8 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -40,42 +39,43 @@ fun EditRecordScreen(
     )
 ) {
 
-    Column(
+    LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
-        componentFactory.Create(viewModel.state.model) {
-            viewModel.onEvent(it)
+        with(componentFactory) {
+            create(viewModel.state.model) {
+                viewModel.onEvent(it)
+            }
         }
 
-        Column {
-            if (viewModel.isChanged) {
-                Text("There is unsaved changes")
-            }
-
-            when (val state = viewModel.state) {
-                is State.Edition, is State.UpdateResult -> Row {
-                    Button(
-                        enabled = viewModel.isChanged && viewModel.state.model.isValid(),
-                        onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) }
-                    ) {
-                        Text("Save")
-                    }
-                    if (state is State.UpdateResult) {
-                        Text("Update Result: ${state.result}")
-                    }
-                    if (state is State.Edition && state.errorCreatingEntity != null) {
-                        Text("Error creating entity: ${state.errorCreatingEntity}")
-                    }
+        item {
+            Column {
+                if (viewModel.isChanged) {
+                    Text("There is unsaved changes")
                 }
 
-                is State.UpdateInProgress -> {
-                    CircularProgressIndicator()
+                when (val state = viewModel.state) {
+                    is State.Edition, is State.UpdateResult -> Row {
+                        Button(
+                            enabled = viewModel.isChanged && viewModel.state.model.isValid(),
+                            onClick = { viewModel.onEvent(Event.OnUpdate(upsert = false)) }
+                        ) {
+                            Text("Save")
+                        }
+                        if (state is State.UpdateResult) {
+                            Text("Update Result: ${state.result}")
+                        }
+                        if (state is State.Edition && state.errorCreatingEntity != null) {
+                            Text("Error creating entity: ${state.errorCreatingEntity}")
+                        }
+                    }
+
+                    is State.UpdateInProgress -> {
+                        CircularProgressIndicator()
+                    }
                 }
             }
-
         }
     }
 }
