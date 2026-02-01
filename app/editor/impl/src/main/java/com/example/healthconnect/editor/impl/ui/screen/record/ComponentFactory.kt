@@ -3,11 +3,12 @@ package com.example.healthconnect.editor.impl.ui.screen.record
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.api.ui.model.ValueComponentModel
-import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
-import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
-import com.example.healthconnect.components.api.ui.model.StringComponentModel
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.ValueComponentModel
+import com.example.healthconnect.components.api.ui.model.top.MetadataComponentModel
+import com.example.healthconnect.components.api.ui.model.top.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.top.StringComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.ListComponentModel
 import com.example.healthconnect.editor.api.ui.model.Model
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnValueChanged
@@ -15,6 +16,7 @@ import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnMe
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnTimeChanged
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnValueSelected
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnStringValueChanged
+import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent.OnListChanged
 
 class ComponentFactory(
     private val provider: ComponentProvider,
@@ -59,6 +61,13 @@ class ComponentFactory(
                         value = componentModel,
                         modifier = modifier
                     ) { eventHandler(OnStringValueChanged(it)) }
+                }
+
+                is ListComponentModel<*> -> with(provider) {
+                    listEditor(
+                        model = componentModel,
+                        modifier = modifier
+                    ) { eventHandler(OnListChanged(it)) }
                 }
             }
         }

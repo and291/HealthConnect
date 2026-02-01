@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

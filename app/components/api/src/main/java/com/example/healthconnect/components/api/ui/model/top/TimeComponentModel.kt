@@ -1,10 +1,11 @@
-package com.example.healthconnect.components.api.ui.model
+package com.example.healthconnect.components.api.ui.model.top
 
+import com.example.healthconnect.components.api.ui.model.TimeModel
 import java.time.Instant
 import java.time.ZoneOffset
 import java.util.UUID
 
-sealed class TimeComponentModel(override val presentationId: UUID) : ComponentModel(presentationId) {
+sealed class TimeComponentModel(override val presentationId: UUID) : TopLevelComponentModel(presentationId) {
 
     data class Instantaneous(
         val time: TimeModel,

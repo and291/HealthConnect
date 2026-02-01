@@ -1,8 +1,8 @@
-package com.example.healthconnect.components.api.ui.model
+package com.example.healthconnect.components.api.ui.model.top
 
 import java.util.UUID
 
-sealed class ValueComponentModel(override val presentationId: UUID) : ComponentModel(presentationId) {
+sealed class ValueComponentModel(override val presentationId: UUID) : TopLevelComponentModel(presentationId) {
 
     abstract val value: String
     abstract val type: Type

@@ -2,8 +2,8 @@ package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.MenstruationFlowModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent

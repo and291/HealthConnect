@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.components.api.ui.model.ValueComponentModel
+import com.example.healthconnect.components.api.ui.model.top.ValueComponentModel
 
 //TODO pass a Record's valid range and validate input inside the component?
 // keep in mind: some Records rely on platform's instance validation inside init{}

@@ -1,9 +1,9 @@
 package com.example.healthconnect.editor.api.ui.model
 
-import com.example.healthconnect.components.api.ui.model.ValueComponentModel
-import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
-import com.example.healthconnect.components.api.ui.model.SelectorComponentModel
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.ValueComponentModel
+import com.example.healthconnect.components.api.ui.model.top.MetadataComponentModel
+import com.example.healthconnect.components.api.ui.model.top.SelectorComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
 
 data class BasalBodyTemperatureModel(
     override val metadata: MetadataComponentModel,

@@ -3,8 +3,8 @@ package com.example.healthconnect.editor.impl.ui.editor
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.calories
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
-import com.example.healthconnect.components.api.ui.model.ValueComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.ValueComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.ActiveCaloriesBurnedModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent

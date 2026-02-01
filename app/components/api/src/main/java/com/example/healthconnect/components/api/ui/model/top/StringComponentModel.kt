@@ -1,4 +1,4 @@
-package com.example.healthconnect.components.api.ui.model
+package com.example.healthconnect.components.api.ui.model.top
 
 import java.util.UUID
 
@@ -7,7 +7,7 @@ data class StringComponentModel(
     val type: Type,
     val readOnly: Boolean = false,
     override val presentationId: UUID = UUID.randomUUID(),
-) : ComponentModel(presentationId) {
+) : TopLevelComponentModel(presentationId) {
 
     override fun isValid(): Boolean = true
 
@@ -23,6 +23,21 @@ data class StringComponentModel(
         data class MindfulnessSessionNotes(
             override val label: String = "Notes",
             override val supportingText: String = "Notes regarding the session. Optional field.",
+        ) : Type()
+
+        data class ExerciseSessionTitle(
+            override val label: String = "Title",
+            override val supportingText: String = "Title of the exercise session. Optional field.",
+        ) : Type()
+
+        data class ExerciseSessionNotes(
+            override val label: String = "Notes",
+            override val supportingText: String = "Notes regarding the exercise session. Optional field.",
+        ) : Type()
+
+        data class ExerciseSessionPlannedExerciseSessionId(
+            override val label: String = "Planned exercise session ID",
+            override val supportingText: String = "The planned exercise session this workout was based upon. Optional field.",
         ) : Type()
 
         data class MetadataClientRecordId(

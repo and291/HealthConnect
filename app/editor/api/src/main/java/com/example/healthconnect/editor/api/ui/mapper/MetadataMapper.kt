@@ -1,7 +1,7 @@
 package com.example.healthconnect.editor.api.ui.mapper
 
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.ui.model.MetadataComponentModel
+import com.example.healthconnect.components.api.ui.model.top.MetadataComponentModel
 
 class MetadataMapper(
     private val deviceMapper: DeviceMapper
