@@ -2,7 +2,7 @@ package com.example.healthconnect.editor.impl.ui.editor
 
 import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.IntermenstrualBleedingModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent

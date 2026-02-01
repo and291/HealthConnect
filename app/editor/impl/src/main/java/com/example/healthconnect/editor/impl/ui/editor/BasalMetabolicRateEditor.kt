@@ -4,8 +4,8 @@ import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Power
 import androidx.health.connect.client.units.kilocaloriesPerDay
-import com.example.healthconnect.components.api.ui.model.ValueComponentModel
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.ValueComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.ui.model.BasalMetabolicRateModel
 import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent

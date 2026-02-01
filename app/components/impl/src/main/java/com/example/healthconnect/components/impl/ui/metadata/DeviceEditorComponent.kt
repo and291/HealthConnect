@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.healthconnect.components.impl.di.Di
-import com.example.healthconnect.components.api.ui.model.DeviceComponentModel
+import com.example.healthconnect.components.api.ui.model.sub.DeviceComponentModel
 import com.example.healthconnect.components.impl.ui.SelectorComponent
 import com.example.healthconnect.components.impl.ui.metadata.mapper.DeviceTypeMapper
 

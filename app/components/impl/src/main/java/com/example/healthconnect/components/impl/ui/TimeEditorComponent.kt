@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.components.api.ui.model.TimeComponentModel
+import com.example.healthconnect.components.api.ui.model.top.TimeComponentModel
 import com.example.healthconnect.components.api.ui.model.TimeModel
 import com.example.healthconnect.components.impl.di.Di
 import com.example.healthconnect.components.impl.ui.TimeEditorComponentViewModel.Event
