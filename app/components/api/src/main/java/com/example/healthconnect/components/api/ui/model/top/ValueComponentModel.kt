@@ -1,0 +1,166 @@
+package com.example.healthconnect.components.api.ui.model.top
+
+import java.util.UUID
+
+sealed class ValueComponentModel(override val presentationId: UUID) : TopLevelComponentModel(presentationId) {
+
+    abstract val value: String
+    abstract val type: Type
+
+    data class Dbl(
+        override val value: String,
+        override val type: Type,
+        override val presentationId: UUID = UUID.randomUUID(),
+    ) : ValueComponentModel(presentationId) {
+
+        constructor(
+            parsedValue: Double,
+            type: Type,
+            presentationId: UUID = UUID.randomUUID(),
+        ) : this(
+            value = parsedValue.toString(),
+            type = type,
+            presentationId = presentationId
+        )
+
+        val parsedValue: Double? = value.toDoubleOrNull()
+
+        override fun isValid(): Boolean  = parsedValue != null
+    }
+
+    data class Lng(
+        override val value: String,
+        override val type: Type,
+        override val presentationId: UUID = UUID.randomUUID(),
+    ) : ValueComponentModel(presentationId) {
+
+        constructor(
+            parsedValue: Long,
+            type: Type,
+            presentationId: UUID = UUID.randomUUID(),
+        ) : this(
+            value = parsedValue.toString(),
+            type = type,
+            presentationId = presentationId
+        )
+
+        val parsedValue: Long? = value.toLongOrNull()
+
+        override fun isValid(): Boolean  = parsedValue != null
+    }
+
+    sealed class Type {
+        abstract val label: String
+        abstract val supportingText: String
+        abstract val suffix: String
+        open val valueType: ValueType = ValueType.Double
+
+        enum class ValueType {
+            Double, Long
+        }
+
+        data class Temperature(
+            override val label: String = "Temperature",
+            override val supportingText: String = "Temperature in \"Temperature\" unit.",
+            override val suffix: String = "Celsius",
+        ) : Type()
+
+        data class Energy(
+            override val label: String = "Energy",
+            override val supportingText: String = "Energy in \"Energy\" unit. Required field. Valid range: 0-1000000 kcal.",
+            override val suffix: String = "kilocalories",
+        ) : Type()
+
+        data class Power(
+            override val label: String = "Power",
+            override val supportingText: String = "Power in \"Power\" unit.",
+            override val suffix: String = "kilocalories per day",
+        ) : Type()
+
+        data class BloodGlucoseLevel(
+            override val label: String = "Blood glucose",
+            override val supportingText: String = "Blood glucose level or concentration. Required field. Valid range: 0-50 mmol/L.",
+            override val suffix: String = "millimoles per liter",
+        ) : Type()
+
+        //TODO unite with next? Keep in mind that viewmodel's key depends on this Type!
+        data class SystolicPressure(
+            override val label: String = "Systolic Pressure",
+            override val supportingText: String = "Systolic blood pressure measurement, in Pressure unit. Required field. Valid range: 20-200mmHg. For SDK extension 17 or higher, Valid range: 20-300mmHg.",
+            override val suffix: String = "millimeters of Mercury (mmHg)",
+        ) : Type()
+
+        data class DiastolicPressure(
+            override val label: String = "Diastolic Pressure",
+            override val supportingText: String = "Diastolic blood pressure measurement, in Pressure unit. Required field. Valid range: 10-180mmHg. For SDK extension 17 or higher, Valid range: 10-300mmHg.",
+            override val suffix: String = "millimeters of Mercury (mmHg)",
+        ) : Type()
+
+        data class Percentage(
+            override val label: String = "Percentage",
+            override val supportingText: String = "Percentage. Required field. Valid range: 0-100.",
+            override val suffix: String = "%",
+        ) : Type()
+
+        data class Mass(
+            override val label: String = "Mass",
+            override val supportingText: String = "Mass in Mass unit. Required field. Valid range: 0-1000 kilograms.",
+            override val suffix: String = "kilograms",
+        ) : Type()
+
+        data class HeartRateVariabilityRmssd(
+            override val label: String = "HRV",
+            override val supportingText: String = "Heart rate variability in milliseconds. Required field. Valid Range: 1-200.",
+            override val suffix: String = "milliseconds",
+        ) : Type()
+
+        data class Length(
+            override val label: String = "Height",
+            override val supportingText: String = "Height in Length unit. Required field. Valid range: 0-3 meters.",
+            override val suffix: String = "meters",
+        ) : Type()
+
+        data class Distance(
+            override val label: String = "Distance",
+            override val supportingText: String = "Distance in Length unit. Required field. Valid range: 0-1000000 meters.",
+            override val suffix: String = "meters",
+        ) : Type()
+
+        data class Elevation(
+            override val label: String = "Elevation",
+            override val supportingText: String = "Elevation in Length units. Required field. Valid range: -1000000-1000000 meters.",
+            override val suffix: String = "meters",
+        ) : Type()
+
+        data class FloorsClimbed(
+            override val label: String = "Floors climbed",
+            override val supportingText: String = "Number of floors climbed. Required field. Valid range: 0-1000000.",
+            override val suffix: String = "floors",
+        ) : Type()
+
+        data class VolumeOfWater(
+            override val label: String = "Volume of water",
+            override val supportingText: String = "Volume of water in Volume unit. Required field. Valid range: 0-100 liters.",
+            override val suffix: String = "liters",
+        ) : Type()
+
+        data class RespiratoryRate(
+            override val label: String = "Respiratory rate",
+            override val supportingText: String = "Respiratory rate in breaths per minute. Required field. Valid range: 0-1000.",
+            override val suffix: String = "breaths per minute",
+        ) : Type()
+
+        data class Vo2Max(
+            override val label: String = "VO2 max",
+            override val supportingText: String = "Maximal aerobic capacity (VO2 max) in milliliters. Required field. Valid range: 0-100.",
+            override val suffix: String = "milliliters per minute kilogram",
+        ) : Type()
+
+        data class BeatsPerMinute(
+            override val label: String = "Heart beats per minute",
+            override val supportingText: String = "Heart beats per minute. Required field. Validation range: 1-300.",
+            override val suffix: String = "bpm",
+            override val valueType: ValueType =  ValueType.Long,
+        ) : Type()
+    }
+}
