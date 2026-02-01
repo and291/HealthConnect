@@ -13,6 +13,7 @@ import androidx.health.connect.client.records.BoneMassRecord
 import androidx.health.connect.client.records.CervicalMucusRecord
 import androidx.health.connect.client.records.DistanceRecord
 import androidx.health.connect.client.records.ElevationGainedRecord
+import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.FloorsClimbedRecord
 import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.HeightRecord
@@ -68,6 +69,7 @@ class EditorFactory {
         FloorsClimbedRecord::class -> FloorsClimbedEditor()
         MenstruationPeriodRecord::class -> MenstruationPeriodEditor()
         MindfulnessSessionRecord::class -> MindfulnessSessionEditor()
+        ExerciseSessionRecord::class -> ExerciseSessionEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }
