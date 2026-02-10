@@ -48,5 +48,7 @@ dependencies {
 
     // Compose
     implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.ui)
+
+    //kotlin reflection
+    implementation(kotlin("reflect"))
 }

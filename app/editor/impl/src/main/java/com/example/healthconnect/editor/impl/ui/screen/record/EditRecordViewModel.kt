@@ -8,11 +8,11 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.impl.ui.editor.Editor
+import com.example.healthconnect.editor.impl.ui.editor.record.Editor
 import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.ui.model.Model
-import com.example.healthconnect.editor.api.ui.model.ModelModificationEvent
+import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
+import com.example.healthconnect.editor.api.domain.record.Model
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State.*
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Update
@@ -37,7 +37,7 @@ class EditRecordViewModel(
 
     private var updateJob: Job? = null
 
-    fun onEvent(event: ModelModificationEvent) {
+    fun onEvent(event: FieldModificationEvent) {
         (_state as? Edition)?.also {
             _state = Edition(editor.update(it.model, event))
         }

@@ -1,0 +1,112 @@
+package com.example.healthconnect.components.impl.ui.editor.atomic
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.healthconnect.components.impl.di.Di
+import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
+import com.example.healthconnect.components.impl.ui.editor.DeviceTypeMapper
+
+@Composable
+internal fun DeviceFieldEditor(
+    specifiedDeviceFieldComponentModel: DeviceField.Specified,
+    onTypeItemSelected: (Pair<Int, String>) -> Unit,
+    onManufacturerValueChanged: (String) -> Unit,
+    onModelValueChanged: (String) -> Unit,
+    onRemoveDeviceClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+    deviceTypeMapper: DeviceTypeMapper = Di.deviceTypeMapper,
+) {
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier,
+    ) {
+
+        SelectorFieldEditor(
+            title = "Type",
+            supportText = "Client supplied type of the device",
+            selectedText = deviceTypeMapper.mapName(specifiedDeviceFieldComponentModel.type),
+            items = deviceTypeMapper.deviceTypes,
+            itemComposable = { (_, name) ->
+                Text(text = name)
+            },
+            onItemSelected = onTypeItemSelected,
+        )
+
+        OutlinedTextField(
+            value = specifiedDeviceFieldComponentModel.manufacturer,
+            enabled = true,
+            singleLine = true,
+            onValueChange = onManufacturerValueChanged,
+            label = {
+                Text("Manufacturer")
+            },
+            supportingText = {
+                Text("Optional client supplied manufacturer of the device")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = specifiedDeviceFieldComponentModel.model,
+            enabled = true,
+            singleLine = true,
+            onValueChange = onModelValueChanged,
+            label = {
+                Text("Model")
+            },
+            supportingText = {
+                Text("Optional client supplied model of the device")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(onClick = onRemoveDeviceClicked) {
+            Text("Remove device")
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DeviceFieldEditorScreenPreview() {
+    val sampleDeviceField = DeviceField.Specified(
+        type = 2,
+        manufacturer = "Sample Manufacturer",
+        model = "Sample Model"
+    )
+
+    DeviceFieldEditor(
+        specifiedDeviceFieldComponentModel = sampleDeviceField,
+        onTypeItemSelected = { },
+        onManufacturerValueChanged = { },
+        onModelValueChanged = { },
+        onRemoveDeviceClicked = { },
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
+fun EmptyDeviceFieldEditorScreenPreview() {
+    val sampleDeviceField = DeviceField.Specified(
+        type = 0,
+        manufacturer = "",
+        model = ""
+    )
+
+    DeviceFieldEditor(
+        specifiedDeviceFieldComponentModel = sampleDeviceField,
+        onTypeItemSelected = { },
+        onManufacturerValueChanged = { },
+        onModelValueChanged = { },
+        onRemoveDeviceClicked = { },
+    )
+}
