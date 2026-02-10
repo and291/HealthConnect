@@ -1,0 +1,46 @@
+package com.example.healthconnect.editor.impl.ui.editor.record
+
+import androidx.health.connect.client.records.LeanBodyMassRecord
+import androidx.health.connect.client.records.metadata.Metadata
+import androidx.health.connect.client.units.kilograms
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
+import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
+import com.example.healthconnect.editor.api.domain.record.LeanBodyMass
+import java.time.Instant
+import java.time.ZoneOffset
+
+class LeanBodyMassEditor() : Editor<LeanBodyMassRecord, LeanBodyMass>() {
+
+    override fun toModel(
+        record: LeanBodyMassRecord,
+        mapper: MetadataMapper,
+    ): LeanBodyMass = LeanBodyMass(
+        time = TimeField.Instantaneous(
+            instant = record.time,
+            zoneOffset = record.zoneOffset
+        ),
+        metadata = mapper.toEntity(record.metadata),
+        mass = ValueField.Dbl(
+            parsedValue = record.mass.inKilograms,
+            type = ValueField.Type.Mass(),
+        ),
+    )
+
+    override fun toRecord(
+        validModel: LeanBodyMass,
+        mapper: MetadataMapper,
+    ): LeanBodyMassRecord = LeanBodyMassRecord(
+        time = validModel.getValidTime().instant,
+        zoneOffset = validModel.getValidTime().zoneOffset,
+        metadata = mapper.toLibMetadata(validModel.metadata),
+        mass = (validModel.mass as ValueField.Dbl).parsedValue!!.kilograms,
+    )
+
+    override fun createDefault(): LeanBodyMassRecord = LeanBodyMassRecord(
+        time = Instant.now(),
+        zoneOffset = ZoneOffset.UTC,
+        metadata = Metadata.Companion.unknownRecordingMethod(),
+        mass = 60.kilograms,
+    )
+}

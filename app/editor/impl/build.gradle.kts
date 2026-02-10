@@ -47,6 +47,9 @@ dependencies {
     implementation(project(":app:editor:api"))
     implementation(project(":app:navigation:api"))
 
+    // reflection
+    implementation(kotlin("reflect"))
+
     //compose
     implementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.tooling)

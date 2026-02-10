@@ -1,22 +1,20 @@
 package com.example.healthconnect.components.impl.di
 
-import com.example.healthconnect.components.api.ui.ComponentProvider
-import com.example.healthconnect.components.impl.ui.ComponentProviderImpl
-import com.example.healthconnect.components.impl.ui.ComponentViewModelFactory
-import com.example.healthconnect.components.impl.ui.metadata.mapper.DeviceTypeMapper
-import com.example.healthconnect.components.impl.ui.metadata.mapper.RecordingMethodMapper
+import com.example.healthconnect.components.api.ui.FieldProvider
+import com.example.healthconnect.components.impl.ui.FieldProviderImpl
+import com.example.healthconnect.components.impl.ui.editor.EditorViewModelFactory
+import com.example.healthconnect.components.impl.ui.editor.DeviceTypeMapper
 import kotlin.getValue
 
 object Di {
 
-    val componentProvider: ComponentProvider by lazy {
-        ComponentProviderImpl()
+    val fieldProvider: FieldProvider by lazy {
+        FieldProviderImpl()
     }
 
-    internal val componentViewModelFactory by lazy {
-        ComponentViewModelFactory()
+    internal val editorViewModelFactory by lazy {
+        EditorViewModelFactory()
     }
 
     internal val deviceTypeMapper = DeviceTypeMapper()
-    internal val recordingMethodMapper = RecordingMethodMapper()
 }
