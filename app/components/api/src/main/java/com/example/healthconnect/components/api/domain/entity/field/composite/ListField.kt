@@ -1,9 +1,14 @@
 package com.example.healthconnect.components.api.domain.entity.field.composite
 
 import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExercisePerformanceTargetField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import java.time.Instant
 import java.util.UUID
 
@@ -16,6 +21,22 @@ data class ListField<T : ComponentModel>(
 
     override fun isValid(): Boolean = items.all { it.isValid() }
 
+    override fun containsInstanceId(instanceId: UUID): Boolean {
+        return items.any { it.instanceId == instanceId}
+    }
+
+    override fun updateFieldByInstanceId(
+        instanceId: UUID,
+        newField: ComponentModel,
+    ): ComponentModel {
+        val mutableList = items.toMutableList()
+        @Suppress("UNCHECKED_CAST")
+        mutableList[mutableList.indexOfFirst { it.instanceId == instanceId }] = newField as T
+        return copy(
+            items = mutableList.toList()
+        )
+    }
+
     fun removeItemByPresentationId(presentationId: UUID): ListField<T> {
         val mutableList = items.toMutableList()
         mutableList.removeIf { it.instanceId == presentationId }
@@ -24,9 +45,33 @@ data class ListField<T : ComponentModel>(
         )
     }
 
+    fun findAndRemoveFromList(
+        targetId: UUID,
+    ): ListField<*>? {
+        // 1. Base case: If this specific list contains the ID, remove and return
+        if (this.containsInstanceId(targetId)) {
+            return this.removeItemByPresentationId(targetId)
+        }
+
+        // 2. Recursive case: Search through Composite items within this list
+        return this.items
+            .filterIsInstance<Composite>()
+            .firstNotNullOfOrNull { composite ->
+                // Get nested lists from the composite and search them
+                composite.getComponents()
+                    .filterIsInstance<ListField<*>>()
+                    .firstNotNullOfOrNull { innerList ->
+                        innerList.findAndRemoveFromList(targetId)
+                    }
+            }
+    }
+
     sealed class Type {
         data object ExerciseSegments : Type()
         data object ExerciseLaps : Type()
+        data object PlannedExerciseBlocks : Type()
+        data object PlannedExerciseSteps : Type()
+        data object ExercisePerformanceTargets : Type()
 
         data class ExerciseRoute(val result: RouteResult) : Type() {
             sealed class RouteResult {
@@ -46,11 +91,14 @@ data class ListField<T : ComponentModel>(
         companion object {
             @Suppress("UNCHECKED_CAST")
             fun <T : ComponentModel> from(
-                type: Type
+                type: Type,
             ): Configuration<T> = when (type) {
                 is Type.ExerciseSegments -> ExerciseSegmentsConfig() as Configuration<T>
                 is Type.ExerciseLaps -> ExerciseLapsConfig() as Configuration<T>
                 is Type.ExerciseRoute -> ExerciseRouteConfig(type) as Configuration<T>
+                is Type.PlannedExerciseBlocks -> PlannedExerciseBlocksConfig() as Configuration<T>
+                is Type.PlannedExerciseSteps -> PlannedExerciseStepsConfig() as Configuration<T>
+                is Type.ExercisePerformanceTargets -> ExercisePerformanceTargetsConfig() as Configuration<T>
             }
         }
 
@@ -72,6 +120,53 @@ data class ListField<T : ComponentModel>(
                 endTime = Instant.now().plusSeconds(60),
                 lengthInMeters = null
             )
+        }
+
+        private class PlannedExerciseBlocksConfig() : Configuration<PlannedExerciseBlockField>() {
+            override val label = "Planned Exercise Blocks"
+            override fun createItem() = PlannedExerciseBlockField(
+                description = StringField(
+                    value = "",
+                    type = StringField.Type.PlannedExerciseBlockDescription()
+                ),
+                steps = ListField(
+                    items = emptyList(),
+                    type = Type.PlannedExerciseSteps
+                ),
+                repetitions = ValueField.Lng(
+                    parsedValue = 1L,
+                    type = ValueField.Type.PlannedExerciseBlockRepetitions()
+                )
+            )
+        }
+
+        private class PlannedExerciseStepsConfig() : Configuration<PlannedExerciseStepField>() {
+            override val label = "Planned Exercise Steps"
+            override fun createItem() = PlannedExerciseStepField(
+                exerciseType = SelectorField(
+                    value = 0,
+                    type = SelectorField.Type.ExerciseType()
+                ),
+                exercisePhase = SelectorField(
+                    value = 0,
+                    type = SelectorField.Type.ExercisePhase()
+                ),
+                description = StringField(
+                    value = "",
+                    type = StringField.Type.PlannedExerciseStepDescription()
+                ),
+                completionGoal = ExerciseCompletionGoalField.ManualCompletion(),
+                performanceTargets = ListField(
+                    items = emptyList(),
+                    type = Type.ExercisePerformanceTargets
+                )
+            )
+        }
+
+        private class ExercisePerformanceTargetsConfig() :
+            Configuration<ExercisePerformanceTargetField>() {
+            override val label = "Performance Targets"
+            override fun createItem() = ExercisePerformanceTargetField.HeartRate(0.0,0.0)
         }
 
         private class ExerciseRouteConfig(

@@ -10,6 +10,7 @@ import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
+import androidx.health.connect.client.records.PlannedExerciseStep
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.metadata.Metadata
@@ -348,6 +349,18 @@ data class SelectorField(
                 ExerciseSegment.EXERCISE_SEGMENT_TYPE_WEIGHTLIFTING to "WEIGHTLIFTING",
                 ExerciseSegment.EXERCISE_SEGMENT_TYPE_WHEELCHAIR to "WHEELCHAIR",
                 ExerciseSegment.EXERCISE_SEGMENT_TYPE_YOGA to "YOGA",
+            ),
+        ) : Type()
+
+        data class ExercisePhase(
+            override val title: String = "Exercise Phase",
+            override val supportText: String = "The phase of the exercise step. Required field.",
+            override val items: List<Pair<Int, String>> = listOf(
+                PlannedExerciseStep.EXERCISE_PHASE_UNKNOWN to "UNKNOWN",
+                PlannedExerciseStep.EXERCISE_PHASE_WARMUP to "WARMUP",
+                PlannedExerciseStep.EXERCISE_PHASE_ACTIVE to "ACTIVE",
+                PlannedExerciseStep.EXERCISE_PHASE_REST to "REST",
+                PlannedExerciseStep.EXERCISE_PHASE_COOLDOWN to "COOLDOWN",
             ),
         ) : Type()
 

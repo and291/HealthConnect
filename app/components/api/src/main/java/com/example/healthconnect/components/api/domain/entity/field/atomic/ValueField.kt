@@ -163,5 +163,12 @@ sealed class ValueField(override val instanceId: UUID) : Atomic(instanceId) {
             override val suffix: String = "bpm",
             override val valueType: ValueType =  ValueType.Long,
         ) : Type()
+
+        data class PlannedExerciseBlockRepetitions(
+            override val label: String = "Repetitions",
+            override val supportingText: String = "Number of times the block is repeated. Required field. Valid range: 1-1000000.",
+            override val suffix: String = "times",
+            override val valueType: ValueType = ValueType.Long,
+        ) : Type()
     }
 }

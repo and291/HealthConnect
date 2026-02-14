@@ -40,6 +40,26 @@ data class StringField(
             override val supportingText: String = "The planned exercise session this workout was based upon. Optional field.",
         ) : Type()
 
+        data class PlannedExerciseSessionTitle(
+            override val label: String = "Title",
+            override val supportingText: String = "Title of the planned exercise session. Optional field.",
+        ) : Type()
+
+        data class PlannedExerciseSessionNotes(
+            override val label: String = "Notes",
+            override val supportingText: String = "Notes regarding the planned exercise session. Optional field.",
+        ) : Type()
+
+        data class PlannedExerciseStepDescription(
+            override val label: String = "Description",
+            override val supportingText: String = "Description of the planned exercise step. Optional field.",
+        ) : Type()
+
+        data class PlannedExerciseBlockDescription(
+            override val label: String = "Description",
+            override val supportingText: String = "Description of the planned exercise block. Optional field.",
+        ) : Type()
+
         data class MetadataClientRecordId(
             override val label: String = "Client record Id",
             override val supportingText: String = "Optional client supplied record unique data identifier associated with the data.",

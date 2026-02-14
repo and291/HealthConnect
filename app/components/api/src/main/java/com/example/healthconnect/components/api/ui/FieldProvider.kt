@@ -3,7 +3,9 @@ package com.example.healthconnect.components.api.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExercisePerformanceTargetField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
@@ -71,6 +73,21 @@ interface FieldProvider {
         modifier: Modifier,
         onDelete: () -> Unit,
         onChanged: (ExerciseRouteField) -> Unit,
+    )
+
+    @Composable
+    fun ExerciseCompletionGoal(
+        item: ExerciseCompletionGoalField,
+        modifier: Modifier,
+        onChanged: (ExerciseCompletionGoalField) -> Unit,
+    )
+
+    @Composable
+    fun ExercisePerformanceTargetItem(
+        item: ExercisePerformanceTargetField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (ExercisePerformanceTargetField) -> Unit,
     )
 
     @Composable

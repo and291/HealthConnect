@@ -25,6 +25,7 @@ import androidx.health.connect.client.records.MenstruationPeriodRecord
 import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
+import androidx.health.connect.client.records.PlannedExerciseSessionRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.RespiratoryRateRecord
 import androidx.health.connect.client.records.RestingHeartRateRecord
@@ -58,6 +59,7 @@ import com.example.healthconnect.editor.impl.ui.editor.record.MenstruationPeriod
 import com.example.healthconnect.editor.impl.ui.editor.record.MindfulnessSessionEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.OvulationTestEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.OxygenSaturationEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.PlannedExerciseSessionEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.RespiratoryRateEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.RestingHeartRateEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.SexualActivityEditor
@@ -101,6 +103,7 @@ class EditorFactory {
         MenstruationPeriodRecord::class -> MenstruationPeriodEditor()
         MindfulnessSessionRecord::class -> MindfulnessSessionEditor()
         ExerciseSessionRecord::class -> ExerciseSessionEditor()
+        PlannedExerciseSessionRecord::class -> PlannedExerciseSessionEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }

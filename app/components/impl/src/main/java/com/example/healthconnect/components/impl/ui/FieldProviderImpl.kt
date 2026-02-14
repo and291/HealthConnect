@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.metadata.Device
 import com.example.healthconnect.components.api.ui.FieldProvider
 import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExercisePerformanceTargetField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
@@ -22,7 +24,9 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeF
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.components.impl.ui.editor.atomic.DeviceFieldEditor
+import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseCompletionGoalFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseLapFieldEditor
+import com.example.healthconnect.components.impl.ui.editor.atomic.ExercisePerformanceTargetFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseRouteFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseSegmentFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.SelectorFieldEditor
@@ -155,6 +159,30 @@ internal class FieldProviderImpl : FieldProvider {
         onChanged: (ExerciseRouteField) -> Unit,
     ) = ExerciseRouteFieldEditor(
         location = item,
+        onChanged = onChanged,
+        onDelete = onDelete,
+        modifier = modifier
+    )
+
+    @Composable
+    override fun ExerciseCompletionGoal(
+        item: ExerciseCompletionGoalField,
+        modifier: Modifier,
+        onChanged: (ExerciseCompletionGoalField) -> Unit,
+    ) = ExerciseCompletionGoalFieldEditor(
+        model = item,
+        onChanged = onChanged,
+        modifier = modifier
+    )
+
+    @Composable
+    override fun ExercisePerformanceTargetItem(
+        item: ExercisePerformanceTargetField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (ExercisePerformanceTargetField) -> Unit,
+    ) = ExercisePerformanceTargetFieldEditor(
+        model = item,
         onChanged = onChanged,
         onDelete = onDelete,
         modifier = modifier

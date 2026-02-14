@@ -22,13 +22,14 @@ sealed class Editor<R : Record, M : Model> {
         }
 
         is FieldModificationEvent.RemoveListItem -> {
-            model.getComponents().forEach { component ->
-                if (component is ListField<*> && component.items.any { it.instanceId == event.instanceId }) {
-                    val updatedList =  component.removeItemByPresentationId(event.instanceId)
-                    return deepReflectUpdate(model, component.instanceId, updatedList)
-                }
-            }
-            throw IllegalStateException("Item not found")
+            // Find the list that contains the ID and return the updated version of that list
+            val updatedComponentsList = model.getComponents()
+                .filterIsInstance<ListField<*>>()
+                .firstNotNullOfOrNull { listField ->
+                    listField.findAndRemoveFromList(event.instanceId)
+                } ?: throw IllegalStateException("Item with ID ${event.instanceId} not found")
+
+            deepReflectUpdate(model, updatedComponentsList.instanceId, updatedComponentsList)
         }
     }
 
@@ -49,26 +50,32 @@ sealed class Editor<R : Record, M : Model> {
         val kClass = instance::class
 
         // 1. Check if any top-level property matches the targetId
-        val directProperty = kClass.memberProperties.firstOrNull { prop ->
+        kClass.memberProperties.forEach { prop ->
             val value = prop.getter.call(instance)
-            (value as? ComponentModel)?.instanceId == targetId
+            if ((value as? ComponentModel)?.instanceId == targetId) {
+                return applyCopy(instance, prop.name, newValue)
+            }
+            //check content of Composite components
+            if (value is Composite && value.containsInstanceId(targetId)) {
+                @Suppress("UNCHECKED_CAST")
+                val updated = value.updateFieldByInstanceId(targetId, newValue) as T
+                return applyCopy(instance, prop.name, updated)
+            }
         }
 
-        if (directProperty != null) {
-            return applyCopy(instance, directProperty.name, newValue)
-        }
-
-        // 2. If not found, search recursively in child properties that are NOT ComponentModels themselves
-        // (but might contain them, like MetadataComponentModel)
-        for (prop in kClass.memberProperties) {
-            val childValue = prop.getter.call(instance) ?: continue
-
-            // Only recurse into objects that are NOT the newValue (to avoid infinite loops)
-            // and are typical container models (not primitives or the target ComponentModel itself)
-            if (childValue is Composite && childValue::class.isData) {
-                val updatedChild = deepReflectUpdate(childValue, targetId, newValue)
-                if (updatedChild !== childValue) {
-                    return applyCopy(instance, prop.name, updatedChild)
+        // 2. Check each nested list
+        kClass.memberProperties.forEach { prop ->
+            val value = prop.getter.call(instance)
+            if (value is ListField<*>) {
+                value.items.forEach { itemComponent ->
+                    val updatedComponent = deepReflectUpdate(itemComponent, targetId, newValue)
+                    if (updatedComponent !== itemComponent) {
+                        val updatedList = value.updateFieldByInstanceId(
+                            updatedComponent.instanceId,
+                            updatedComponent
+                        )
+                        return applyCopy(instance, prop.name, updatedList)
+                    }
                 }
             }
         }
