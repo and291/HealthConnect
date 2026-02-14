@@ -170,5 +170,17 @@ sealed class ValueField(override val instanceId: UUID) : Atomic(instanceId) {
             override val suffix: String = "times",
             override val valueType: ValueType = ValueType.Long,
         ) : Type()
+
+        data class NutritionEnergy(
+            override val label: String = "Energy",
+            override val supportingText: String = "Energy in \"Energy\" unit. Optional field.",
+            override val suffix: String = "kilocalories",
+        ) : Type()
+
+        data class NutritionMass(
+            override val label: String,
+            override val supportingText: String = "$label in Mass unit. Optional field.",
+            override val suffix: String = "grams",
+        ) : Type()
     }
 }
