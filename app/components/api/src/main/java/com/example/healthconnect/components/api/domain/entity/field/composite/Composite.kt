@@ -15,4 +15,8 @@ sealed class Composite(
         val kClass = this::class as KClass<Composite>
         return kClass.declaredMemberProperties.mapNotNull { it.get(this) as? ComponentModel }
     }
+
+    abstract fun containsInstanceId(instanceId: UUID): Boolean
+
+    abstract fun updateFieldByInstanceId(instanceId: UUID, newField: ComponentModel): ComponentModel
 }

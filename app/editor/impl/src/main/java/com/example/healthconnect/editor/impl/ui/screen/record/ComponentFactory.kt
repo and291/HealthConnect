@@ -20,13 +20,17 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Devic
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
+import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseStepField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.Composite
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ExercisePerformanceTargetField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
+import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseBlockField
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent.*
 import com.example.healthconnect.editor.api.domain.record.Model
@@ -91,6 +95,17 @@ class ComponentFactory(
                 item = componentModel,
                 modifier = modifier,
                 onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is ExercisePerformanceTargetField -> ExercisePerformanceTargetItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is ExerciseCompletionGoalField -> ExerciseCompletionGoal(
+                item = componentModel,
+                modifier = modifier,
             ) { eventHandler(OnChanged(it)) }
         }
     }
@@ -158,6 +173,58 @@ class ComponentFactory(
                 }
 
                 item(key = "list_divider_${model.instanceId}") {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                }
+            }
+
+            is PlannedExerciseBlockField -> {
+                item(key = "planned_exercise_block_header_${model.instanceId}") {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Planned Exercise Block",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Button(onClick = { eventHandler(RemoveListItem(model.instanceId)) }) {
+                            Text("Remove")
+                        }
+                    }
+                }
+                model.getComponents().forEach { itemModel ->
+                    createByType(itemModel, modifier, eventHandler)
+                }
+                item(key = "planned_exercise_block_divider_${model.instanceId}") {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                }
+            }
+
+            is PlannedExerciseStepField -> {
+                item(key = "planned_exercise_step_header_${model.instanceId}") {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Planned Exercise Step",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Button(onClick = { eventHandler(RemoveListItem(model.instanceId)) }) {
+                            Text("Remove")
+                        }
+                    }
+                }
+                model.getComponents().forEach { itemModel ->
+                    createByType(itemModel, modifier, eventHandler)
+                }
+                item(key = "planned_exercise_step_divider_${model.instanceId}") {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 }
             }
