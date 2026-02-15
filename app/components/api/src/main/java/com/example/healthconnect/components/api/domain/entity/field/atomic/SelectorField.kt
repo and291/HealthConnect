@@ -70,16 +70,16 @@ data class SelectorField(
             ),
         ) : Type()
 
-        data class MealType(
+        data class NutritionMealType(
             override val title: String = "Meal Type",
             override val supportText: String = "Type of meal related to the nutrients consumed. Optional, enum field.",
-            override val items: List<Pair<Int, String>> = listOf(
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN to "UNKNOWN",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_BREAKFAST to "BREAKFAST",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH to "LUNCH",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER to "DINNER",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK to "SNACK",
-            ),
+            override val items: List<Pair<Int, String>> = MEAL_TYPES,
+        ) : Type()
+
+        data class BloodGlucoseMealType(
+            override val title: String = "Meal Type",
+            override val supportText: String = "Type of meal related to the blood glucose measurement. Optional, enum field.",
+            override val items: List<Pair<Int, String>> = MEAL_TYPES,
         ) : Type()
 
         data class RelationToMeal(
@@ -402,5 +402,15 @@ data class SelectorField(
                 SleepSessionRecord.STAGE_TYPE_AWAKE_IN_BED to "AWAKE IN BED",
             ),
         ) : Type()
+
+        companion object {
+            private val MEAL_TYPES = listOf(
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN to "UNKNOWN",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_BREAKFAST to "BREAKFAST",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH to "LUNCH",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER to "DINNER",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK to "SNACK",
+            )
+        }
     }
 }
