@@ -31,8 +31,13 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.RespiratoryRateRecord
 import androidx.health.connect.client.records.RestingHeartRateRecord
 import androidx.health.connect.client.records.SexualActivityRecord
+import androidx.health.connect.client.records.SkinTemperatureRecord
+import androidx.health.connect.client.records.SleepSessionRecord
+import androidx.health.connect.client.records.StepsRecord
+import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.WeightRecord
+import androidx.health.connect.client.records.WheelchairPushesRecord
 import com.example.healthconnect.editor.api.domain.record.Model
 import com.example.healthconnect.editor.impl.ui.editor.record.ActiveCaloriesBurnedEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.ActivityIntensityEditor
@@ -65,8 +70,13 @@ import com.example.healthconnect.editor.impl.ui.editor.record.PlannedExerciseSes
 import com.example.healthconnect.editor.impl.ui.editor.record.RespiratoryRateEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.RestingHeartRateEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.SexualActivityEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.SkinTemperatureEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.SleepSessionEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.StepsEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.TotalCaloriesBurnedEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.Vo2MaxEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.WeightEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.WheelchairPushesEditor
 import kotlin.reflect.KClass
 
 class EditorFactory {
@@ -107,6 +117,11 @@ class EditorFactory {
         ExerciseSessionRecord::class -> ExerciseSessionEditor()
         PlannedExerciseSessionRecord::class -> PlannedExerciseSessionEditor()
         NutritionRecord::class -> NutritionEditor()
+        SkinTemperatureRecord::class -> SkinTemperatureEditor()
+        SleepSessionRecord::class -> SleepSessionEditor()
+        StepsRecord::class -> StepsEditor()
+        TotalCaloriesBurnedRecord::class -> TotalCaloriesBurnedEditor()
+        WheelchairPushesRecord::class -> WheelchairPushesEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }

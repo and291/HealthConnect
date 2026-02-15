@@ -182,5 +182,25 @@ sealed class ValueField(override val instanceId: UUID) : Atomic(instanceId) {
             override val supportingText: String = "$label in Mass unit. Optional field.",
             override val suffix: String = "grams",
         ) : Type()
+
+        data class StepsCount(
+            override val label: String = "Steps",
+            override val supportingText: String = "Count. Required field. Valid range: 1-1000000.",
+            override val suffix: String = "steps",
+            override val valueType: ValueType = ValueType.Long,
+        ) : Type()
+
+        data class WheelchairPushesCount(
+            override val label: String = "Wheelchair pushes",
+            override val supportingText: String = "Count. Required field. Valid range: 1-1000000.",
+            override val suffix: String = "pushes",
+            override val valueType: ValueType = ValueType.Long,
+        ) : Type()
+
+        data class TemperatureDelta(
+            override val label: String = "Temperature Delta",
+            override val supportingText: String = "Temperature delta in Celsius degrees.",
+            override val suffix: String = "Celsius",
+        ) : Type()
     }
 }

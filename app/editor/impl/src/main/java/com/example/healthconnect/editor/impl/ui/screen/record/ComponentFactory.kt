@@ -22,6 +22,8 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Exerc
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
 import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseStepField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SkinTemperatureDeltaField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SleepSessionStageField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
@@ -106,6 +108,18 @@ class ComponentFactory(
             is ExerciseCompletionGoalField -> ExerciseCompletionGoal(
                 item = componentModel,
                 modifier = modifier,
+            ) { eventHandler(OnChanged(it)) }
+
+            is SkinTemperatureDeltaField -> SkinTemperatureDeltaItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is SleepSessionStageField -> SleepSessionStageItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
             ) { eventHandler(OnChanged(it)) }
         }
     }
