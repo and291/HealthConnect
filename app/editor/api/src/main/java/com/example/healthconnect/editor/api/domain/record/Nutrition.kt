@@ -1,0 +1,56 @@
+package com.example.healthconnect.editor.api.domain.record
+
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
+import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
+
+data class Nutrition(
+    override val metadata: MetadataField,
+    override val time: TimeField,
+    val name: StringField,
+    val mealType: SelectorField,
+    val energy: ValueField,
+    val energyFromFat: ValueField,
+    val totalFat: ValueField,
+    val saturatedFat: ValueField,
+    val transFat: ValueField,
+    val polyunsaturatedFat: ValueField,
+    val monounsaturatedFat: ValueField,
+    val unsaturatedFat: ValueField,
+    val cholesterol: ValueField,
+    val sodium: ValueField,
+    val totalCarbohydrate: ValueField,
+    val dietaryFiber: ValueField,
+    val sugar: ValueField,
+    val protein: ValueField,
+    val vitaminA: ValueField,
+    val vitaminB6: ValueField,
+    val vitaminB12: ValueField,
+    val vitaminC: ValueField,
+    val vitaminD: ValueField,
+    val vitaminE: ValueField,
+    val vitaminK: ValueField,
+    val calcium: ValueField,
+    val iron: ValueField,
+    val potassium: ValueField,
+    val pantothenicAcid: ValueField,
+    val niacin: ValueField,
+    val biotin: ValueField,
+    val riboflavin: ValueField,
+    val thiamin: ValueField,
+    val folate: ValueField,
+    val folicAcid: ValueField,
+    val iodine: ValueField,
+    val magnesium: ValueField,
+    val manganese: ValueField,
+    val phosphorus: ValueField,
+    val selenium: ValueField,
+    val zinc: ValueField,
+    val chloride: ValueField,
+    val chromium: ValueField,
+    val copper: ValueField,
+    val molybdenum: ValueField,
+    val caffeine: ValueField,
+) : Interval()

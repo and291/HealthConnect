@@ -84,5 +84,10 @@ data class StringField(
             override val label: String = "Last modified time",
             override val supportingText: String = "Automatically populated to when data was last modified (or originally created).",
         ) : Type()
+
+        data class NutritionName(
+            override val label: String = "Name",
+            override val supportingText: String = "Name of the food or drink. Optional field.",
+        ) : Type()
     }
 }
