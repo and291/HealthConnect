@@ -32,7 +32,7 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseLevel>() {
         ),
         mealType = SelectorField(
             value = record.mealType,
-            type = SelectorField.Type.MealType()
+            type = SelectorField.Type.BloodGlucoseMealType()
         ),
         relationToMeals = SelectorField(
             value = record.relationToMeal,

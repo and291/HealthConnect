@@ -9,6 +9,8 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Exerc
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SkinTemperatureDeltaField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SleepSessionStageField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
@@ -92,4 +94,20 @@ interface FieldProvider {
 
     @Composable
     fun RouteResultStatus(type: ListField.Type)
+
+    @Composable
+    fun SkinTemperatureDeltaItem(
+        item: SkinTemperatureDeltaField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (SkinTemperatureDeltaField) -> Unit,
+    )
+
+    @Composable
+    fun SleepSessionStageItem(
+        item: SleepSessionStageField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (SleepSessionStageField) -> Unit,
+    )
 }

@@ -7,6 +7,8 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Exerc
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SkinTemperatureDeltaField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SleepSessionStageField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import java.time.Instant
@@ -72,6 +74,8 @@ data class ListField<T : ComponentModel>(
         data object PlannedExerciseBlocks : Type()
         data object PlannedExerciseSteps : Type()
         data object ExercisePerformanceTargets : Type()
+        data object SkinTemperatureDeltas : Type()
+        data object SleepSessionStages : Type()
 
         data class ExerciseRoute(val result: RouteResult) : Type() {
             sealed class RouteResult {
@@ -99,6 +103,8 @@ data class ListField<T : ComponentModel>(
                 is Type.PlannedExerciseBlocks -> PlannedExerciseBlocksConfig() as Configuration<T>
                 is Type.PlannedExerciseSteps -> PlannedExerciseStepsConfig() as Configuration<T>
                 is Type.ExercisePerformanceTargets -> ExercisePerformanceTargetsConfig() as Configuration<T>
+                is Type.SkinTemperatureDeltas -> SkinTemperatureDeltasConfig() as Configuration<T>
+                is Type.SleepSessionStages -> SleepSessionStagesConfig() as Configuration<T>
             }
         }
 
@@ -186,6 +192,35 @@ data class ListField<T : ComponentModel>(
                 altitude = null,
                 horizontalAccuracy = null,
                 verticalAccuracy = null
+            )
+        }
+
+        private class SkinTemperatureDeltasConfig() : Configuration<SkinTemperatureDeltaField>() {
+            override val label = "Temperature Deltas"
+            override fun createItem() = SkinTemperatureDeltaField(
+                time = StringField(
+                    value = Instant.now().toString(),
+                    type = StringField.Type.SkinTemperatureDeltaTime()
+                ),
+                delta = ValueField.Dbl(
+                    parsedValue = 0.0,
+                    type = ValueField.Type.TemperatureDelta()
+                )
+            )
+        }
+
+        private class SleepSessionStagesConfig() : Configuration<SleepSessionStageField>() {
+            override val label = "Sleep Stages"
+            override fun createItem() = SleepSessionStageField(
+                startTime = StringField(
+                    value = Instant.now().toString(),
+                    type = StringField.Type.SleepSessionStageTime("Start Time")
+                ),
+                endTime = StringField(
+                    value = Instant.now().plusSeconds(3600).toString(),
+                    type = StringField.Type.SleepSessionStageTime("End Time")
+                ),
+                stage = 0
             )
         }
     }

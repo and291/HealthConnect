@@ -89,5 +89,15 @@ data class StringField(
             override val label: String = "Name",
             override val supportingText: String = "Name of the food or drink. Optional field.",
         ) : Type()
+
+        data class SkinTemperatureDeltaTime(
+            override val label: String = "Time",
+            override val supportingText: String = "The point in time when the measurement was taken. Format: ISO-8601.",
+        ) : Type()
+
+        data class SleepSessionStageTime(
+            override val label: String,
+            override val supportingText: String = "Start or end time of the sleep stage. Format: ISO-8601.",
+        ) : Type()
     }
 }

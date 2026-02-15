@@ -35,7 +35,7 @@ class NutritionEditor() : Editor<NutritionRecord, Nutrition>() {
         ),
         mealType = SelectorField(
             value = record.mealType,
-            type = SelectorField.Type.MealType()
+            type = SelectorField.Type.NutritionMealType()
         ),
         energy = record.energy.toValueField("Energy"),
         energyFromFat = record.energyFromFat.toValueField("Energy from fat"),

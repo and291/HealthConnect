@@ -12,6 +12,8 @@ import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.PlannedExerciseStep
 import androidx.health.connect.client.records.SexualActivityRecord
+import androidx.health.connect.client.records.SkinTemperatureRecord
+import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import java.util.UUID
@@ -68,16 +70,16 @@ data class SelectorField(
             ),
         ) : Type()
 
-        data class MealType(
+        data class NutritionMealType(
+            override val title: String = "Meal Type",
+            override val supportText: String = "Type of meal related to the nutrients consumed. Optional, enum field.",
+            override val items: List<Pair<Int, String>> = MEAL_TYPES,
+        ) : Type()
+
+        data class BloodGlucoseMealType(
             override val title: String = "Meal Type",
             override val supportText: String = "Type of meal related to the blood glucose measurement. Optional, enum field.",
-            override val items: List<Pair<Int, String>> = listOf(
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN to "UNKNOWN",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_BREAKFAST to "BREAKFAST",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH to "LUNCH",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER to "DINNER",
-                androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK to "SNACK",
-            ),
+            override val items: List<Pair<Int, String>> = MEAL_TYPES,
         ) : Type()
 
         data class RelationToMeal(
@@ -374,5 +376,41 @@ data class SelectorField(
                 Metadata.Companion.RECORDING_METHOD_MANUAL_ENTRY to "MANUAL ENTRY",
             ),
         ) : Type()
+
+        data class SkinTemperatureMeasurementLocation(
+            override val title: String = "Measurement Location",
+            override val supportText: String = "Location on the body where the skin temperature was measured.",
+            override val items: List<Pair<Int, String>> = listOf(
+                SkinTemperatureRecord.MEASUREMENT_LOCATION_UNKNOWN to "UNKNOWN",
+                SkinTemperatureRecord.MEASUREMENT_LOCATION_FINGER to "FINGER",
+                SkinTemperatureRecord.MEASUREMENT_LOCATION_TOE to "TOE",
+                SkinTemperatureRecord.MEASUREMENT_LOCATION_WRIST to "WRIST",
+            ),
+        ) : Type()
+
+        data class SleepStageType(
+            override val title: String = "Sleep Stage",
+            override val supportText: String = "Type of sleep stage.",
+            override val items: List<Pair<Int, String>> = listOf(
+                SleepSessionRecord.STAGE_TYPE_UNKNOWN to "UNKNOWN",
+                SleepSessionRecord.STAGE_TYPE_AWAKE to "AWAKE",
+                SleepSessionRecord.STAGE_TYPE_SLEEPING to "SLEEPING",
+                SleepSessionRecord.STAGE_TYPE_OUT_OF_BED to "OUT OF BED",
+                SleepSessionRecord.STAGE_TYPE_LIGHT to "LIGHT",
+                SleepSessionRecord.STAGE_TYPE_DEEP to "DEEP",
+                SleepSessionRecord.STAGE_TYPE_REM to "REM",
+                SleepSessionRecord.STAGE_TYPE_AWAKE_IN_BED to "AWAKE IN BED",
+            ),
+        ) : Type()
+
+        companion object {
+            private val MEAL_TYPES = listOf(
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_UNKNOWN to "UNKNOWN",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_BREAKFAST to "BREAKFAST",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_LUNCH to "LUNCH",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_DINNER to "DINNER",
+                androidx.health.connect.client.records.MealType.MEAL_TYPE_SNACK to "SNACK",
+            )
+        }
     }
 }
