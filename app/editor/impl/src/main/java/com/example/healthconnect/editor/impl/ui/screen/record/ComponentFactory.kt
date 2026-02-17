@@ -16,14 +16,19 @@ import androidx.compose.ui.unit.dp
 import com.example.healthconnect.components.api.ui.FieldProvider
 import com.example.healthconnect.components.api.domain.entity.ComponentModel
 import com.example.healthconnect.components.api.domain.entity.field.atomic.Atomic
+import com.example.healthconnect.components.api.domain.entity.field.atomic.CyclingPedalingCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.HeartRateSampleField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.PowerSampleField
 import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseStepField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SkinTemperatureDeltaField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SleepSessionStageField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SpeedSampleField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.StepsCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
@@ -117,6 +122,36 @@ class ComponentFactory(
             ) { eventHandler(OnChanged(it)) }
 
             is SleepSessionStageField -> SleepSessionStageItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is HeartRateSampleField -> HeartRateSampleItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is CyclingPedalingCadenceSampleField -> CyclingPedalingCadenceSampleItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is PowerSampleField -> PowerSampleItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is SpeedSampleField -> SpeedSampleItem(
+                item = componentModel,
+                modifier = modifier,
+                onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }
+            ) { eventHandler(OnChanged(it)) }
+
+            is StepsCadenceSampleField -> StepsCadenceSampleItem(
                 item = componentModel,
                 modifier = modifier,
                 onDelete = { eventHandler(RemoveListItem(componentModel.instanceId)) }

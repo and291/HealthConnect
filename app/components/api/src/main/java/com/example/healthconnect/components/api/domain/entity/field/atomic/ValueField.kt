@@ -78,6 +78,12 @@ sealed class ValueField(override val instanceId: UUID) : Atomic(instanceId) {
             override val suffix: String = "kilocalories per day",
         ) : Type()
 
+        data class PowerWatt(
+            override val label: String = "Power",
+            override val supportingText: String = "Power in Watts. Required field. Valid range: 0-100000.",
+            override val suffix: String = "Watts",
+        ) : Type()
+
         data class BloodGlucoseLevel(
             override val label: String = "Blood glucose",
             override val supportingText: String = "Blood glucose level or concentration. Required field. Valid range: 0-50 mmol/L.",
@@ -201,6 +207,24 @@ sealed class ValueField(override val instanceId: UUID) : Atomic(instanceId) {
             override val label: String = "Temperature Delta",
             override val supportingText: String = "Temperature delta in Celsius degrees.",
             override val suffix: String = "Celsius",
+        ) : Type()
+
+        data class CyclingPedalingCadence(
+            override val label: String = "Cadence",
+            override val supportingText: String = "Cycling pedaling cadence in revolutions per minute. Required field. Valid range: 0-10000.",
+            override val suffix: String = "rpm",
+        ) : Type()
+
+        data class Speed(
+            override val label: String = "Speed",
+            override val supportingText: String = "Speed in meters per second. Required field. Valid range: 0-1000000.",
+            override val suffix: String = "meters per second",
+        ) : Type()
+
+        data class StepsCadence(
+            override val label: String = "Steps cadence",
+            override val supportingText: String = "Steps cadence in steps per minute. Required field. Valid range: 0-10000.",
+            override val suffix: String = "steps per minute",
         ) : Type()
     }
 }
