@@ -11,29 +11,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.metadata.Device
+import com.example.healthconnect.components.api.domain.entity.field.atomic.CyclingPedalingCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExercisePerformanceTargetField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.HeartRateSampleField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.PowerSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SkinTemperatureDeltaField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SleepSessionStageField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SpeedSampleField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.StepsCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.components.api.ui.FieldProvider
+import com.example.healthconnect.components.impl.ui.editor.atomic.CyclingPedalingCadenceSampleFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.DeviceFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseCompletionGoalFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseLapFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExercisePerformanceTargetFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseRouteFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ExerciseSegmentFieldEditor
+import com.example.healthconnect.components.impl.ui.editor.atomic.HeartRateSampleFieldEditor
+import com.example.healthconnect.components.impl.ui.editor.atomic.PowerSampleFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.SelectorFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.SkinTemperatureDeltaFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.SleepSessionStageFieldEditor
+import com.example.healthconnect.components.impl.ui.editor.atomic.SpeedSampleFieldEditor
+import com.example.healthconnect.components.impl.ui.editor.atomic.StepsCadenceSampleFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.StringFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.TimeFieldEditor
 import com.example.healthconnect.components.impl.ui.editor.atomic.ValueFieldEditor
@@ -231,6 +241,71 @@ internal class FieldProviderImpl : FieldProvider {
         onChanged: (SleepSessionStageField) -> Unit,
     ) = SleepSessionStageFieldEditor(
         item = item,
+        onChanged = onChanged,
+        onDelete = onDelete,
+        modifier = modifier
+    )
+
+    @Composable
+    override fun HeartRateSampleItem(
+        item: HeartRateSampleField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (HeartRateSampleField) -> Unit
+    ) = HeartRateSampleFieldEditor(
+        model = item,
+        onChanged = onChanged,
+        onDelete = onDelete,
+        modifier = modifier
+    )
+
+    @Composable
+    override fun CyclingPedalingCadenceSampleItem(
+        item: CyclingPedalingCadenceSampleField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (CyclingPedalingCadenceSampleField) -> Unit
+    ) = CyclingPedalingCadenceSampleFieldEditor(
+        model = item,
+        onChanged = onChanged,
+        onDelete = onDelete,
+        modifier = modifier
+    )
+
+    @Composable
+    override fun PowerSampleItem(
+        item: PowerSampleField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (PowerSampleField) -> Unit
+    ) = PowerSampleFieldEditor(
+        model = item,
+        onChanged = onChanged,
+        onDelete = onDelete,
+        modifier = modifier
+    )
+
+    @Composable
+    override fun SpeedSampleItem(
+        item: SpeedSampleField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (SpeedSampleField) -> Unit
+    ) = SpeedSampleFieldEditor(
+        model = item,
+        onChanged = onChanged,
+        onDelete = onDelete,
+        modifier = modifier
+    )
+
+    @Composable
+    override fun StepsCadenceSampleItem(
+        item: StepsCadenceSampleField,
+        modifier: Modifier,
+        onDelete: () -> Unit,
+        onChanged: (StepsCadenceSampleField) -> Unit
+    ) = StepsCadenceSampleFieldEditor(
+        model = item,
         onChanged = onChanged,
         onDelete = onDelete,
         modifier = modifier

@@ -1,14 +1,19 @@
 package com.example.healthconnect.components.api.domain.entity.field.composite
 
 import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.field.atomic.CyclingPedalingCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExercisePerformanceTargetField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseRouteField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseSegmentField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.HeartRateSampleField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.PowerSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SkinTemperatureDeltaField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SleepSessionStageField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SpeedSampleField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.StepsCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import java.time.Instant
@@ -76,6 +81,11 @@ data class ListField<T : ComponentModel>(
         data object ExercisePerformanceTargets : Type()
         data object SkinTemperatureDeltas : Type()
         data object SleepSessionStages : Type()
+        data object HeartRateSamples : Type()
+        data object CyclingPedalingCadenceSamples : Type()
+        data object PowerSamples : Type()
+        data object SpeedSamples : Type()
+        data object StepsCadenceSamples : Type()
 
         data class ExerciseRoute(val result: RouteResult) : Type() {
             sealed class RouteResult {
@@ -105,6 +115,11 @@ data class ListField<T : ComponentModel>(
                 is Type.ExercisePerformanceTargets -> ExercisePerformanceTargetsConfig() as Configuration<T>
                 is Type.SkinTemperatureDeltas -> SkinTemperatureDeltasConfig() as Configuration<T>
                 is Type.SleepSessionStages -> SleepSessionStagesConfig() as Configuration<T>
+                is Type.HeartRateSamples -> HeartRateSamplesConfig() as Configuration<T>
+                is Type.CyclingPedalingCadenceSamples -> CyclingPedalingCadenceSamplesConfig() as Configuration<T>
+                is Type.PowerSamples -> PowerSamplesConfig() as Configuration<T>
+                is Type.SpeedSamples -> SpeedSamplesConfig() as Configuration<T>
+                is Type.StepsCadenceSamples -> StepsCadenceSamplesConfig() as Configuration<T>
             }
         }
 
@@ -221,6 +236,61 @@ data class ListField<T : ComponentModel>(
                     type = StringField.Type.SleepSessionStageTime("End Time")
                 ),
                 stage = 0
+            )
+        }
+
+        private class HeartRateSamplesConfig() : Configuration<HeartRateSampleField>() {
+            override val label = "Heart Rate Samples"
+            override fun createItem() = HeartRateSampleField(
+                time = Instant.now(),
+                heartRate = ValueField.Lng(
+                    parsedValue = 70L,
+                    type = ValueField.Type.BeatsPerMinute()
+                )
+            )
+        }
+
+        private class CyclingPedalingCadenceSamplesConfig() : Configuration<CyclingPedalingCadenceSampleField>() {
+            override val label = "Cycling Pedaling Cadence Samples"
+            override fun createItem() = CyclingPedalingCadenceSampleField(
+                time = Instant.now(),
+                cadence = ValueField.Dbl(
+                    parsedValue = 90.0,
+                    type = ValueField.Type.CyclingPedalingCadence()
+                )
+            )
+        }
+
+        private class PowerSamplesConfig() : Configuration<PowerSampleField>() {
+            override val label = "Power Samples"
+            override fun createItem() = PowerSampleField(
+                time = Instant.now(),
+                power = ValueField.Dbl(
+                    parsedValue = 200.0,
+                    type = ValueField.Type.PowerWatt()
+                )
+            )
+        }
+
+        private class SpeedSamplesConfig() : Configuration<SpeedSampleField>() {
+            override val label = "Speed Samples"
+            override fun createItem() = SpeedSampleField(
+                time = Instant.now(),
+                speed = ValueField.Dbl(
+                    parsedValue = 5.0,
+                    type = ValueField.Type.Speed()
+                )
+            )
+        }
+
+        private class StepsCadenceSamplesConfig() : Configuration<StepsCadenceSampleField>() {
+            override val label = "Steps Cadence Samples"
+            override fun createItem() = StepsCadenceSampleField(
+                time = Instant.now(),
+                cadence = ValueField.Dbl(
+                    parsedValue = 120.0,
+                    type = ValueField.Type.StepsCadence()
+                )
             )
         }
     }

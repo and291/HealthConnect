@@ -11,10 +11,12 @@ import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.BodyWaterMassRecord
 import androidx.health.connect.client.records.BoneMassRecord
 import androidx.health.connect.client.records.CervicalMucusRecord
+import androidx.health.connect.client.records.CyclingPedalingCadenceRecord
 import androidx.health.connect.client.records.DistanceRecord
 import androidx.health.connect.client.records.ElevationGainedRecord
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.FloorsClimbedRecord
+import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.HeightRecord
 import androidx.health.connect.client.records.HydrationRecord
@@ -27,12 +29,15 @@ import androidx.health.connect.client.records.NutritionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
 import androidx.health.connect.client.records.PlannedExerciseSessionRecord
+import androidx.health.connect.client.records.PowerRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.RespiratoryRateRecord
 import androidx.health.connect.client.records.RestingHeartRateRecord
 import androidx.health.connect.client.records.SexualActivityRecord
 import androidx.health.connect.client.records.SkinTemperatureRecord
 import androidx.health.connect.client.records.SleepSessionRecord
+import androidx.health.connect.client.records.SpeedRecord
+import androidx.health.connect.client.records.StepsCadenceRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
@@ -50,11 +55,13 @@ import com.example.healthconnect.editor.impl.ui.editor.record.BodyTemperatureEdi
 import com.example.healthconnect.editor.impl.ui.editor.record.BodyWaterMassEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.BoneMassEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.CervicalMucusEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.CyclingPedalingCadenceEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.DistanceEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.Editor
 import com.example.healthconnect.editor.impl.ui.editor.record.ElevationGainedEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.ExerciseSessionEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.FloorsClimbedEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.HeartRateEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.HeartRateVariabilityRmssdEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.HeightEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.HydrationEditor
@@ -67,11 +74,14 @@ import com.example.healthconnect.editor.impl.ui.editor.record.NutritionEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.OvulationTestEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.OxygenSaturationEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.PlannedExerciseSessionEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.PowerEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.RespiratoryRateEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.RestingHeartRateEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.SexualActivityEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.SkinTemperatureEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.SleepSessionEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.SpeedEditor
+import com.example.healthconnect.editor.impl.ui.editor.record.StepsCadenceEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.StepsEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.TotalCaloriesBurnedEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.Vo2MaxEditor
@@ -122,6 +132,11 @@ class EditorFactory {
         StepsRecord::class -> StepsEditor()
         TotalCaloriesBurnedRecord::class -> TotalCaloriesBurnedEditor()
         WheelchairPushesRecord::class -> WheelchairPushesEditor()
+        HeartRateRecord::class -> HeartRateEditor()
+        CyclingPedalingCadenceRecord::class -> CyclingPedalingCadenceEditor()
+        PowerRecord::class -> PowerEditor()
+        SpeedRecord::class -> SpeedEditor()
+        StepsCadenceRecord::class -> StepsCadenceEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }
