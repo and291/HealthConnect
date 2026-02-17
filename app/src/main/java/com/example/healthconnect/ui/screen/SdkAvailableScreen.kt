@@ -60,6 +60,7 @@ fun SdkAvailableScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 2.dp)
                                 .clickable {
+                                    @Suppress("UNCHECKED_CAST")
                                     onTypeClick(type as KClass<Record>)
                                 }
                         )
