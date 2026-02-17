@@ -14,6 +14,13 @@ class DeviceTypeMapper {
         Device.TYPE_FITNESS_BAND to "FITNESS BAND",
         Device.TYPE_CHEST_STRAP to "CHEST STRAP",
         Device.TYPE_SMART_DISPLAY to "SMART DISPLAY",
+        Device.TYPE_CONSUMER_MEDICAL_DEVICE to "CONSUMER MEDICAL DEVICE",
+        Device.TYPE_GLASSES to "GLASSES",
+        Device.TYPE_HEARABLE to "HEARABLE",
+        Device.TYPE_FITNESS_MACHINE to "FITNESS MACHINE",
+        Device.TYPE_FITNESS_EQUIPMENT to "FITNESS EQUIPMENT",
+        Device.TYPE_PORTABLE_COMPUTER to "PORTABLE COMPUTER",
+        Device.TYPE_METER to "METER",
     )
 
     fun mapName(type: Int): String {
