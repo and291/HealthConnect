@@ -3,6 +3,7 @@ package com.example.healthconnect.utilty.impl.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.healthconnect.editor.api.domain.record.factory.RecordFactory
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
 import com.example.healthconnect.utilty.impl.ui.screen.RecordsViewModel
@@ -12,6 +13,7 @@ import kotlin.reflect.KClass
 class RecordsViewModelFactory(
     private val read: Read,
     private val delete: Delete,
+    private val recordFactory: RecordFactory,
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -20,7 +22,8 @@ class RecordsViewModelFactory(
             RecordsViewModel::class -> RecordsViewModel(
                 read = read,
                 delete = delete,
-                recordType = checkNotNull(extras[RECORD_TYPE_KEY])
+                recordType = checkNotNull(extras[RECORD_TYPE_KEY]),
+                recordFactory = recordFactory,
             )
 
             else -> throw IllegalStateException("Unknown ViewModel class:" + modelClass.simpleName)

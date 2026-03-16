@@ -8,6 +8,7 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.healthconnect.editor.api.domain.record.factory.RecordFactory
 import com.example.healthconnect.utilty.api.domain.entity.Payload
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
@@ -21,6 +22,7 @@ import kotlin.reflect.KClass
 
 class RecordsViewModel(
     private val recordType: KClass<out Record>,
+    private val recordFactory: RecordFactory,
     private val read: Read,
     private val delete: Delete,
 ) : ViewModel() {
@@ -64,7 +66,7 @@ class RecordsViewModel(
                             is Payload.ReadList<*> -> {
                                 _state = State.Data(payload.list.map {
                                     DisplayRecord(
-                                        description = it.toString(),
+                                        model = recordFactory.create(it),
                                         metadataId = it.metadata.id,
                                         record = it,
                                     )
