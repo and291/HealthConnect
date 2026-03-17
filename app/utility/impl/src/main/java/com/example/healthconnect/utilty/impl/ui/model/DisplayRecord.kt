@@ -5,6 +5,5 @@ import com.example.healthconnect.editor.api.domain.record.Model
 
 data class DisplayRecord(
     val model: Model,
-    val metadataId: String,
     val record: Record,
 )

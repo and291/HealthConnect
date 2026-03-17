@@ -76,7 +76,7 @@ fun RecordsScreen(
                         onDelete = {
                             val event = RecordsViewModel.Event.DeleteRecord(
                                 recordType = recordType,
-                                metadataId = record.metadataId,
+                                metadataId = record.record.metadata.id,
                             )
                             viewModel.onEvent(event)
                         },

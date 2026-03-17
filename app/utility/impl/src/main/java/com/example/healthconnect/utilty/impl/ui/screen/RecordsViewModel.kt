@@ -67,7 +67,6 @@ class RecordsViewModel(
                                 _state = State.Data(payload.list.map {
                                     DisplayRecord(
                                         model = modelFactory.create(it),
-                                        metadataId = it.metadata.id,
                                         record = it,
                                     )
                                 })

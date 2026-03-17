@@ -45,7 +45,6 @@ private fun RecordItemPreview() {
                 ),
                 count = ValueField.Lng(parsedValue = 8500L, type = ValueField.Type.StepsCount()),
             ),
-            metadataId = "abc-123",
             record = StepsRecord(
                 startTime = Instant.parse("2024-01-15T09:00:00Z"),
                 startZoneOffset = ZoneOffset.UTC,
