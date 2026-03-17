@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
@@ -32,6 +33,7 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
                         backStack.add(EditorNavigationEntry.Insert(key.recordType))
                     },
                     recordType = key.recordType,
+                    title = stringResource(key.titleRes),
                     modifier = Modifier.padding(innerPadding ?: defaultPadding)
                 )
             }

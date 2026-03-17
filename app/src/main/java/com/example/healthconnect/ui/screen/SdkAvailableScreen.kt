@@ -32,7 +32,7 @@ import kotlin.reflect.KClass
 
 @Composable
 fun SdkAvailableScreen(
-    onTypeClick: (KClass<Record>) -> Unit,
+    onTypeClick: (KClass<Record>, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SdkAvailableViewModel = viewModel(
         modelClass = SdkAvailableViewModel::class.java,
@@ -71,7 +71,7 @@ fun SdkAvailableScreen(
                                 .padding(vertical = 2.dp)
                                 .clickable {
                                     @Suppress("UNCHECKED_CAST")
-                                    onTypeClick(type as KClass<Record>)
+                                    onTypeClick(type as KClass<Record>, recordTypeNameMapper.nameRes(type))
                                 }
                         ) {
                             Icon(
@@ -95,7 +95,7 @@ fun SdkAvailableScreenPreview() {
 
     HealthConnectTheme {
         SdkAvailableScreen(
-            onTypeClick = {}
+            onTypeClick = { _, _ -> }
         )
     }
 }

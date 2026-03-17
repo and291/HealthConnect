@@ -52,8 +52,8 @@ fun CreateNavDisplay(
             is AppNavigationEntry -> when (key) {
                 is Available -> NavEntry(key) {
                     SdkAvailableScreen(
-                        onTypeClick = { type ->
-                            backStack.add(UtilityNavigationEntry.Records(type))
+                        onTypeClick = { type, titleRes ->
+                            backStack.add(UtilityNavigationEntry.Records(type, titleRes))
                         },
                         modifier = Modifier.padding(innerPadding)
                     )
