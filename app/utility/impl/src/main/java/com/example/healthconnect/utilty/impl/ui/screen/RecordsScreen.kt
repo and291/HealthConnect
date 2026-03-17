@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +33,7 @@ fun RecordsScreen(
     onRecordClick: (Record) -> Unit,
     onInsertRecordClick: () -> Unit,
     recordType: KClass<out Record>,
+    title: String,
     modifier: Modifier = Modifier,
     viewModel: RecordsViewModel = viewModel(
         factory = Di.recordsViewModelFactory,
@@ -62,6 +64,13 @@ fun RecordsScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.fillMaxWidth(),
     ) {
+        item {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+        }
 
         when (val state = viewModel.state) {
             is RecordsViewModel.State.Data -> {
@@ -110,6 +119,7 @@ fun RecordsScreenPreview() {
         requestPermission = {},
         onRecordClick = {},
         onInsertRecordClick = {},
-        recordType = StepsRecord::class as KClass<Record>
+        recordType = StepsRecord::class as KClass<Record>,
+        title = "Steps",
     )
 }
