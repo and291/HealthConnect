@@ -15,17 +15,18 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeF
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
+import com.example.healthconnect.utilty.impl.ui.summary.field.Summary
 import java.time.Instant
 
 @Composable
 fun ComponentModel.Summary(modifier: Modifier = Modifier) {
     when (this) {
-        is MetadataField -> this.Summary(modifier)
-        is TimeField -> this.Summary(modifier)
-        is ValueField -> this.Summary(modifier)
-        is StringField -> this.Summary(modifier)
-        is SelectorField -> this.Summary(modifier)
-        is DeviceField -> this.Summary(modifier)
+        is MetadataField -> (this as MetadataField).Summary(modifier)
+        is TimeField -> (this as TimeField).Summary(modifier)
+        is ValueField -> (this as ValueField).Summary(modifier)
+        is StringField -> (this as StringField).Summary(modifier)
+        is SelectorField -> (this as SelectorField).Summary(modifier)
+        is DeviceField -> (this as DeviceField).Summary(modifier)
         is ListField<*> -> Row(modifier = modifier) {
             Text(
                 text = "${config.label}: ",
