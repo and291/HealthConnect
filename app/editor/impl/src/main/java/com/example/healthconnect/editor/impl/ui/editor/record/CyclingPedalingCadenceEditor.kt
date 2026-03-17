@@ -21,7 +21,8 @@ class CyclingPedalingCadenceEditor() : Editor<CyclingPedalingCadenceRecord, Cycl
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         samples = ListField(
@@ -34,7 +35,8 @@ class CyclingPedalingCadenceEditor() : Editor<CyclingPedalingCadenceRecord, Cycl
                     )
                 )
             },
-            type = ListField.Type.CyclingPedalingCadenceSamples
+            type = ListField.Type.CyclingPedalingCadenceSamples,
+            priority = 1
         )
     )
 

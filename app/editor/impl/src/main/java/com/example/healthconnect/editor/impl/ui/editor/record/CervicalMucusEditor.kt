@@ -17,16 +17,19 @@ class CervicalMucusEditor() : Editor<CervicalMucusRecord, CervicalMucus>() {
     ): CervicalMucus = CervicalMucus(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         appearance = SelectorField(
             value = record.appearance,
             type = SelectorField.Type.Appearance(),
+            priority = 1
         ),
         sensation = SelectorField(
             value = record.sensation,
             type = SelectorField.Type.Sensation(),
+            priority = 2
         ),
     )
 

@@ -21,12 +21,14 @@ class BasalMetabolicRateEditor() :
         BasalMetabolicRate(
             time = TimeField.Instantaneous(
                 instant = record.time,
-                zoneOffset = record.zoneOffset
+                zoneOffset = record.zoneOffset,
+                priority = 0
             ),
             metadata = mapper.toEntity(record.metadata),
             power = ValueField.Dbl(
                 parsedValue = record.basalMetabolicRate.inKilocaloriesPerDay,
                 type = ValueField.Type.Power(),
+                priority = 1
             )
         )
 

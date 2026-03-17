@@ -18,16 +18,19 @@ class Vo2MaxEditor() : Editor<Vo2MaxRecord, Vo2Max>() {
     ): Vo2Max = Vo2Max(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         vo2MillilitersPerMinuteKilogram = ValueField.Dbl(
             parsedValue = record.vo2MillilitersPerMinuteKilogram,
             type = ValueField.Type.Vo2Max(),
+            priority = 1
         ),
         measurementMethod = SelectorField(
             value = record.measurementMethod,
             type = SelectorField.Type.Vo2MaxMeasurementMethod(),
+            priority = 2
         ),
     )
 

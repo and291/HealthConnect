@@ -18,12 +18,14 @@ class WeightEditor() : Editor<WeightRecord, Weight>() {
     ): Weight = Weight(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         weight = ValueField.Dbl(
             parsedValue = record.weight.inKilograms,
             type = ValueField.Type.Mass(),
+            priority = 1
         ),
     )
 

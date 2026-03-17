@@ -25,16 +25,19 @@ class SkinTemperatureEditor() : Editor<SkinTemperatureRecord, SkinTemperature>()
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         baseline = ValueField.Dbl(
             parsedValue = record.baseline?.inCelsius ?: 0.0,
             type = ValueField.Type.Temperature("Baseline"),
+            priority = 1
         ),
         measurementLocation = SelectorField(
             value = record.measurementLocation,
-            type = SelectorField.Type.SkinTemperatureMeasurementLocation()
+            type = SelectorField.Type.SkinTemperatureMeasurementLocation(),
+            priority = 2
         ),
         deltas = ListField(
             items = record.deltas.map {
@@ -49,7 +52,8 @@ class SkinTemperatureEditor() : Editor<SkinTemperatureRecord, SkinTemperature>()
                     )
                 )
             },
-            type = ListField.Type.SkinTemperatureDeltas
+            type = ListField.Type.SkinTemperatureDeltas,
+            priority = 3
         )
     )
 

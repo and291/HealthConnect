@@ -18,12 +18,14 @@ class HeartRateVariabilityRmssdEditor() :
     ): HeartRateVariabilityRmssd = HeartRateVariabilityRmssd(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         heartRateVariabilityMillis = ValueField.Dbl(
             parsedValue = record.heartRateVariabilityMillis,
             type = ValueField.Type.HeartRateVariabilityRmssd(),
+            priority = 1
         ),
     )
 

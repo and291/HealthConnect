@@ -18,12 +18,14 @@ class HeightEditor() : Editor<HeightRecord, Height>() {
     ): Height = Height(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         height = ValueField.Dbl(
             parsedValue = record.height.inMeters,
             type = ValueField.Type.Length(),
+            priority = 1
         ),
     )
 

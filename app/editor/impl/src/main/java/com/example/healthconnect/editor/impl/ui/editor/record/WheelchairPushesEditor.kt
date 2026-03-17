@@ -19,12 +19,14 @@ class WheelchairPushesEditor() : Editor<WheelchairPushesRecord, WheelchairPushes
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         count = ValueField.Lng(
             parsedValue = record.count,
             type = ValueField.Type.WheelchairPushesCount(),
+            priority = 1
         ),
     )
 

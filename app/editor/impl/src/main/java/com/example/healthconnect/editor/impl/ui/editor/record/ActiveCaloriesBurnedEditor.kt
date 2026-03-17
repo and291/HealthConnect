@@ -21,12 +21,14 @@ class ActiveCaloriesBurnedEditor() : Editor<ActiveCaloriesBurnedRecord, ActiveCa
                 startTime = record.startTime,
                 startZoneOffset = record.startZoneOffset,
                 endTime = record.endTime,
-                endZoneOffset = record.endZoneOffset
+                endZoneOffset = record.endZoneOffset,
+                priority = 0
             ),
             metadata = mapper.toEntity(record.metadata),
             energy = ValueField.Dbl(
                 parsedValue = record.energy.inCalories,
                 type = ValueField.Type.Energy(),
+                priority = 1
             ),
         )
 

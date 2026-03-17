@@ -21,16 +21,19 @@ class BasalBodyTemperatureEditor() : Editor<BasalBodyTemperatureRecord, BasalBod
         BasalBodyTemperature(
             time = TimeField.Instantaneous(
                 instant = record.time,
-                zoneOffset = record.zoneOffset
+                zoneOffset = record.zoneOffset,
+                priority = 0
             ),
             metadata = mapper.toEntity(record.metadata),
             temperature = ValueField.Dbl(
                 parsedValue = record.temperature.inCelsius,
                 type = ValueField.Type.Temperature(),
+                priority = 1
             ),
             measurementLocation = SelectorField(
                 value = record.measurementLocation, //TODO validate data from lib
                 type = SelectorField.Type.MeasurementLocationBodyTemperature(),
+                priority = 2
             )
         )
 

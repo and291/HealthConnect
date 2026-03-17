@@ -21,16 +21,19 @@ class SleepSessionEditor() : Editor<SleepSessionRecord, SleepSession>() {
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         title = StringField(
             value = record.title ?: "",
-            type = StringField.Type.MindfulnessSessionTitle()
+            type = StringField.Type.MindfulnessSessionTitle(),
+            priority = 1
         ),
         notes = StringField(
             value = record.notes ?: "",
-            type = StringField.Type.MindfulnessSessionNotes()
+            type = StringField.Type.MindfulnessSessionNotes(),
+            priority = 2
         ),
         stages = ListField(
             items = record.stages.map {
@@ -46,7 +49,8 @@ class SleepSessionEditor() : Editor<SleepSessionRecord, SleepSession>() {
                     stage = it.stage
                 )
             },
-            type = ListField.Type.SleepSessionStages
+            type = ListField.Type.SleepSessionStages,
+            priority = 3
         )
     )
 

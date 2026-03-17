@@ -29,20 +29,24 @@ class ExerciseSessionEditor() : Editor<ExerciseSessionRecord, ExerciseSession>()
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0,
         ),
         metadata = mapper.toEntity(record.metadata),
         title = StringField(
             value = record.title ?: "",
-            type = StringField.Type.ExerciseSessionTitle()
+            type = StringField.Type.ExerciseSessionTitle(),
+            priority = 2,
         ),
         notes = StringField(
             value = record.notes ?: "",
-            type = StringField.Type.ExerciseSessionNotes()
+            type = StringField.Type.ExerciseSessionNotes(),
+            priority = 3,
         ),
         exerciseType = SelectorField(
             value = record.exerciseType,
-            type = SelectorField.Type.ExerciseType()
+            type = SelectorField.Type.ExerciseType(),
+            priority = 1,
         ),
         plannedExerciseSessionId = StringField(
             value = record.plannedExerciseSessionId ?: "",
