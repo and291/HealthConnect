@@ -23,7 +23,7 @@ sealed class Editor<R : Record, M : Model> {
 
         is FieldModificationEvent.RemoveListItem -> {
             // Find the list that contains the ID and return the updated version of that list
-            val updatedComponentsList = model.getComponents()
+            val updatedComponentsList = model.getFields()
                 .filterIsInstance<ListField<*>>()
                 .firstNotNullOfOrNull { listField ->
                     listField.findAndRemoveFromList(event.instanceId)

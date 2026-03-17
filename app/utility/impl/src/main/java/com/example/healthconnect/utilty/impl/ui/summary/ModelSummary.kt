@@ -18,7 +18,7 @@ import java.time.ZoneOffset
 @Composable
 fun Model.Summary(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        getComponents().sortedBy { it.priority }.forEach { it.Summary() }
+        getFields().sortedBy { it.priority }.forEach { it.Summary() }
     }
 }
 

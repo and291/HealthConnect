@@ -9,10 +9,10 @@ sealed class Model {
 
     abstract val metadata: MetadataField
 
-    fun isValid(): Boolean = getComponents().all { it.isValid() }
+    fun isValid(): Boolean = getFields().all { it.isValid() }
 
     @Suppress("UNCHECKED_CAST")
-    fun getComponents(): List<Field> {
+    fun getFields(): List<Field> {
         val kClass = this::class as KClass<Model>
         return kClass.declaredMemberProperties.map { it.get(this) as Field }
     }

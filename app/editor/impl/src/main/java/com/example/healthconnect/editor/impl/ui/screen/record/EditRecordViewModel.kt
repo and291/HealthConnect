@@ -36,7 +36,7 @@ class EditRecordViewModel(
         get() = _state
 
     val sortedComponents
-        get() = _state.model.getComponents().sortedBy { it.priority }
+        get() = _state.model.getFields().sortedBy { it.priority }
 
     private var updateJob: Job? = null
 

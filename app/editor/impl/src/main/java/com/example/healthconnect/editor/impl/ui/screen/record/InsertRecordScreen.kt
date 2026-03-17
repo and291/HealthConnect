@@ -45,7 +45,7 @@ fun InsertRecordScreen(
         modifier = modifier.padding(16.dp)
     ) {
         with(componentFactory) {
-            create(viewModel.state.model.getComponents()) {
+            create(viewModel.state.model.getFields()) {
                 viewModel.onEvent(it)
             }
         }
