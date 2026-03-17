@@ -1,6 +1,6 @@
 package com.example.healthconnect.components.api.domain.entity.field.atomic
 
-import com.example.healthconnect.components.api.domain.entity.ComponentModel.Companion.PRIORITY_DEFAULT
+import com.example.healthconnect.components.api.domain.entity.Field.Companion.PRIORITY_DEFAULT
 import com.example.healthconnect.components.api.domain.entity.Time
 import java.time.Instant
 import java.time.ZoneOffset

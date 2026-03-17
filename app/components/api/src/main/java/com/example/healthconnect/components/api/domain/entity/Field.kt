@@ -2,7 +2,7 @@ package com.example.healthconnect.components.api.domain.entity
 
 import java.util.UUID
 
-interface ComponentModel {
+interface Field {
     val instanceId: UUID
     val priority: Int get() = PRIORITY_DEFAULT
 

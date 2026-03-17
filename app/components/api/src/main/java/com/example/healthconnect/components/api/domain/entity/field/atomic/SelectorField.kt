@@ -16,7 +16,7 @@ import androidx.health.connect.client.records.SkinTemperatureRecord
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.metadata.Metadata
-import com.example.healthconnect.components.api.domain.entity.ComponentModel.Companion.PRIORITY_DEFAULT
+import com.example.healthconnect.components.api.domain.entity.Field.Companion.PRIORITY_DEFAULT
 import java.util.UUID
 
 data class SelectorField(

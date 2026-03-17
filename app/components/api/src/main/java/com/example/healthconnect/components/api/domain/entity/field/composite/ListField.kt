@@ -1,7 +1,7 @@
 package com.example.healthconnect.components.api.domain.entity.field.composite
 
-import com.example.healthconnect.components.api.domain.entity.ComponentModel
-import com.example.healthconnect.components.api.domain.entity.ComponentModel.Companion.PRIORITY_DEFAULT
+import com.example.healthconnect.components.api.domain.entity.Field
+import com.example.healthconnect.components.api.domain.entity.Field.Companion.PRIORITY_DEFAULT
 import com.example.healthconnect.components.api.domain.entity.field.atomic.CyclingPedalingCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
@@ -20,7 +20,7 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Value
 import java.time.Instant
 import java.util.UUID
 
-data class ListField<T : ComponentModel>(
+data class ListField<T : Field>(
     val items: List<T>,
     val type: Type,
     val config: Configuration<T> = Configuration.from(type),
@@ -36,8 +36,8 @@ data class ListField<T : ComponentModel>(
 
     override fun updateFieldByInstanceId(
         instanceId: UUID,
-        newField: ComponentModel,
-    ): ComponentModel {
+        newField: Field,
+    ): Field {
         val mutableList = items.toMutableList()
         @Suppress("UNCHECKED_CAST")
         mutableList[mutableList.indexOfFirst { it.instanceId == instanceId }] = newField as T
@@ -98,7 +98,7 @@ data class ListField<T : ComponentModel>(
         }
     }
 
-    sealed class Configuration<T : ComponentModel> {
+    sealed class Configuration<T : Field> {
         abstract fun createItem(): T
         abstract val label: String
         open val hasStatusContent: Boolean = false
@@ -106,7 +106,7 @@ data class ListField<T : ComponentModel>(
 
         companion object {
             @Suppress("UNCHECKED_CAST")
-            fun <T : ComponentModel> from(
+            fun <T : Field> from(
                 type: Type,
             ): Configuration<T> = when (type) {
                 is Type.ExerciseSegments -> ExerciseSegmentsConfig() as Configuration<T>

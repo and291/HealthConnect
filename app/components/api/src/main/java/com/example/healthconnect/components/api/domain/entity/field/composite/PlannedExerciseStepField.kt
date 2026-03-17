@@ -1,6 +1,6 @@
 package com.example.healthconnect.components.api.domain.entity.field.composite
 
-import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExercisePerformanceTargetField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
@@ -33,8 +33,8 @@ data class PlannedExerciseStepField(
     @Suppress("UNCHECKED_CAST")
     override fun updateFieldByInstanceId(
         instanceId: UUID,
-        newField: ComponentModel,
-    ): ComponentModel = when (instanceId) {
+        newField: Field,
+    ): Field = when (instanceId) {
         exerciseType.instanceId -> copy(exerciseType = newField as SelectorField)
         exercisePhase.instanceId -> copy(exercisePhase = newField as SelectorField)
         description.instanceId -> copy(description = newField as StringField)
