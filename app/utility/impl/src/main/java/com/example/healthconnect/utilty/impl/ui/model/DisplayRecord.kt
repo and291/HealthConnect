@@ -1,9 +1,9 @@
 package com.example.healthconnect.utilty.impl.ui.model
 
 import androidx.health.connect.client.records.Record
+import com.example.healthconnect.editor.api.domain.record.Model
 
 data class DisplayRecord(
-    val description: String,
-    val metadataId: String,
+    val model: Model,
     val record: Record,
 )

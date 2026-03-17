@@ -72,11 +72,11 @@ fun RecordsScreen(
                 }
                 items(state.records) { record ->
                     RecordItem(
-                        text = record.description,
+                        record = record,
                         onDelete = {
                             val event = RecordsViewModel.Event.DeleteRecord(
                                 recordType = recordType,
-                                metadataId = record.metadataId,
+                                metadataId = record.record.metadata.id,
                             )
                             viewModel.onEvent(event)
                         },
