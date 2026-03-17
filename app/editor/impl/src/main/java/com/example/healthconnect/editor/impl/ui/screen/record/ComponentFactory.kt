@@ -40,17 +40,16 @@ import com.example.healthconnect.components.api.domain.entity.field.composite.Me
 import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseBlockField
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent.*
-import com.example.healthconnect.editor.api.domain.record.Model
 
 class ComponentFactory(
     private val provider: FieldProvider,
 ) {
 
     fun LazyListScope.create(
-        model: Model,
+        components: List<ComponentModel>,
         modifier: Modifier = Modifier,
         eventHandler: (FieldModificationEvent) -> Unit,
-    ) = model.getComponents().forEach { componentModel ->
+    ) = components.forEach { componentModel ->
         createByType(componentModel, modifier, eventHandler)
     }
 

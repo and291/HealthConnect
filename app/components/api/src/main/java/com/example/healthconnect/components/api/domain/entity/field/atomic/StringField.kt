@@ -1,5 +1,6 @@
 package com.example.healthconnect.components.api.domain.entity.field.atomic
 
+import com.example.healthconnect.components.api.domain.entity.ComponentModel.Companion.PRIORITY_DEFAULT
 import java.util.UUID
 
 data class StringField(
@@ -7,6 +8,7 @@ data class StringField(
     val type: Type,
     val readOnly: Boolean = false,
     override val instanceId: UUID = UUID.randomUUID(),
+    override val priority: Int = PRIORITY_DEFAULT,
 ) : Atomic(instanceId) {
 
     override fun isValid(): Boolean = true

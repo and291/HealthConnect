@@ -1,6 +1,7 @@
 package com.example.healthconnect.components.api.domain.entity.field.composite
 
 import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.ComponentModel.Companion.PRIORITY_DEFAULT
 import com.example.healthconnect.components.api.domain.entity.field.atomic.CyclingPedalingCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseCompletionGoalField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ExerciseLapField
@@ -24,6 +25,7 @@ data class ListField<T : ComponentModel>(
     val type: Type,
     val config: Configuration<T> = Configuration.from(type),
     override val instanceId: UUID = UUID.randomUUID(),
+    override val priority: Int = PRIORITY_DEFAULT,
 ) : Composite(instanceId) {
 
     override fun isValid(): Boolean = items.all { it.isValid() }

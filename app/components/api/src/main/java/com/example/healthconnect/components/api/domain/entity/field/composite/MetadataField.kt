@@ -1,6 +1,7 @@
 package com.example.healthconnect.components.api.domain.entity.field.composite
 
 import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.ComponentModel.Companion.PRIORITY_DEFAULT
 import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
@@ -15,6 +16,7 @@ data class MetadataField(
     val clientRecordVersion: StringField,
     val deviceFieldComponentModel: DeviceField = DeviceField.Empty(),
     override val instanceId: UUID = UUID.randomUUID(),
+    override val priority: Int = PRIORITY_DEFAULT,
 ) : Composite(instanceId) {
 
     override fun isValid(): Boolean {
