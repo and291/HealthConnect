@@ -19,25 +19,30 @@ class BloodPressureEditor() : Editor<BloodPressureRecord, BloodPressure>() {
     ): BloodPressure = BloodPressure(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0,
         ),
         metadata = mapper.toEntity(record.metadata),
         systolic = ValueField.Dbl(
             parsedValue = record.systolic.inMillimetersOfMercury,
-            type = ValueField.Type.SystolicPressure()
+            type = ValueField.Type.SystolicPressure(),
+            priority = 1,
         ),
         diastolic = ValueField.Dbl(
             parsedValue = record.diastolic.inMillimetersOfMercury,
-            type = ValueField.Type.DiastolicPressure()
+            type = ValueField.Type.DiastolicPressure(),
+            priority = 2,
         ),
         bodyPosition = SelectorField(
             value = record.bodyPosition,
-            type = SelectorField.Type.BodyPosition()
+            type = SelectorField.Type.BodyPosition(),
+            priority = 3,
         ),
         measurementLocation = SelectorField(
             value = record.measurementLocation,
-            type = SelectorField.Type.MeasurementLocationBloodPressure()
-        )
+            type = SelectorField.Type.MeasurementLocationBloodPressure(),
+            priority = 4,
+        ),
     )
 
     override fun toRecord(

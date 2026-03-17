@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.HeartRateSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
@@ -19,7 +19,7 @@ import com.example.healthconnect.utilty.impl.ui.summary.field.Summary
 import java.time.Instant
 
 @Composable
-fun ComponentModel.Summary(modifier: Modifier = Modifier) {
+fun Field.Summary(modifier: Modifier = Modifier) {
     when (this) {
         is MetadataField -> (this as MetadataField).Summary(modifier)
         is TimeField -> (this as TimeField).Summary(modifier)
@@ -44,7 +44,7 @@ fun ComponentModel.Summary(modifier: Modifier = Modifier) {
 @Composable
 @Preview(showBackground = true)
 private fun ComponentSummaryValueFieldPreview() {
-    (ValueField.Dbl(parsedValue = 70.5, type = ValueField.Type.Mass()) as ComponentModel).Summary()
+    (ValueField.Dbl(parsedValue = 70.5, type = ValueField.Type.Mass()) as Field).Summary()
 }
 
 @Composable
@@ -56,5 +56,5 @@ private fun ComponentSummaryListFieldPreview() {
             HeartRateSampleField(time = Instant.parse("2024-01-15T09:01:00Z"), heartRate = ValueField.Lng(75L, ValueField.Type.BeatsPerMinute())),
         ),
         type = ListField.Type.HeartRateSamples,
-    ) as ComponentModel).Summary()
+    ) as Field).Summary()
 }

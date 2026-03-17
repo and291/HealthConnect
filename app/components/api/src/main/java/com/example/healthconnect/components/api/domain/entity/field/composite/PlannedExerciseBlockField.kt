@@ -1,6 +1,6 @@
 package com.example.healthconnect.components.api.domain.entity.field.composite
 
-import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import java.util.UUID
@@ -26,8 +26,8 @@ data class PlannedExerciseBlockField(
     @Suppress("UNCHECKED_CAST")
     override fun updateFieldByInstanceId(
         instanceId: UUID,
-        newField: ComponentModel,
-    ): ComponentModel = when (instanceId) {
+        newField: Field,
+    ): Field = when (instanceId) {
         description.instanceId -> copy(description = newField as StringField)
         steps.instanceId -> copy(steps = newField as ListField<PlannedExerciseStepField>)
         repetitions.instanceId -> copy(repetitions = newField as ValueField.Lng)

@@ -20,12 +20,14 @@ class HydrationEditor() : Editor<HydrationRecord, Hydration>() {
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         volume = ValueField.Dbl(
             parsedValue = record.volume.inLiters,
             type = ValueField.Type.VolumeOfWater(),
+            priority = 1
         ),
     )
 

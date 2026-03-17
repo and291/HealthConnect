@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.healthconnect.components.api.ui.FieldProvider
-import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.components.api.domain.entity.field.atomic.Atomic
 import com.example.healthconnect.components.api.domain.entity.field.atomic.CyclingPedalingCadenceSampleField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.DeviceField
@@ -40,17 +40,16 @@ import com.example.healthconnect.components.api.domain.entity.field.composite.Me
 import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseBlockField
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent.*
-import com.example.healthconnect.editor.api.domain.record.Model
 
 class ComponentFactory(
     private val provider: FieldProvider,
 ) {
 
     fun LazyListScope.create(
-        model: Model,
+        components: List<Field>,
         modifier: Modifier = Modifier,
         eventHandler: (FieldModificationEvent) -> Unit,
-    ) = model.getComponents().forEach { componentModel ->
+    ) = components.forEach { componentModel ->
         createByType(componentModel, modifier, eventHandler)
     }
 
@@ -199,7 +198,7 @@ class ComponentFactory(
                                 @Suppress("UNCHECKED_CAST")
                                 eventHandler(
                                     OnChanged(
-                                        component = (model as ListField<ComponentModel>).copy(
+                                        component = (model as ListField<Field>).copy(
                                             items = model.items + model.config.createItem()
                                         )
                                     )
@@ -281,7 +280,7 @@ class ComponentFactory(
     }
 
     private fun LazyListScope.createByType(
-        model: ComponentModel,
+        model: Field,
         modifier: Modifier,
         eventHandler: (FieldModificationEvent) -> Unit,
     ) = when (model) {

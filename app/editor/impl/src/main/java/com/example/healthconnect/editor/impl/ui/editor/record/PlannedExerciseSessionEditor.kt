@@ -36,20 +36,24 @@ class PlannedExerciseSessionEditor() : Editor<PlannedExerciseSessionRecord, Plan
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         title = StringField(
             value = record.title ?: "",
-            type = StringField.Type.PlannedExerciseSessionTitle()
+            type = StringField.Type.PlannedExerciseSessionTitle(),
+            priority = 2
         ),
         notes = StringField(
             value = record.notes ?: "",
-            type = StringField.Type.PlannedExerciseSessionNotes()
+            type = StringField.Type.PlannedExerciseSessionNotes(),
+            priority = 3
         ),
         exerciseType = SelectorField(
             value = record.exerciseType,
-            type = SelectorField.Type.ExerciseType()
+            type = SelectorField.Type.ExerciseType(),
+            priority = 1
         ),
         blocks = ListField(
             items = record.blocks.map { block ->
@@ -90,7 +94,8 @@ class PlannedExerciseSessionEditor() : Editor<PlannedExerciseSessionRecord, Plan
                     )
                 )
             },
-            type = ListField.Type.PlannedExerciseBlocks
+            type = ListField.Type.PlannedExerciseBlocks,
+            priority = 4
         )
     )
 

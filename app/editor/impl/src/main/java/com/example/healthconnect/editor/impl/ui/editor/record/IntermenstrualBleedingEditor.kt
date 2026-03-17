@@ -17,7 +17,8 @@ class IntermenstrualBleedingEditor() :
     ): IntermenstrualBleeding = IntermenstrualBleeding(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
     )

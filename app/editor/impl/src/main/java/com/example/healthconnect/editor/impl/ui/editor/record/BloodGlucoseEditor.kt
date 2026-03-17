@@ -19,24 +19,29 @@ class BloodGlucoseEditor() : Editor<BloodGlucoseRecord, BloodGlucoseLevel>() {
     ): BloodGlucoseLevel = BloodGlucoseLevel(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         level = ValueField.Dbl(
             parsedValue = record.level.inMillimolesPerLiter,
             type = ValueField.Type.BloodGlucoseLevel(),
+            priority = 1
         ),
         specimenSource = SelectorField(
             value = record.specimenSource,
-            type = SelectorField.Type.SpecimenSource()
+            type = SelectorField.Type.SpecimenSource(),
+            priority = 4
         ),
         mealType = SelectorField(
             value = record.mealType,
-            type = SelectorField.Type.BloodGlucoseMealType()
+            type = SelectorField.Type.BloodGlucoseMealType(),
+            priority = 2
         ),
         relationToMeals = SelectorField(
             value = record.relationToMeal,
-            type = SelectorField.Type.RelationToMeal()
+            type = SelectorField.Type.RelationToMeal(),
+            priority = 3
         ),
     )
 

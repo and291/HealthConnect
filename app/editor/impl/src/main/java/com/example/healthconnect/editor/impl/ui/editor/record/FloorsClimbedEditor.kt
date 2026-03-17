@@ -19,12 +19,14 @@ class FloorsClimbedEditor() : Editor<FloorsClimbedRecord, FloorsClimbed>() {
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         floors = ValueField.Dbl(
             parsedValue = record.floors,
             type = ValueField.Type.FloorsClimbed(),
+            priority = 1
         ),
     )
 

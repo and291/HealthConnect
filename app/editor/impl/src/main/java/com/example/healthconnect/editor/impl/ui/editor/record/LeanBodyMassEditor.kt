@@ -18,12 +18,14 @@ class LeanBodyMassEditor() : Editor<LeanBodyMassRecord, LeanBodyMass>() {
     ): LeanBodyMass = LeanBodyMass(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         mass = ValueField.Dbl(
             parsedValue = record.mass.inKilograms,
             type = ValueField.Type.Mass(),
+            priority = 1
         ),
     )
 

@@ -20,20 +20,24 @@ class MindfulnessSessionEditor() : Editor<MindfulnessSessionRecord, MindfulnessS
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         title = StringField(
             value = record.title ?: "",
-            type = StringField.Type.MindfulnessSessionTitle()
+            type = StringField.Type.MindfulnessSessionTitle(),
+            priority = 2
         ),
         notes = StringField(
             value = record.notes ?: "",
-            type = StringField.Type.MindfulnessSessionNotes()
+            type = StringField.Type.MindfulnessSessionNotes(),
+            priority = 3
         ),
         mindfulnessSessionType = SelectorField(
             value = record.mindfulnessSessionType,
-            type = SelectorField.Type.MindfulnessSessionType()
+            type = SelectorField.Type.MindfulnessSessionType(),
+            priority = 1
         )
     )
 

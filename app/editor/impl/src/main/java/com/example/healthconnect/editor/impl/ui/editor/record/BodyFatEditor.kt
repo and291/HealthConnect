@@ -18,12 +18,14 @@ class BodyFatEditor() : Editor<BodyFatRecord, BodyFat>() {
     ): BodyFat = BodyFat(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         percentage = ValueField.Dbl(
             parsedValue = record.percentage.value,
             type = ValueField.Type.Percentage(),
+            priority = 1
         )
     )
 

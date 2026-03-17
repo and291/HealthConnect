@@ -1,7 +1,7 @@
 package com.example.healthconnect.editor.impl.ui.editor.record
 
 import androidx.health.connect.client.records.Record
-import com.example.healthconnect.components.api.domain.entity.ComponentModel
+import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.components.api.domain.entity.field.composite.Composite
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
@@ -23,7 +23,7 @@ sealed class Editor<R : Record, M : Model> {
 
         is FieldModificationEvent.RemoveListItem -> {
             // Find the list that contains the ID and return the updated version of that list
-            val updatedComponentsList = model.getComponents()
+            val updatedComponentsList = model.getFields()
                 .filterIsInstance<ListField<*>>()
                 .firstNotNullOfOrNull { listField ->
                     listField.findAndRemoveFromList(event.instanceId)
@@ -45,14 +45,14 @@ sealed class Editor<R : Record, M : Model> {
     private fun <T : Any> deepReflectUpdate(
         instance: T,
         targetId: UUID,
-        newValue: ComponentModel,
+        newValue: Field,
     ): T {
         val kClass = instance::class
 
         // 1. Check if any top-level property matches the targetId
         kClass.memberProperties.forEach { prop ->
             val value = prop.getter.call(instance)
-            if ((value as? ComponentModel)?.instanceId == targetId) {
+            if ((value as? Field)?.instanceId == targetId) {
                 return applyCopy(instance, prop.name, newValue)
             }
             //check content of Composite components

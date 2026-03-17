@@ -22,7 +22,8 @@ class PowerEditor() : Editor<PowerRecord, PowerModel>() {
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         samples = ListField(
@@ -35,7 +36,8 @@ class PowerEditor() : Editor<PowerRecord, PowerModel>() {
                     )
                 )
             },
-            type = ListField.Type.PowerSamples
+            type = ListField.Type.PowerSamples,
+            priority = 1
         )
     )
 

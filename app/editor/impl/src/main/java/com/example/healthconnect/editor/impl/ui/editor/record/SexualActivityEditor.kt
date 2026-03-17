@@ -17,12 +17,14 @@ class SexualActivityEditor() : Editor<SexualActivityRecord, SexualActivity>() {
     ): SexualActivity = SexualActivity(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         protectionUsed = SelectorField(
             value = record.protectionUsed,
             type = SelectorField.Type.ProtectionUsed(),
+            priority = 1
         ),
     )
 

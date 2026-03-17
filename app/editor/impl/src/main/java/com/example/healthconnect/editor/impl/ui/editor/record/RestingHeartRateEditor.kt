@@ -17,12 +17,14 @@ class RestingHeartRateEditor() : Editor<RestingHeartRateRecord, RestingHeartRate
     ): RestingHeartRate = RestingHeartRate(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         beatsPerMinute = ValueField.Lng(
             parsedValue = record.beatsPerMinute,
             type = ValueField.Type.BeatsPerMinute(),
+            priority = 1
         ),
     )
 

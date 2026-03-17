@@ -21,7 +21,8 @@ class HeartRateEditor() : Editor<HeartRateRecord, HeartRate>() {
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         samples = ListField(
@@ -34,7 +35,8 @@ class HeartRateEditor() : Editor<HeartRateRecord, HeartRate>() {
                     )
                 )
             },
-            type = ListField.Type.HeartRateSamples
+            type = ListField.Type.HeartRateSamples,
+            priority = 1
         )
     )
 

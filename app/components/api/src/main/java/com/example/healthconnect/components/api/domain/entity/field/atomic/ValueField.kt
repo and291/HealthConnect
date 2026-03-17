@@ -1,5 +1,6 @@
 package com.example.healthconnect.components.api.domain.entity.field.atomic
 
+import com.example.healthconnect.components.api.domain.entity.Field.Companion.PRIORITY_DEFAULT
 import java.util.UUID
 
 
@@ -12,16 +13,19 @@ sealed class ValueField(override val instanceId: UUID) : Atomic(instanceId) {
         override val value: String,
         override val type: Type,
         override val instanceId: UUID = UUID.randomUUID(),
+        override val priority: Int = PRIORITY_DEFAULT,
     ) : ValueField(instanceId) {
 
         constructor(
             parsedValue: Double,
             type: Type,
             presentationId: UUID = UUID.randomUUID(),
+            priority: Int = PRIORITY_DEFAULT,
         ) : this(
             value = parsedValue.toString(),
             type = type,
-            instanceId = presentationId
+            instanceId = presentationId,
+            priority = priority,
         )
 
         val parsedValue: Double? = value.toDoubleOrNull()
@@ -33,16 +37,19 @@ sealed class ValueField(override val instanceId: UUID) : Atomic(instanceId) {
         override val value: String,
         override val type: Type,
         override val instanceId: UUID = UUID.randomUUID(),
+        override val priority: Int = PRIORITY_DEFAULT,
     ) : ValueField(instanceId) {
 
         constructor(
             parsedValue: Long,
             type: Type,
             presentationId: UUID = UUID.randomUUID(),
+            priority: Int = PRIORITY_DEFAULT,
         ) : this(
             value = parsedValue.toString(),
             type = type,
-            instanceId = presentationId
+            instanceId = presentationId,
+            priority = priority,
         )
 
         val parsedValue: Long? = value.toLongOrNull()

@@ -17,12 +17,14 @@ class OvulationTestEditor() : Editor<OvulationTestRecord, OvulationTest>() {
     ): OvulationTest = OvulationTest(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         result = SelectorField(
             value = record.result,
             type = SelectorField.Type.Result(),
+            priority = 1
         ),
     )
 

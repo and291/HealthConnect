@@ -20,12 +20,14 @@ class ElevationGainedEditor() : Editor<ElevationGainedRecord, ElevationGained>()
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         elevation = ValueField.Dbl(
             parsedValue = record.elevation.inMeters,
             type = ValueField.Type.Elevation(),
+            priority = 1
         ),
     )
 

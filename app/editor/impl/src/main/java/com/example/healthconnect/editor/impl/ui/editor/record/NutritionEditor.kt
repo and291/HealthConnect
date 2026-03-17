@@ -26,31 +26,34 @@ class NutritionEditor() : Editor<NutritionRecord, Nutrition>() {
             startTime = record.startTime,
             startZoneOffset = record.startZoneOffset,
             endTime = record.endTime,
-            endZoneOffset = record.endZoneOffset
+            endZoneOffset = record.endZoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         name = StringField(
             value = record.name ?: "",
-            type = StringField.Type.NutritionName()
+            type = StringField.Type.NutritionName(),
+            priority = 1
         ),
         mealType = SelectorField(
             value = record.mealType,
-            type = SelectorField.Type.NutritionMealType()
+            type = SelectorField.Type.NutritionMealType(),
+            priority = 2
         ),
-        energy = record.energy.toValueField("Energy"),
+        energy = record.energy.toValueField("Energy", 3),
         energyFromFat = record.energyFromFat.toValueField("Energy from fat"),
-        totalFat = record.totalFat.toValueField("Total Fat"),
+        totalFat = record.totalFat.toValueField("Total Fat", 6),
         saturatedFat = record.saturatedFat.toValueField("Saturated Fat"),
         transFat = record.transFat.toValueField("Trans Fat"),
         polyunsaturatedFat = record.polyunsaturatedFat.toValueField("Polyunsaturated Fat"),
         monounsaturatedFat = record.monounsaturatedFat.toValueField("Monounsaturated Fat"),
         unsaturatedFat = record.unsaturatedFat.toValueField("Unsaturated Fat"),
         cholesterol = record.cholesterol.toValueField("Cholesterol"),
-        sodium = record.sodium.toValueField("Sodium"),
-        totalCarbohydrate = record.totalCarbohydrate.toValueField("Total Carbohydrate"),
-        dietaryFiber = record.dietaryFiber.toValueField("Dietary Fiber"),
-        sugar = record.sugar.toValueField("Sugar"),
-        protein = record.protein.toValueField("Protein"),
+        sodium = record.sodium.toValueField("Sodium", 9),
+        totalCarbohydrate = record.totalCarbohydrate.toValueField("Total Carbohydrate", 5),
+        dietaryFiber = record.dietaryFiber.toValueField("Dietary Fiber", 8),
+        sugar = record.sugar.toValueField("Sugar", 7),
+        protein = record.protein.toValueField("Protein", 4),
         vitaminA = record.vitaminA.toValueField("Vitamin A"),
         vitaminB6 = record.vitaminB6.toValueField("Vitamin B6"),
         vitaminB12 = record.vitaminB12.toValueField("Vitamin B12"),
@@ -136,14 +139,16 @@ class NutritionEditor() : Editor<NutritionRecord, Nutrition>() {
         caffeine = validModel.caffeine.toMass(),
     )
 
-    private fun Mass?.toValueField(label: String): ValueField = ValueField.Dbl(
+    private fun Mass?.toValueField(label: String, priority: Int = Int.MAX_VALUE): ValueField = ValueField.Dbl(
         parsedValue = this?.inGrams ?: 0.0,
         type = ValueField.Type.NutritionMass(label),
+        priority = priority
     )
 
-    private fun Energy?.toValueField(label: String): ValueField = ValueField.Dbl(
+    private fun Energy?.toValueField(label: String, priority: Int = Int.MAX_VALUE): ValueField = ValueField.Dbl(
         parsedValue = this?.inKilocalories ?: 0.0,
         type = if (label == "Energy") ValueField.Type.NutritionEnergy() else ValueField.Type.NutritionEnergy(label, "$label in Energy unit. Optional field."),
+        priority = priority
     )
 
     private fun ValueField.toMass(): Mass? = (this as ValueField.Dbl).parsedValue?.takeIf { it > 0 }?.grams

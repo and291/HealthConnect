@@ -17,12 +17,14 @@ class MenstruationFlowEditor() : Editor<MenstruationFlowRecord, MenstruationFlow
     ): MenstruationFlow = MenstruationFlow(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         flow = SelectorField(
             value = record.flow,
             type = SelectorField.Type.Flow(),
+            priority = 1
         ),
     )
 

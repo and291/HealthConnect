@@ -17,12 +17,14 @@ class RespiratoryRateEditor() : Editor<RespiratoryRateRecord, RespiratoryRate>()
     ): RespiratoryRate = RespiratoryRate(
         time = TimeField.Instantaneous(
             instant = record.time,
-            zoneOffset = record.zoneOffset
+            zoneOffset = record.zoneOffset,
+            priority = 0
         ),
         metadata = mapper.toEntity(record.metadata),
         rate = ValueField.Dbl(
             parsedValue = record.rate,
             type = ValueField.Type.RespiratoryRate(),
+            priority = 1
         )
     )
 

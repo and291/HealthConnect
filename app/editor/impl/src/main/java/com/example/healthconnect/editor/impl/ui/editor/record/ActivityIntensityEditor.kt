@@ -20,12 +20,14 @@ class ActivityIntensityEditor() : Editor<ActivityIntensityRecord, ActivityIntens
                 startTime = record.startTime,
                 startZoneOffset = record.startZoneOffset,
                 endTime = record.endTime,
-                endZoneOffset = record.endZoneOffset
+                endZoneOffset = record.endZoneOffset,
+                priority = 0
             ),
             metadata = mapper.toEntity(record.metadata),
             intensity = SelectorField(
                 value = record.activityIntensityType,
                 type = SelectorField.Type.ActivityIntensityType(),
+                priority = 1
             ),
         )
 
