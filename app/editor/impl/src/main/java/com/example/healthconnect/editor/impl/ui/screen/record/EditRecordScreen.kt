@@ -44,7 +44,7 @@ fun EditRecordScreen(
         modifier = modifier.padding(16.dp)
     ) {
         with(componentFactory) {
-            create(viewModel.sortedComponents) {
+            create(viewModel.sortedFields) {
                 viewModel.onEvent(it)
             }
         }
