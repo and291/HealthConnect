@@ -6,7 +6,7 @@ import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.editor.api.domain.record.factory.RecordFactory
+import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
@@ -24,7 +24,7 @@ object Di { //TODO move to dagger. keep all features
     var isPreview = true
 
     lateinit var applicationContext: Context
-    lateinit var recordFactory: RecordFactory
+    lateinit var modelFactory: ModelFactory
 
     private val libraryRepository by lazy {
         if (isPreview) {
@@ -81,6 +81,6 @@ object Di { //TODO move to dagger. keep all features
     }
 
     val recordsViewModelFactory by lazy {
-        RecordsViewModelFactory(read, delete, recordFactory)
+        RecordsViewModelFactory(read, delete, modelFactory)
     }
 }
