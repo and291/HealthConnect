@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">HealthConnect Test Utility</string>
+
+    <!-- Record type names -->
+    <string name="record_type_active_calories_burned">Active Calories Burned</string>
+    <string name="record_type_activity_intensity">Activity Intensity</string>
+    <string name="record_type_basal_body_temperature">Basal Body Temperature</string>
+    <string name="record_type_basal_metabolic_rate">Basal Metabolic Rate</string>
+    <string name="record_type_blood_glucose">Blood Glucose</string>
+    <string name="record_type_blood_pressure">Blood Pressure</string>
+    <string name="record_type_body_fat">Body Fat</string>
+    <string name="record_type_body_temperature">Body Temperature</string>
+    <string name="record_type_body_water_mass">Body Water Mass</string>
+    <string name="record_type_bone_mass">Bone Mass</string>
+    <string name="record_type_cervical_mucus">Cervical Mucus</string>
+    <string name="record_type_cycling_pedaling_cadence">Cycling Pedaling Cadence</string>
+    <string name="record_type_distance">Distance</string>
+    <string name="record_type_elevation_gained">Elevation Gained</string>
+    <string name="record_type_exercise_session">Exercise Session</string>
+    <string name="record_type_floors_climbed">Floors Climbed</string>
+    <string name="record_type_heart_rate">Heart Rate</string>
+    <string name="record_type_heart_rate_variability_rmssd">Heart Rate Variability RMSSD</string>
+    <string name="record_type_height">Height</string>
+    <string name="record_type_hydration">Hydration</string>
+    <string name="record_type_intermenstrual_bleeding">Intermenstrual Bleeding</string>
+    <string name="record_type_lean_body_mass">Lean Body Mass</string>
+    <string name="record_type_menstruation_flow">Menstruation Flow</string>
+    <string name="record_type_menstruation_period">Menstruation Period</string>
+    <string name="record_type_mindfulness_session">Mindfulness Session</string>
+    <string name="record_type_nutrition">Nutrition</string>
+    <string name="record_type_ovulation_test">Ovulation Test</string>
+    <string name="record_type_oxygen_saturation">Oxygen Saturation</string>
+    <string name="record_type_planned_exercise_session">Planned Exercise Session</string>
+    <string name="record_type_power">Power</string>
+    <string name="record_type_respiratory_rate">Respiratory Rate</string>
+    <string name="record_type_resting_heart_rate">Resting Heart Rate</string>
+    <string name="record_type_sexual_activity">Sexual Activity</string>
+    <string name="record_type_skin_temperature">Skin Temperature</string>
+    <string name="record_type_sleep_session">Sleep Session</string>
+    <string name="record_type_speed">Speed</string>
+    <string name="record_type_steps">Steps</string>
+    <string name="record_type_steps_cadence">Steps Cadence</string>
+    <string name="record_type_total_calories_burned">Total Calories Burned</string>
+    <string name="record_type_vo2_max">VO2 Max</string>
+    <string name="record_type_weight">Weight</string>
+    <string name="record_type_wheelchair_pushes">Wheelchair Pushes</string>
 </resources>
