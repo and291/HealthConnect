@@ -11,7 +11,7 @@ import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
-import com.example.healthconnect.utilty.impl.ui.screen.RecordsScreen
+import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsScreen
 
 class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
 

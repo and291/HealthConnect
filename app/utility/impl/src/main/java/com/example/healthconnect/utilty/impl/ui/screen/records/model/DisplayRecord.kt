@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.model
+package com.example.healthconnect.utilty.impl.ui.screen.records.model
 
 import androidx.health.connect.client.records.Record
 import com.example.healthconnect.editor.api.domain.record.Model

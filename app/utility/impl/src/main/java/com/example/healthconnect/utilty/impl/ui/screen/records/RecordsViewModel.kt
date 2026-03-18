@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen
+package com.example.healthconnect.utilty.impl.ui.screen.records
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -13,7 +13,7 @@ import com.example.healthconnect.utilty.api.domain.entity.Payload
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
-import com.example.healthconnect.utilty.impl.ui.model.DisplayRecord
+import com.example.healthconnect.utilty.impl.ui.screen.records.model.DisplayRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

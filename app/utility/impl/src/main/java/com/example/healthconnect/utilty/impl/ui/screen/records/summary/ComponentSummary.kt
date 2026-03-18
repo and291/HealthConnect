@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.summary
+package com.example.healthconnect.utilty.impl.ui.screen.records.summary
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
@@ -15,9 +15,10 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeF
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
-import com.example.healthconnect.utilty.impl.ui.summary.field.Summary
+import com.example.healthconnect.utilty.impl.ui.screen.records.summary.field.Summary
 import java.time.Instant
 
+@Suppress("USELESS_CAST")
 @Composable
 fun Field.Summary(modifier: Modifier = Modifier) {
     when (this) {

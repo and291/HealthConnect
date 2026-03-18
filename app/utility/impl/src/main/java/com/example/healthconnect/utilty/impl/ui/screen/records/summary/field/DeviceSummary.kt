@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.summary.field
+package com.example.healthconnect.utilty.impl.ui.screen.records.summary.field
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme

@@ -6,8 +6,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
-import com.example.healthconnect.utilty.impl.ui.screen.RecordsViewModel
-import com.example.healthconnect.utilty.impl.ui.screen.RecordsViewModel.Companion.RECORD_TYPE_KEY
+import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel
+import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Companion.RECORD_TYPE_KEY
 import kotlin.reflect.KClass
 
 class RecordsViewModelFactory(

@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen
+package com.example.healthconnect.utilty.impl.ui.screen.records
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,6 @@ import androidx.health.connect.client.records.StepsRecord
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.utilty.impl.di.Di
-import com.example.healthconnect.utilty.impl.ui.RecordItem
 import kotlin.reflect.KClass
 
 
