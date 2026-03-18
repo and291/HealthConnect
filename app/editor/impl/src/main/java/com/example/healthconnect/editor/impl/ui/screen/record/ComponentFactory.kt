@@ -172,7 +172,7 @@ class ComponentFactory(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
-                model.getComponents().forEach { model ->
+                model.getComponents().sortedBy { it.priority }.forEach { model ->
                     createByType(model, modifier, eventHandler)
                 }
                 item(key = "metadata_divider_${model.instanceId}") {
