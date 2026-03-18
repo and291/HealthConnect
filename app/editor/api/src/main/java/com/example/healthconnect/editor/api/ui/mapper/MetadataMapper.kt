@@ -12,30 +12,36 @@ class MetadataMapper(
     fun toEntity(metadata: Metadata): MetadataField = MetadataField(
         recordingMethod = SelectorField(
             value = metadata.recordingMethod,
-            type = SelectorField.Type.RecordingMethod()
+            type = SelectorField.Type.RecordingMethod(),
+            priority = Int.MAX_VALUE - 100,
         ),
         id = StringField(
             value = metadata.id,
             type = StringField.Type.MetadataId(),
-            readOnly = true
+            readOnly = true,
+            priority = Int.MAX_VALUE - 96,
         ),
         dataOriginPackageName = StringField(
             value = metadata.dataOrigin.packageName,
             type = StringField.Type.MetadataDataOrigin(),
-            readOnly = true
+            readOnly = true,
+            priority = Int.MAX_VALUE - 95,
         ),
         lastModifiedTime = StringField(
             value = metadata.lastModifiedTime.toString(),
             type = StringField.Type.MetadataLastModifiedTime(),
-            readOnly = true
+            readOnly = true,
+            priority = Int.MAX_VALUE - 94,
         ),
         clientRecordId = StringField(
             value = metadata.clientRecordId ?: "",
-            type = StringField.Type.MetadataClientRecordId()
+            type = StringField.Type.MetadataClientRecordId(),
+            priority = Int.MAX_VALUE - 98,
         ),
         clientRecordVersion = StringField(
             value = metadata.clientRecordVersion.toString(),
-            type = StringField.Type.MetadataClientRecordVersion()
+            type = StringField.Type.MetadataClientRecordVersion(),
+            priority = Int.MAX_VALUE - 97,
         ),
         deviceFieldComponentModel = deviceMapper.toEntity(metadata.device)
     )
