@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.summary.field
+package com.example.healthconnect.utilty.impl.ui.screen.records.summary.field
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
@@ -6,26 +6,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
+import androidx.health.connect.client.records.metadata.Metadata
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 
 @Composable
 @Preview(showBackground = true)
-private fun ValueFieldPreview() {
-    ValueField.Lng(
-        parsedValue = 1000L,
-        type = ValueField.Type.StepsCount(),
+private fun SelectorFieldPreview() {
+    SelectorField(
+        value = Metadata.RECORDING_METHOD_MANUAL_ENTRY,
+        type = SelectorField.Type.RecordingMethod(),
     ).Summary()
 }
 
 @Composable
-fun ValueField.Summary(modifier: Modifier = Modifier) {
+fun SelectorField.Summary(modifier: Modifier = Modifier) {
     Row(modifier = modifier) {
         Text(
-            text = "${type.label}: ",
+            text = "${type.title}: ",
             style = MaterialTheme.typography.labelSmall,
         )
         Text(
-            text = "$value ${type.suffix}",
+            text = map(value),
             style = MaterialTheme.typography.bodySmall,
         )
     }

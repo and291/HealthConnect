@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui
+package com.example.healthconnect.utilty.impl.ui.screen.records
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +18,8 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeF
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
 import com.example.healthconnect.editor.api.domain.record.Steps
-import com.example.healthconnect.utilty.impl.ui.model.DisplayRecord
-import com.example.healthconnect.utilty.impl.ui.summary.Summary
+import com.example.healthconnect.utilty.impl.ui.screen.records.model.DisplayRecord
+import com.example.healthconnect.utilty.impl.ui.screen.records.summary.Summary
 import java.time.Instant
 import java.time.ZoneOffset
 

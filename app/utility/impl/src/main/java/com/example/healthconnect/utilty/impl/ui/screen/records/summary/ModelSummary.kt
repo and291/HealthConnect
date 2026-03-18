@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.summary
+package com.example.healthconnect.utilty.impl.ui.screen.records.summary
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
