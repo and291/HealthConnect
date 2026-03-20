@@ -13,5 +13,7 @@ import kotlin.reflect.KClass
  */
 sealed class UtilityNavigationEntry : NavigationEntry {
 
+    data object Dashboard : UtilityNavigationEntry()
+
     data class Records(val recordType: KClass<Record>, @param:StringRes val titleRes: Int) : UtilityNavigationEntry()
 }

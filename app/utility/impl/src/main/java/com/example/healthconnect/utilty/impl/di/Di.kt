@@ -18,6 +18,9 @@ import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
 import com.example.healthconnect.utilty.impl.domain.usecase.Read
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
 import kotlin.reflect.KClass
 
 object Di { //TODO move to dagger. keep all features
@@ -82,5 +85,12 @@ object Di { //TODO move to dagger. keep all features
 
     val recordsViewModelFactory by lazy {
         RecordsViewModelFactory(read, delete, modelFactory)
+    }
+
+    private val recordTypeNameMapper by lazy { RecordTypeNameMapper() }
+    private val recordTypeIconMapper by lazy { RecordTypeIconMapper() }
+
+    val dashboardViewModelFactory by lazy {
+        DashboardViewModelFactory(read, recordTypeNameMapper, recordTypeIconMapper)
     }
 }

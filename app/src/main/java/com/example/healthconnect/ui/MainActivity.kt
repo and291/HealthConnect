@@ -18,6 +18,7 @@ import com.example.healthconnect.di.Di
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.ui.navigation.AppNavigationEntry
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
+import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.ui.theme.HealthConnectTheme
 
 class MainActivity : ComponentActivity() {
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
 
             val status by activityViewModel.sdkStatus
             val destination = when (status) {
-                SDK_AVAILABLE -> AppNavigationEntry.Available
+                SDK_AVAILABLE -> UtilityNavigationEntry.Dashboard
                 SDK_UNAVAILABLE -> AppNavigationEntry.Unavailable
                 SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> AppNavigationEntry.ProviderUpdateRequired
                 else -> TODO()

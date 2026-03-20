@@ -1,6 +1,6 @@
-package com.example.healthconnect.ui.mapper
+package com.example.healthconnect.utilty.impl.ui.mapper
 
-import com.example.healthconnect.domain.LibraryRecords
+import com.example.healthconnect.utilty.impl.domain.SupportedRecords
 import org.junit.Test
 
 class RecordTypeIconMapperTest {
@@ -9,7 +9,7 @@ class RecordTypeIconMapperTest {
 
     @Test
     fun allLibraryRecordsHaveIcon() {
-        val allTypes = LibraryRecords.instantaneous + LibraryRecords.interval + LibraryRecords.series
+        val allTypes = SupportedRecords.instantaneous + SupportedRecords.interval + SupportedRecords.series
         allTypes.forEach { type ->
             mapper.icon(type) // throws if missing
         }
