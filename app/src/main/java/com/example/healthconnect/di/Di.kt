@@ -7,8 +7,6 @@ import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProvider
 import com.example.healthconnect.editor.impl.navigation.EditorNavigationEntryProviderImpl
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
-import com.example.healthconnect.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.impl.navigation.UtilityNavigationEntryProviderImpl
 
@@ -39,6 +37,4 @@ object Di { //move to dagger. keep all features
 
     val utilityNav: UtilityNavigationEntryProvider = UtilityNavigationEntryProviderImpl()
     val editorNav: EditorNavigationEntryProvider = EditorNavigationEntryProviderImpl()
-    val recordTypeIconMapper: RecordTypeIconMapper = RecordTypeIconMapper()
-    val recordTypeNameMapper: RecordTypeNameMapper = RecordTypeNameMapper()
 }
