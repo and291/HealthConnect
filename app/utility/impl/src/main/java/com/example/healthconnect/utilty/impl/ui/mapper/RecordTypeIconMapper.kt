@@ -1,4 +1,4 @@
-package com.example.healthconnect.ui.mapper
+package com.example.healthconnect.utilty.impl.ui.mapper
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Accessible

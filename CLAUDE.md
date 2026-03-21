@@ -82,6 +82,12 @@ ViewModels use Compose's `mutableStateOf` / `mutableStateListOf`. No third-party
 - **Kotlin Serialization** plugin enabled
 - Versions managed via `gradle/libs.versions.toml`
 
+## Compose Previews
+
+Every `@Composable` function in the project must have at least one fully operational and interactive `@Preview`. Previews are placed after the composable they demonstrate in the same file, declared `private`. Preview functions must be self-contained — pass explicit sample data for stateless composables, and rely on `Di` (which defaults to `isPreview = true` with a mock repository) for screen-level composables that require a ViewModel.
+
+For interactive preview correctness, the mock `LibraryRepository` in `Di` returns `Result.PermissionRequired` for all record types (since the mock grants only `"sdk:permission"`, not the real Health Connect permissions), so all counts render as `null` in previews.
+
 ## Testing
 
 Unit tests live under `app/src/test/`. Key test files cover mappers (`RecordTypeIconMapperTest`, `RecordTypeNameMapperTest`) and domain logic (`LibraryRecordsTest`). Instrumentation tests use Espresso but have minimal coverage currently.

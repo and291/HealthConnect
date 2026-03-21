@@ -1,4 +1,4 @@
-package com.example.healthconnect.ui.mapper
+package com.example.healthconnect.utilty.impl.ui.mapper
 
 import androidx.annotation.StringRes
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
@@ -43,7 +43,7 @@ import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.WheelchairPushesRecord
-import com.example.healthconnect.R
+import com.example.healthconnect.utilty.impl.R
 import kotlin.reflect.KClass
 
 class RecordTypeNameMapper {

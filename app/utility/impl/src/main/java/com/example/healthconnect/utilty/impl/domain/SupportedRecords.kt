@@ -1,4 +1,4 @@
-package com.example.healthconnect.domain
+package com.example.healthconnect.utilty.impl.domain
 
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.ActivityIntensityRecord
@@ -44,10 +44,10 @@ import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.WheelchairPushesRecord
 import kotlin.reflect.KClass
 
-object LibraryRecords {
+internal object SupportedRecords {
 
-    //time + zoneOffset
-    val instantaneous: List<KClass<*>> = listOf<KClass<*>>(
+    // time + zoneOffset
+    val instantaneous: List<KClass<*>> = listOf(
         BasalBodyTemperatureRecord::class,
         BasalMetabolicRateRecord::class,
         BloodGlucoseRecord::class,
@@ -71,8 +71,8 @@ object LibraryRecords {
         WeightRecord::class,
     )
 
-    //start, endTime + offset
-    val interval: List<KClass<*>> = listOf<KClass<*>>(
+    // start, endTime + offset
+    val interval: List<KClass<*>> = listOf(
         ActiveCaloriesBurnedRecord::class,
         ActivityIntensityRecord::class,
         DistanceRecord::class,
@@ -91,8 +91,8 @@ object LibraryRecords {
         WheelchairPushesRecord::class,
     )
 
-    //list of T
-    val series: List<KClass<*>> = listOf<KClass<*>>(
+    // list of T
+    val series: List<KClass<*>> = listOf(
         CyclingPedalingCadenceRecord::class,
         HeartRateRecord::class,
         PowerRecord::class,

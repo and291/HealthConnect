@@ -54,7 +54,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.material.icons.extended)
     // Use to implement health connects
     implementation(libs.androidx.connect.client)
     implementation(project(":app:components:api"))
