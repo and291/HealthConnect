@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.Record
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -91,4 +92,10 @@ fun DashboardScreen(
             }
         }
     }
+}
+
+@Preview(widthDp = 480, heightDp = 720, showBackground = true)
+@Composable
+private fun DashboardScreenPreview() {
+    DashboardScreen(onTypeClick = { _, _ -> })
 }
