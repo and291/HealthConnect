@@ -1,10 +1,13 @@
+import com.android.build.api.dsl.LibraryExtension
+import org.gradle.kotlin.dsl.configure
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
-android {
+extensions.configure<LibraryExtension> {
     namespace = "com.example.healthconnect.utilty.impl"
     compileSdk = 36
     compileSdkExtension = 19

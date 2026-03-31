@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.ApplicationExtension
+import org.gradle.kotlin.dsl.configure
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,7 +9,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
-android {
+extensions.configure<ApplicationExtension> {
     namespace = "com.example.healthconnect"
     compileSdk = 36
     compileSdkExtension = 19
