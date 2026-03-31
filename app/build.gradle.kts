@@ -9,6 +9,7 @@ plugins {
 android {
     namespace = "com.example.healthconnect"
     compileSdk = 36
+    compileSdkExtension = 19
 
     defaultConfig {
         applicationId = "com.example.healthconnect"

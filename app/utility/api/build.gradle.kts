@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "com.example.healthconnect.utilty.api"
     compileSdk = 36
+    compileSdkExtension = 19
 
     defaultConfig {
         minSdk = 24
