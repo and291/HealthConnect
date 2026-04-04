@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,23 +25,27 @@ import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.Record
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.utilty.impl.di.Di
+import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModel.Effect
+import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModel.Event
 import kotlin.reflect.KClass
 
 @Composable
 fun DashboardScreen(
     onTypeClick: (KClass<out Record>, Int) -> Unit,
+    onShowLibraryDataManager: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = viewModel(factory = Di.dashboardViewModelFactory),
 ) {
     LaunchedEffect(Unit) {
-        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+        viewModel.onEvent(Event.Refresh)
     }
 
     val effect by viewModel.effect.collectAsState(null)
     LaunchedEffect(effect) {
         effect?.let { e ->
             when (e) {
-                is DashboardViewModel.Effect.NavigateToRecords -> onTypeClick(e.recordType, e.nameRes)
+                is Effect.NavigateToRecords -> onTypeClick(e.recordType, e.nameRes)
+                is Effect.ShowLibraryDataManager -> onShowLibraryDataManager()
             }
             viewModel.effectConsumed(e)
         }
@@ -64,6 +69,18 @@ fun DashboardScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = modifier.fillMaxSize(),
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    OutlinedButton(
+                        onClick = {
+                            viewModel.onEvent(Event.OnLibraryDataManagerClick)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                    ) {
+                        Text("Health Connect's internal data manager")
+                    }
+                }
                 state.segments.forEach { segment ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(
@@ -80,7 +97,7 @@ fun DashboardScreen(
                             item = item,
                             onClick = {
                                 viewModel.onEvent(
-                                    DashboardViewModel.Event.OnTypeClick(
+                                    Event.OnTypeClick(
                                         recordType = item.recordType,
                                         nameRes = item.nameRes,
                                     )
@@ -97,5 +114,8 @@ fun DashboardScreen(
 @Preview(widthDp = 480, heightDp = 720, showBackground = true)
 @Composable
 private fun DashboardScreenPreview() {
-    DashboardScreen(onTypeClick = { _, _ -> })
+    DashboardScreen(
+        onTypeClick = { _, _ -> },
+        onShowLibraryDataManager = {}
+    )
 }

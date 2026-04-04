@@ -7,6 +7,7 @@ import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProvider
 import com.example.healthconnect.editor.impl.navigation.EditorNavigationEntryProviderImpl
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
+import com.example.healthconnect.ui.navigation.LibraryNavigation
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.impl.navigation.UtilityNavigationEntryProviderImpl
 
@@ -32,7 +33,11 @@ object Di { //move to dagger. keep all features
     }
 
     val parameterlessViewModelFactory by lazy {
-        ParameterlessViewModelFactory(applicationContext, libraryRepository)
+        ParameterlessViewModelFactory(libraryRepository)
+    }
+
+    val libraryNavigation: LibraryNavigation by lazy {
+        LibraryNavigation(applicationContext)
     }
 
     val utilityNav: UtilityNavigationEntryProvider = UtilityNavigationEntryProviderImpl()

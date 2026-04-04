@@ -53,6 +53,10 @@ class DashboardViewModel(
             is Event.OnTypeClick -> viewModelScope.launch {
                 _effect.emit(Effect.NavigateToRecords(event.recordType, event.nameRes))
             }
+
+            Event.OnLibraryDataManagerClick -> viewModelScope.launch {
+                _effect.emit(Effect.ShowLibraryDataManager)
+            }
         }
     }
 
@@ -104,6 +108,7 @@ class DashboardViewModel(
             val recordType: KClass<out Record>,
             @param:StringRes val nameRes: Int,
         ) : Effect()
+        object ShowLibraryDataManager : Effect()
     }
 
     sealed class Event {
@@ -112,5 +117,6 @@ class DashboardViewModel(
             val recordType: KClass<out Record>,
             @param:StringRes val nameRes: Int,
         ) : Event()
+        data object OnLibraryDataManagerClick : Event()
     }
 }

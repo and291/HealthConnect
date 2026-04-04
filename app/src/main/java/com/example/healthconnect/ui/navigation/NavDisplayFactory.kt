@@ -1,7 +1,6 @@
 package com.example.healthconnect.ui.navigation
 
 import android.app.Activity
-import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -36,6 +35,7 @@ fun CreateNavDisplay(
     innerPadding: PaddingValues,
     requestPermission: (String) -> Unit,
     activity: Activity,
+    libraryNavigation: LibraryNavigation,
 ) {
     NavDisplay(
         backStack = backStack,
@@ -56,13 +56,8 @@ fun CreateNavDisplay(
 
                 is ProviderUpdateRequired -> NavEntry(key) {
                     SdkUpdateRequiredScreen(
-                        startUpdateActivity = { intent ->
-                            activity.startActivity(
-                                Intent.createChooser(
-                                    intent,
-                                    "Choose app to update Health Connect library"
-                                )
-                            )
+                        startUpdateActivity = {
+                            activity.startActivity(libraryNavigation.chooseUpdateLibraryIntent())
                         },
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -75,6 +70,9 @@ fun CreateNavDisplay(
                 key = key,
                 backStack = backStack,
                 requestPermission = requestPermission,
+                showInternalDataManager = {
+                    activity.startActivity(libraryNavigation.chooseManageDataIntent())
+                },
                 innerPadding = innerPadding
             )
 

@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
                         innerPadding = innerPadding,
                         requestPermission = requestPermission,
                         activity = this,
+                        libraryNavigation = Di.libraryNavigation,
                     )
                 }
             }

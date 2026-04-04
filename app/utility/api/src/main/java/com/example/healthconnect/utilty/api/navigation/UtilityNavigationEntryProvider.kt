@@ -11,6 +11,7 @@ interface UtilityNavigationEntryProvider {
         key: UtilityNavigationEntry,
         backStack: SnapshotStateList<NavigationEntry>,
         requestPermission: (String) -> Unit,
-        innerPadding: PaddingValues? = null
+        showInternalDataManager: () -> Unit,
+        innerPadding: PaddingValues? = null,
     ): NavEntry<NavigationEntry>
 }

@@ -6,13 +6,15 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.health.connect.client.records.Record
 import androidx.navigation3.runtime.NavEntry
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
-import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
+import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardScreen
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsScreen
+import kotlin.reflect.KClass
 
 class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
 
@@ -20,6 +22,7 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
         key: UtilityNavigationEntry,
         backStack: SnapshotStateList<NavigationEntry>,
         requestPermission: (String) -> Unit,
+        showInternalDataManager: () -> Unit,
         innerPadding: PaddingValues?,
     ): NavEntry<NavigationEntry> {
         val defaultPadding = PaddingValues(all = 0.dp)
@@ -30,11 +33,12 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
                         @Suppress("UNCHECKED_CAST")
                         backStack.add(
                             UtilityNavigationEntry.Records(
-                                recordType = type as kotlin.reflect.KClass<androidx.health.connect.client.records.Record>,
+                                recordType = type as KClass<Record>,
                                 titleRes = nameRes,
                             )
                         )
                     },
+                    onShowLibraryDataManager = showInternalDataManager,
                     modifier = Modifier.padding(innerPadding ?: defaultPadding),
                 )
             }
