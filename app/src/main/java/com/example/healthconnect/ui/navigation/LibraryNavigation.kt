@@ -5,6 +5,11 @@ import android.content.Intent
 import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
 
+/**
+ * ==Architecture==
+ *
+ * Single entry point into HealtConnect related navigation
+ */
 class LibraryNavigation(
     private val applicationContext: Context
 ) {
