@@ -39,6 +39,16 @@ extensions.configure<ApplicationExtension> {
     buildFeatures {
         compose = true
     }
+    buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+        }
+    }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 kotlin {
@@ -66,6 +76,7 @@ dependencies {
     implementation(project(":app:editor:api"))
     implementation(project(":app:editor:impl"))
     implementation(project(":app:navigation:api"))
+    implementation(libs.core.ktx)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //viewmodel
@@ -80,4 +91,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.core)
 
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 }

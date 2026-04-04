@@ -34,6 +34,11 @@ extensions.configure<LibraryExtension> {
     buildFeatures {
         compose = true
     }
+    buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+        }
+    }
 }
 
 kotlin {
@@ -49,6 +54,7 @@ dependencies {
     implementation(libs.material)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
