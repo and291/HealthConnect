@@ -7,10 +7,9 @@ import androidx.compose.runtime.setValue
 import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.healthconnect.utilty.api.domain.entity.Payload
-import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.impl.domain.SupportedRecords
-import com.example.healthconnect.utilty.impl.domain.usecase.Read
+import com.example.healthconnect.utilty.impl.domain.usecase.Count
+import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
@@ -21,11 +20,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class DashboardViewModel(
-    private val read: Read,
+    private val count: Count,
     private val nameMapper: RecordTypeNameMapper,
     private val iconMapper: RecordTypeIconMapper,
 ) : ViewModel() {
@@ -70,13 +70,12 @@ class DashboardViewModel(
         }
     }
 
-    private suspend fun readCount(type: KClass<out Record>): Int? {
-        return when (val result = read(type)) {
-            is Result.Success -> when (val payload = result.payload) {
-                is Payload.ReadList<*> -> payload.list.size
-                else -> null
-            }
-            else -> null
+    private suspend fun readCount(
+        type: KClass<out Record>
+    ): Int? = count(type).fold(null as Int?) { acc, result ->
+        when (result) {
+            is FlowResult.Data -> (acc ?: 0) + result.item
+            is FlowResult.Terminal -> null // Treat any terminal error as failure
         }
     }
 

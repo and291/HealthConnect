@@ -5,8 +5,18 @@ import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
+import com.example.healthconnect.editor.api.domain.record.Model
+import com.example.healthconnect.utilty.impl.domain.LibraryRepository
+import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
+import com.example.healthconnect.utilty.impl.domain.usecase.Count
+import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -14,14 +24,9 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.PayloadMapper
-import com.example.healthconnect.utilty.impl.domain.ResultMapper
-import com.example.healthconnect.utilty.impl.domain.usecase.Read
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import kotlin.reflect.KClass
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,7 +44,9 @@ class DashboardViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun createViewModel(): DashboardViewModel {
+    private fun createViewModel(
+        countForType: (KClass<out Record>) -> Flow<FlowResult<Int>> = { error("not expected") },
+    ): DashboardViewModel {
         val repository = object : LibraryRepository {
             override fun getSdkStatus() = 0
             override suspend fun getGrantedPermissions() = emptySet<String>()
@@ -47,13 +54,18 @@ class DashboardViewModelTest {
             override suspend fun insertRecords(records: List<Record>): InsertRecordsResponse = error("not expected")
             override suspend fun <T : Record> readRecords(request: ReadRecordsRequest<T>): ReadRecordsResponse<T> = error("not expected")
             override suspend fun removeRecord(recordType: KClass<out Record>, metadataId: String) = Unit
+            override fun <R : Record> readAll(request: ReadRequest<R>): Flow<FlowResult<Model>> = error("not expected")
+            override fun <R : Record> count(request: ReadRequest<R>): Flow<FlowResult<Int>> = countForType(request.recordType)
         }
         return DashboardViewModel(
-            read = Read(repository, ResultMapper(), PayloadMapper()),
+            count = Count(repository),
             nameMapper = RecordTypeNameMapper(),
             iconMapper = RecordTypeIconMapper(),
         )
     }
+
+    private fun DashboardViewModel.State.Data.countForType(type: KClass<*>): Int? =
+        segments.flatMap { it.items }.firstOrNull { it.recordType == type }?.count
 
     @Test
     fun onLibraryDataManagerClick_emitsShowLibraryDataManagerEffect() = runTest {
@@ -115,5 +127,57 @@ class DashboardViewModelTest {
             DashboardViewModel.Effect.NavigateToRecords(StepsRecord::class, 42),
             viewModel.effect.value
         )
+    }
+
+    @Test
+    fun onRefresh_transitionsStateToData() = runTest {
+        val viewModel = createViewModel(countForType = { flowOf(FlowResult.Data(0)) })
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        assertTrue(viewModel.state is DashboardViewModel.State.Data)
+    }
+
+    @Test
+    fun onRefresh_accumulatesPaginatedCountsForType() = runTest {
+        val viewModel = createViewModel(countForType = { type ->
+            if (type == StepsRecord::class) flow {
+                emit(FlowResult.Data(3))
+                emit(FlowResult.Data(2))
+            } else flowOf(FlowResult.Data(0))
+        })
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        val state = viewModel.state as DashboardViewModel.State.Data
+        assertEquals(5, state.countForType(StepsRecord::class))
+    }
+
+    @Test
+    fun onRefresh_withPermissionRequired_setsNullCountForType() = runTest {
+        val viewModel = createViewModel(countForType = { type ->
+            if (type == StepsRecord::class) flowOf(FlowResult.Terminal.PermissionRequired("hc.permission.STEPS"))
+            else flowOf(FlowResult.Data(0))
+        })
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        val state = viewModel.state as DashboardViewModel.State.Data
+        assertNull(state.countForType(StepsRecord::class))
+    }
+
+    @Test
+    fun onRefresh_withTerminalAfterData_setsNullCountForType() = runTest {
+        val viewModel = createViewModel(countForType = { type ->
+            if (type == StepsRecord::class) flow {
+                emit(FlowResult.Data(3))
+                emit(FlowResult.Terminal.UnhandledException(RuntimeException("fail")))
+            } else flowOf(FlowResult.Data(0))
+        })
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        val state = viewModel.state as DashboardViewModel.State.Data
+        assertNull(state.countForType(StepsRecord::class))
     }
 }
