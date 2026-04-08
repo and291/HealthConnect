@@ -205,3 +205,29 @@ For interactive preview correctness, the mock `LibraryRepository` in `Di` return
 The project is developed using a **TDD (Test-Driven Development)** approach. Tests should be written before or alongside the implementation, not as an afterthought.
 
 Unit tests live under `app/src/test/`. Key test files cover mappers (`RecordTypeIconMapperTest`, `RecordTypeNameMapperTest`) and domain logic (`LibraryRecordsTest`). Instrumentation tests use Espresso but have minimal coverage currently.
+
+### What makes a test useful
+
+A test is useful only if it can fail due to a real mistake in the implementation. Before writing a test, ask: *what bug would this catch that the compiler wouldn't?*
+
+**Avoid mirror tests** — tests whose expected values are a copy of the implementation's internal data. A test that duplicates a lookup map entry-for-entry catches nothing; any mistake made consistently in both places passes silently. Example of a useless test:
+
+```kotlin
+// Implementation
+private val map = mapOf(Steps::class to StepsRecord::class, ...)
+
+// Test — mirrors the map, catches nothing
+assertEquals(StepsRecord::class, mapper.map(Steps::class))
+```
+
+**Prefer completeness tests** — tests that verify coverage against an independent source of truth. For example, asserting that every entry in `SupportedRecords` has a corresponding mapper entry catches omissions when new record types are added:
+
+```kotlin
+@Test
+fun `all supported record types are covered`() {
+    val allTypes = SupportedRecords.instantaneous + SupportedRecords.interval + SupportedRecords.series
+    allTypes.forEach { mapper.someMethod(it) } // throws if missing
+}
+```
+
+If the only meaningful thing a test validates is a non-obvious name mismatch (e.g. `BloodGlucoseLevel` → `BloodGlucoseRecord`), consider whether a code comment on that entry is more appropriate than a full test class.
