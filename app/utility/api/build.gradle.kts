@@ -40,8 +40,6 @@ kotlin {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -49,10 +47,8 @@ dependencies {
     implementation(project(":app:navigation:api"))
     implementation(project(":app:models:api"))
 
-    // Use to implement health connect
-    implementation(libs.androidx.connect.client) //you may get rid of this dependency if you will exclude lib classes from navigation arguments
-
     //compose
+    implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.foundation.layout)
 
     //compose navigation v3

@@ -77,7 +77,6 @@ dependencies {
     implementation(project(":app:editor:api"))
     implementation(project(":app:editor:impl"))
     implementation(project(":app:navigation:api"))
-    implementation(libs.core.ktx)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //viewmodel
@@ -91,6 +90,7 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.kotlinx.serialization.core)
 
+    testImplementation(libs.core.ktx)
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
