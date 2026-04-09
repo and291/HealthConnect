@@ -48,6 +48,7 @@ dependencies {
 
     implementation(project(":app:components:api"))
     implementation(project(":app:navigation:api"))
+    implementation(project(":app:models:api"))
 
     // Use to implement health connects
     implementation(libs.androidx.connect.client)

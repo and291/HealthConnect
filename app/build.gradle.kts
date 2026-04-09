@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.connect.client)
     implementation(project(":app:components:api"))
     implementation(project(":app:components:impl"))
+    implementation(project(":app:models:api"))
     implementation(project(":app:utility:api"))
     implementation(project(":app:utility:impl"))
     implementation(project(":app:editor:api"))
