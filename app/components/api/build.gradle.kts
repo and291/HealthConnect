@@ -41,7 +41,6 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

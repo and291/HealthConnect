@@ -41,7 +41,6 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
     implementation(project(":app:components:api"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

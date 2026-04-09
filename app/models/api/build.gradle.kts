@@ -31,7 +31,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
 
     implementation(project(":app:components:api"))
     //kotlin reflection

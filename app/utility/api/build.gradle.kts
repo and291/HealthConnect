@@ -39,11 +39,6 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
     implementation(project(":app:navigation:api"))
     implementation(project(":app:models:api"))
 
@@ -53,4 +48,8 @@ dependencies {
 
     //compose navigation v3
     implementation(libs.androidx.navigation3.runtime)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
