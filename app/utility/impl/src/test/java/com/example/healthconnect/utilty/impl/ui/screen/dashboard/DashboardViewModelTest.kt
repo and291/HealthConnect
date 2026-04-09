@@ -1,11 +1,7 @@
 package com.example.healthconnect.utilty.impl.ui.screen.dashboard
 
-import androidx.health.connect.client.records.Record
-import androidx.health.connect.client.records.StepsRecord
-import androidx.health.connect.client.request.ReadRecordsRequest
-import androidx.health.connect.client.response.InsertRecordsResponse
-import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.editor.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
@@ -45,17 +41,16 @@ class DashboardViewModelTest {
     }
 
     private fun createViewModel(
-        countForType: (KClass<out Record>) -> Flow<FlowResult<Int>> = { error("not expected") },
+        countForType: (KClass<out Model>) -> Flow<FlowResult<Int>> = { error("not expected") },
     ): DashboardViewModel {
         val repository = object : LibraryRepository {
             override fun getSdkStatus() = 0
             override suspend fun getGrantedPermissions() = emptySet<String>()
-            override suspend fun updateRecords(records: List<Record>) = Unit
-            override suspend fun insertRecords(records: List<Record>): InsertRecordsResponse = error("not expected")
-            override suspend fun <T : Record> readRecords(request: ReadRecordsRequest<T>): ReadRecordsResponse<T> = error("not expected")
-            override suspend fun removeRecord(recordType: KClass<out Record>, metadataId: String) = Unit
-            override fun <R : Record> readAll(request: ReadRequest<R>): Flow<FlowResult<Model>> = error("not expected")
-            override fun <R : Record> count(request: ReadRequest<R>): Flow<FlowResult<Int>> = countForType(request.recordType)
+            override suspend fun updateRecords(records: List<Model>) = Unit
+            override suspend fun insertRecords(records: List<Model>): List<String> = error("not expected")
+            override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = Unit
+            override fun <M : Model> readAll(request: ReadRequest<M>): Flow<FlowResult<Model>> = error("not expected")
+            override fun <M : Model> count(request: ReadRequest<M>): Flow<FlowResult<Int>> = countForType(request.modelType)
         }
         return DashboardViewModel(
             count = Count(repository),
@@ -91,7 +86,7 @@ class DashboardViewModelTest {
         val viewModel = createViewModel()
         viewModel.onEvent(DashboardViewModel.Event.OnLibraryDataManagerClick)
 
-        viewModel.effectConsumed(DashboardViewModel.Effect.NavigateToRecords(StepsRecord::class, 0))
+        viewModel.effectConsumed(DashboardViewModel.Effect.NavigateToRecords(Steps::class, 0))
 
         assertEquals(DashboardViewModel.Effect.ShowLibraryDataManager, viewModel.effect.value)
     }
@@ -100,18 +95,18 @@ class DashboardViewModelTest {
     fun onTypeClick_emitsNavigateToRecordsEffect() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(StepsRecord::class, 42))
+        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(Steps::class, 42))
 
         val effect = viewModel.effect.value
-        assertEquals(DashboardViewModel.Effect.NavigateToRecords(StepsRecord::class, 42), effect)
+        assertEquals(DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42), effect)
     }
 
     @Test
     fun effectConsumed_clearsNavigateToRecordsEffect() = runTest {
         val viewModel = createViewModel()
-        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(StepsRecord::class, 42))
+        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(Steps::class, 42))
 
-        viewModel.effectConsumed(DashboardViewModel.Effect.NavigateToRecords(StepsRecord::class, 42))
+        viewModel.effectConsumed(DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42))
 
         assertNull(viewModel.effect.value)
     }
@@ -119,12 +114,12 @@ class DashboardViewModelTest {
     @Test
     fun effectConsumed_doesNotClearNavigateToRecords_whenShowLibraryDataManagerConsumed() = runTest {
         val viewModel = createViewModel()
-        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(StepsRecord::class, 42))
+        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(Steps::class, 42))
 
         viewModel.effectConsumed(DashboardViewModel.Effect.ShowLibraryDataManager)
 
         assertEquals(
-            DashboardViewModel.Effect.NavigateToRecords(StepsRecord::class, 42),
+            DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42),
             viewModel.effect.value
         )
     }
@@ -141,7 +136,7 @@ class DashboardViewModelTest {
     @Test
     fun onRefresh_accumulatesPaginatedCountsForType() = runTest {
         val viewModel = createViewModel(countForType = { type ->
-            if (type == StepsRecord::class) flow {
+            if (type == Steps::class) flow {
                 emit(FlowResult.Data(3))
                 emit(FlowResult.Data(2))
             } else flowOf(FlowResult.Data(0))
@@ -150,26 +145,26 @@ class DashboardViewModelTest {
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
         val state = viewModel.state as DashboardViewModel.State.Data
-        assertEquals(5, state.countForType(StepsRecord::class))
+        assertEquals(5, state.countForType(Steps::class))
     }
 
     @Test
     fun onRefresh_withPermissionRequired_setsNullCountForType() = runTest {
         val viewModel = createViewModel(countForType = { type ->
-            if (type == StepsRecord::class) flowOf(FlowResult.Terminal.PermissionRequired("hc.permission.STEPS"))
+            if (type == Steps::class) flowOf(FlowResult.Terminal.PermissionRequired("hc.permission.STEPS"))
             else flowOf(FlowResult.Data(0))
         })
 
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
         val state = viewModel.state as DashboardViewModel.State.Data
-        assertNull(state.countForType(StepsRecord::class))
+        assertNull(state.countForType(Steps::class))
     }
 
     @Test
     fun onRefresh_withTerminalAfterData_setsNullCountForType() = runTest {
         val viewModel = createViewModel(countForType = { type ->
-            if (type == StepsRecord::class) flow {
+            if (type == Steps::class) flow {
                 emit(FlowResult.Data(3))
                 emit(FlowResult.Terminal.UnhandledException(RuntimeException("fail")))
             } else flowOf(FlowResult.Data(0))
@@ -178,6 +173,6 @@ class DashboardViewModelTest {
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
         val state = viewModel.state as DashboardViewModel.State.Data
-        assertNull(state.countForType(StepsRecord::class))
+        assertNull(state.countForType(Steps::class))
     }
 }

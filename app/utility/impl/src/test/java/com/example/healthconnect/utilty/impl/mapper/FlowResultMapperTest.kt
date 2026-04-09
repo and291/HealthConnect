@@ -1,9 +1,9 @@
-package com.example.healthconnect.utilty.impl.domain
+package com.example.healthconnect.utilty.impl.mapper
 
 import android.os.RemoteException
+import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertSame
+import org.junit.Assert
 import org.junit.Test
 import java.io.IOException
 
@@ -17,7 +17,7 @@ class FlowResultMapperTest {
 
         val result = mapper.mapTerminalState(exception)
 
-        assertEquals(FlowResult.Terminal.IpcFailure(exception), result)
+        Assert.assertEquals(FlowResult.Terminal.IpcFailure(exception), result)
     }
 
     @Test
@@ -26,7 +26,7 @@ class FlowResultMapperTest {
 
         val result = mapper.mapTerminalState(exception)
 
-        assertEquals(FlowResult.Terminal.UnpermittedAccess(exception), result)
+        Assert.assertEquals(FlowResult.Terminal.UnpermittedAccess(exception), result)
     }
 
     @Test
@@ -35,7 +35,7 @@ class FlowResultMapperTest {
 
         val result = mapper.mapTerminalState(exception)
 
-        assertEquals(FlowResult.Terminal.IoException(exception), result)
+        Assert.assertEquals(FlowResult.Terminal.IoException(exception), result)
     }
 
     @Test
@@ -44,7 +44,7 @@ class FlowResultMapperTest {
 
         val result = mapper.mapTerminalState(exception)
 
-        assertEquals(FlowResult.Terminal.UnhandledException(exception), result)
+        Assert.assertEquals(FlowResult.Terminal.UnhandledException(exception), result)
     }
 
     @Test
@@ -53,6 +53,6 @@ class FlowResultMapperTest {
 
         val result = mapper.mapTerminalState(exception) as FlowResult.Terminal.UnhandledException
 
-        assertSame(exception, result.exception)
+        Assert.assertSame(exception, result.exception)
     }
 }

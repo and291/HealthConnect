@@ -1,34 +1,25 @@
 package com.example.healthconnect.utilty.impl.domain.usecase
 
-import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.Record
-import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.PayloadMapper
-import com.example.healthconnect.utilty.impl.domain.ResultMapper
+import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.domain.entity.Payload
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
+import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
+import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 
 class InsertImpl(
     private val libraryRepository: LibraryRepository,
     private val resultMapper: ResultMapper,
-    private val payloadMapper: PayloadMapper,
 ): Insert {
 
     override suspend operator fun invoke(
-        record: Record,
-    ): Result {
-        val requiredPermission = HealthPermission.getWritePermission(record::class)
-        if (!libraryRepository.getGrantedPermissions().contains(requiredPermission)) {
-            return Result.PermissionRequired(requiredPermission)
-        }
-
-        return try {
-            val response = libraryRepository.insertRecords(listOf(record))
-            Result.Success(
-                payload = payloadMapper.mapInsertList(response)
-            )
-        } catch (e: Exception) {
-            resultMapper.mapException(e)
-        }
+        record: Model,
+    ): Result = try {
+        val response = libraryRepository.insertRecords(listOf(record))
+        Result.Success(
+            payload = Payload.InsertList(response)
+        )
+    } catch (e: Exception) {
+        resultMapper.mapException(e)
     }
 }

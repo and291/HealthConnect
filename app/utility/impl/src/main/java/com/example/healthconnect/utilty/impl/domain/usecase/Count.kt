@@ -1,6 +1,6 @@
 package com.example.healthconnect.utilty.impl.domain.usecase
 
-import androidx.health.connect.client.records.Record
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
 import kotlinx.coroutines.flow.Flow
@@ -12,10 +12,10 @@ class Count(
 ) {
 
     operator fun invoke(
-        type: KClass<out Record>
+        type: KClass<out Model>
     ): Flow<FlowResult<Int>> {
         val request = ReadRequest(
-            recordType = type,
+            modelType = type,
             endTime = Instant.now(),
             pageSize = 5_000,
         )

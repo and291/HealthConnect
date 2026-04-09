@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.Record
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModel.Effect
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModel.Event
@@ -31,7 +31,7 @@ import kotlin.reflect.KClass
 
 @Composable
 fun DashboardScreen(
-    onTypeClick: (KClass<out Record>, Int) -> Unit,
+    onTypeClick: (KClass<out Model>, Int) -> Unit,
     onShowLibraryDataManager: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = viewModel(factory = Di.dashboardViewModelFactory),

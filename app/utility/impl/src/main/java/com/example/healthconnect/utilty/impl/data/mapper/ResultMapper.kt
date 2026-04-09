@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.domain
+package com.example.healthconnect.utilty.impl.data.mapper
 
 import android.os.RemoteException
 import com.example.healthconnect.utilty.api.domain.entity.Result

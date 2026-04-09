@@ -1,6 +1,6 @@
 package com.example.healthconnect.editor.api.navigation
 
-import androidx.health.connect.client.records.Record
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.navigation.api.NavigationEntry
 import kotlin.reflect.KClass
 
@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  */
 sealed class EditorNavigationEntry : NavigationEntry {
 
-    data class EditRecordScreen(val record: Record) : EditorNavigationEntry()
+    data class EditRecordScreen(val model: Model) : EditorNavigationEntry()
 
-    data class Insert(val recordType: KClass<Record>) : EditorNavigationEntry()
+    data class Insert(val modelType: KClass<out Model>) : EditorNavigationEntry()
 }

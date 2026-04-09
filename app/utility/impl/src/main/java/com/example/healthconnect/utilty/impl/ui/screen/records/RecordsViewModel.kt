@@ -1,19 +1,15 @@
 package com.example.healthconnect.utilty.impl.ui.screen.records
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
-import com.example.healthconnect.utilty.api.domain.entity.Payload
-import com.example.healthconnect.utilty.api.domain.entity.Result
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
-import com.example.healthconnect.utilty.impl.domain.usecase.Read
-import com.example.healthconnect.utilty.impl.ui.screen.records.model.DisplayRecord
+import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
+import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,9 +17,8 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class RecordsViewModel(
-    private val recordType: KClass<out Record>,
-    private val modelFactory: ModelFactory,
-    private val read: Read,
+    private val recordType: KClass<out Model>,
+    private val readAll: ReadAll,
     private val delete: Delete,
 ) : ViewModel() {
 
@@ -50,35 +45,14 @@ class RecordsViewModel(
             }
 
             Event.Refresh -> viewModelScope.launch {
-                val result = read(recordType).also {
-                    Log.d(this::class.qualifiedName, "Records list refreshed with result: $it")
-                }
-                when (result) {
-                    is Result.IoException -> TODO()
-                    is Result.IpcFailure -> TODO()
-                    is Result.PermissionRequired -> {
-                        _effect.emit(Effect.RequestSinglePermission(result.sdkPermission))
-                    }
-
-                    is Result.Success -> {
-                        when (val payload = result.payload) {
-                            is Payload.InsertList -> TODO()
-                            is Payload.ReadList<*> -> {
-                                _state = State.Data(payload.list.map {
-                                    DisplayRecord(
-                                        model = modelFactory.create(it),
-                                        record = it,
-                                    )
-                                })
-                            }
-
-                            is Payload.Removed -> TODO()
-                            Payload.Updated -> TODO()
+                readAll(recordType).collect {
+                    when (it) {
+                        is FlowResult.Data<*> -> {
+                            //TODO accumulate list here
+                            _state = State.Data(listOf(it.item as Model))
                         }
+                        is FlowResult.Terminal -> TODO()
                     }
-
-                    is Result.UnhandledException -> TODO()
-                    is Result.UnpermittedAccess -> TODO()
                 }
             }
 
@@ -93,14 +67,14 @@ class RecordsViewModel(
         data object Loading : State()
 
         data class Data(
-            val records: List<DisplayRecord>
+            val records: List<Model>
         ) : State()
     }
 
     sealed class Effect {
 
         data class OpenRecordScreen(
-            val record: Record,
+            val record: Model,
         ) : Effect()
 
         data class RequestSinglePermission(
@@ -111,11 +85,11 @@ class RecordsViewModel(
     sealed class Event {
 
         data class OnRecordClick(
-            val record: Record,
+            val record: Model,
         ) : Event()
 
         data class DeleteRecord(
-            val recordType: KClass<out Record>,
+            val recordType: KClass<out Model>,
             val metadataId: String,
         ) : Event()
 
@@ -123,6 +97,6 @@ class RecordsViewModel(
     }
 
     companion object {
-        val RECORD_TYPE_KEY: CreationExtras.Key<KClass<out Record>> = CreationExtras.Key()
+        val RECORD_TYPE_KEY: CreationExtras.Key<KClass<out Model>> = CreationExtras.Key()
     }
 }

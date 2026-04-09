@@ -18,10 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.Record
-import androidx.health.connect.client.records.StepsRecord
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.utilty.impl.di.Di
 import kotlin.reflect.KClass
 
@@ -29,9 +29,9 @@ import kotlin.reflect.KClass
 @Composable
 fun RecordsScreen(
     requestPermission: (String) -> Unit,
-    onRecordClick: (Record) -> Unit,
+    onRecordClick: (Model) -> Unit,
     onInsertRecordClick: () -> Unit,
-    recordType: KClass<out Record>,
+    recordType: KClass<out Model>,
     title: String,
     modifier: Modifier = Modifier,
     viewModel: RecordsViewModel = viewModel(
@@ -84,7 +84,7 @@ fun RecordsScreen(
                         onDelete = {
                             val event = RecordsViewModel.Event.DeleteRecord(
                                 recordType = recordType,
-                                metadataId = record.record.metadata.id,
+                                metadataId = record.metadata.id.value,
                             )
                             viewModel.onEvent(event)
                         },
@@ -93,7 +93,7 @@ fun RecordsScreen(
                             .clickable {
                                 //Do you really need to route this event thru view model? What for?
                                 val event = RecordsViewModel.Event.OnRecordClick(
-                                    record = record.record,
+                                    record = record,
                                 )
                                 viewModel.onEvent(event)
                             }
@@ -118,7 +118,7 @@ fun RecordsScreenPreview() {
         requestPermission = {},
         onRecordClick = {},
         onInsertRecordClick = {},
-        recordType = StepsRecord::class as KClass<Record>,
+        recordType = Steps::class,
         title = "Steps",
     )
 }

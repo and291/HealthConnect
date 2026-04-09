@@ -6,7 +6,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.Record
 import androidx.navigation3.runtime.NavEntry
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
@@ -14,7 +13,6 @@ import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardScreen
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsScreen
-import kotlin.reflect.KClass
 
 class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
 
@@ -30,10 +28,9 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
             is UtilityNavigationEntry.Dashboard -> NavEntry(key) {
                 DashboardScreen(
                     onTypeClick = { type, nameRes ->
-                        @Suppress("UNCHECKED_CAST")
                         backStack.add(
                             UtilityNavigationEntry.Records(
-                                recordType = type as KClass<Record>,
+                                recordType = type,
                                 titleRes = nameRes,
                             )
                         )
