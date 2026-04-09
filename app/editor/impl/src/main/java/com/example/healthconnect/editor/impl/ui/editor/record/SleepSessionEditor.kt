@@ -6,7 +6,7 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Sleep
 import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
-import com.example.healthconnect.editor.api.domain.record.SleepSession
+import com.example.healthconnect.models.api.domain.record.SleepSession
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import java.time.Instant
 import java.time.ZoneOffset

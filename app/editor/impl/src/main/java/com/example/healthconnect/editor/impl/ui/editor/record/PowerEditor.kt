@@ -7,7 +7,7 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Power
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
-import com.example.healthconnect.editor.api.domain.record.Power as PowerModel
+import com.example.healthconnect.models.api.domain.record.Power as PowerModel
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import java.time.Instant
 import java.time.ZoneOffset

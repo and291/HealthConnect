@@ -20,7 +20,7 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Exerc
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseBlockField
 import com.example.healthconnect.components.api.domain.entity.field.composite.PlannedExerciseStepField
-import com.example.healthconnect.editor.api.domain.record.PlannedExerciseSession
+import com.example.healthconnect.models.api.domain.record.PlannedExerciseSession
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import java.time.Duration
 import java.time.Instant

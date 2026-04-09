@@ -6,7 +6,7 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Value
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.domain.record.Vo2Max
+import com.example.healthconnect.models.api.domain.record.Vo2Max
 import java.time.Instant
 import java.time.ZoneOffset
 
