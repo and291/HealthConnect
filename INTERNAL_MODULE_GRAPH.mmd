@@ -1,0 +1,62 @@
+classDiagram
+
+    class app {
+        <<composition root>>
+    }
+
+    namespace components {
+        class app_components_api {
+            <<api>>
+        }
+        class app_components_impl {
+            <<impl>>
+        }
+    }
+
+    namespace editor {
+        class app_editor_api {
+            <<api>>
+        }
+        class app_editor_impl {
+            <<impl>>
+        }
+    }
+
+    namespace models {
+        class app_models_api {
+            <<api>>
+        }
+    }
+
+    namespace navigation {
+        class app_navigation_api {
+            <<api>>
+        }
+    }
+
+    namespace utility {
+        class app_utility_api {
+            <<api>>
+        }
+        class app_utility_impl {
+            <<impl>>
+        }
+    }
+
+    app_components_impl --> app_components_api
+    app_editor_api --> app_components_api
+    app_editor_api --> app_navigation_api
+    app_editor_api --> app_models_api
+    app_editor_impl --> app_components_api
+    app_editor_impl --> app_utility_api
+    app_editor_impl --> app_editor_api
+    app_editor_impl --> app_navigation_api
+    app_editor_impl --> app_models_api
+    app_models_api --> app_components_api
+    app_utility_api --> app_navigation_api
+    app_utility_api --> app_models_api
+    app_utility_impl --> app_utility_api
+    app_utility_impl --> app_editor_api
+    app_utility_impl --> app_navigation_api
+    app_utility_impl --> app_components_api
+    app_utility_impl --> app_models_api
