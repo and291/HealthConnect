@@ -1,3 +1,15 @@
+# Internal Module Graph
+
+> **Generated — do not edit by hand.**
+> Refresh with `./gradlew generateInternalModuleGraph` and commit the result.
+>
+> `:app` is shown as a node but its outgoing edges are hidden —
+> it correctly depends on every module as the composition root.
+>
+> **Red edges** = architecture violation: a module outside `:app`
+> depends on an `:impl` module, which must never be shared.
+
+```mermaid
 flowchart TD
 
     app([":app"])
@@ -44,3 +56,5 @@ flowchart TD
     app_utility_impl --> app_models_api
 
     style app fill:#e8f4e8,stroke:#2d7a2d,color:#000
+
+```

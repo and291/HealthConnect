@@ -1,0 +1,123 @@
+# External Module Graph
+
+> **Generated — do not edit by hand.**
+> Refresh with `./gradlew generateExternalModuleGraph` and commit the result.
+>
+> **Solid arrows** = internal module dependencies.
+> **Dashed arrows** = direct external library dependencies
+> (BOMs and test-scoped deps excluded).
+> **Blue nodes** = external libraries, grouped by category.
+> **Red solid edges** = architecture violations.
+
+```mermaid
+flowchart TD
+
+    app([":app"])
+
+    components["components"]
+    editor["editor"]
+    models["models"]
+    navigation["navigation"]
+    utility["utility"]
+
+    ext_androidx_activity_activity_compose("activity-compose")
+    ext_androidx_compose_foundation_foundation_layout("foundation-layout")
+    ext_androidx_compose_material3_adaptive_adaptive_navigation3("adaptive-navigation3")
+    ext_androidx_compose_material3_material3("material3")
+    ext_androidx_compose_material_material_icons_core("material-icons-core")
+    ext_androidx_compose_material_material_icons_extended("material-icons-extended")
+    ext_androidx_compose_runtime_runtime("runtime")
+    ext_androidx_compose_ui_ui("ui")
+    ext_androidx_compose_ui_ui_graphics("ui-graphics")
+    ext_androidx_compose_ui_ui_tooling_preview("ui-tooling-preview")
+    ext_androidx_core_core_ktx("core-ktx")
+    ext_androidx_health_connect_connect_client("connect-client")
+    ext_androidx_lifecycle_lifecycle_runtime_ktx("lifecycle-runtime-ktx")
+    ext_androidx_lifecycle_lifecycle_viewmodel_compose("lifecycle-viewmodel-compose")
+    ext_androidx_lifecycle_lifecycle_viewmodel_ktx("lifecycle-viewmodel-ktx")
+    ext_androidx_lifecycle_lifecycle_viewmodel_navigation3("lifecycle-viewmodel-navigation3")
+    ext_androidx_navigation3_navigation3_runtime("navigation3-runtime")
+    ext_androidx_navigation3_navigation3_ui("navigation3-ui")
+    ext_org_jetbrains_kotlin_kotlin_reflect("kotlin-reflect")
+    ext_org_jetbrains_kotlin_kotlin_stdlib("kotlin-stdlib")
+    ext_org_jetbrains_kotlinx_kotlinx_serialization_core("kotlinx-serialization-core")
+
+    app --> components
+    app --> editor
+    app --> models
+    app --> navigation
+    app --> utility
+    editor --> components
+    editor --> models
+    editor --> navigation
+    editor --> utility
+    models --> components
+    utility --> components
+    utility --> editor
+    utility --> models
+    utility --> navigation
+
+    app -.-> ext_androidx_activity_activity_compose
+    app -.-> ext_androidx_compose_ui_ui_graphics
+    app -.-> ext_androidx_compose_ui_ui_tooling_preview
+    app -.-> ext_androidx_core_core_ktx
+    app -.-> ext_androidx_lifecycle_lifecycle_runtime_ktx
+    app -.-> ext_androidx_lifecycle_lifecycle_viewmodel_navigation3
+    app -.-> ext_androidx_navigation3_navigation3_ui
+    app -.-> ext_org_jetbrains_kotlinx_kotlinx_serialization_core
+    components -.-> ext_androidx_compose_material3_material3
+    components -.-> ext_androidx_compose_material_material_icons_core
+    components -.-> ext_androidx_compose_runtime_runtime
+    components -.-> ext_androidx_compose_ui_ui
+    components -.-> ext_androidx_health_connect_connect_client
+    components -.-> ext_androidx_lifecycle_lifecycle_viewmodel_compose
+    components -.-> ext_androidx_lifecycle_lifecycle_viewmodel_ktx
+    components -.-> ext_org_jetbrains_kotlin_kotlin_reflect
+    components -.-> ext_org_jetbrains_kotlin_kotlin_stdlib
+    editor -.-> ext_androidx_compose_foundation_foundation_layout
+    editor -.-> ext_androidx_compose_material3_material3
+    editor -.-> ext_androidx_health_connect_connect_client
+    editor -.-> ext_androidx_lifecycle_lifecycle_viewmodel_compose
+    editor -.-> ext_androidx_lifecycle_lifecycle_viewmodel_ktx
+    editor -.-> ext_androidx_navigation3_navigation3_runtime
+    editor -.-> ext_org_jetbrains_kotlin_kotlin_reflect
+    editor -.-> ext_org_jetbrains_kotlin_kotlin_stdlib
+    models -.-> ext_org_jetbrains_kotlin_kotlin_reflect
+    models -.-> ext_org_jetbrains_kotlin_kotlin_stdlib
+    navigation -.-> ext_org_jetbrains_kotlin_kotlin_stdlib
+    utility -.-> ext_androidx_compose_foundation_foundation_layout
+    utility -.-> ext_androidx_compose_material3_adaptive_adaptive_navigation3
+    utility -.-> ext_androidx_compose_material3_material3
+    utility -.-> ext_androidx_compose_material_material_icons_extended
+    utility -.-> ext_androidx_compose_runtime_runtime
+    utility -.-> ext_androidx_health_connect_connect_client
+    utility -.-> ext_androidx_lifecycle_lifecycle_viewmodel_compose
+    utility -.-> ext_androidx_lifecycle_lifecycle_viewmodel_ktx
+    utility -.-> ext_androidx_navigation3_navigation3_runtime
+    utility -.-> ext_org_jetbrains_kotlin_kotlin_stdlib
+
+    style app fill:#e8f4e8,stroke:#2d7a2d,color:#000
+    classDef extDep fill:#e8f0ff,stroke:#4466cc,color:#000
+    class ext_androidx_core_core_ktx extDep
+    class ext_androidx_lifecycle_lifecycle_runtime_ktx extDep
+    class ext_androidx_activity_activity_compose extDep
+    class ext_androidx_compose_ui_ui_graphics extDep
+    class ext_androidx_compose_ui_ui_tooling_preview extDep
+    class ext_androidx_navigation3_navigation3_ui extDep
+    class ext_androidx_lifecycle_lifecycle_viewmodel_navigation3 extDep
+    class ext_org_jetbrains_kotlinx_kotlinx_serialization_core extDep
+    class ext_androidx_compose_ui_ui extDep
+    class ext_androidx_health_connect_connect_client extDep
+    class ext_androidx_compose_runtime_runtime extDep
+    class ext_org_jetbrains_kotlin_kotlin_reflect extDep
+    class ext_org_jetbrains_kotlin_kotlin_stdlib extDep
+    class ext_androidx_compose_material3_material3 extDep
+    class ext_androidx_compose_material_material_icons_core extDep
+    class ext_androidx_lifecycle_lifecycle_viewmodel_compose extDep
+    class ext_androidx_lifecycle_lifecycle_viewmodel_ktx extDep
+    class ext_androidx_compose_foundation_foundation_layout extDep
+    class ext_androidx_navigation3_navigation3_runtime extDep
+    class ext_androidx_compose_material_material_icons_extended extDep
+    class ext_androidx_compose_material3_adaptive_adaptive_navigation3 extDep
+
+```
