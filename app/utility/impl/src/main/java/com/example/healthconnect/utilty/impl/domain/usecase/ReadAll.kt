@@ -1,7 +1,6 @@
 package com.example.healthconnect.utilty.impl.domain.usecase
 
-import androidx.health.connect.client.records.Record
-import com.example.healthconnect.editor.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
 import kotlinx.coroutines.flow.Flow
@@ -13,10 +12,10 @@ class ReadAll(
 ) {
 
     operator fun invoke(
-        type: KClass<out Record>
+        type: KClass<out Model>
     ): Flow<FlowResult<Model>> {
         val request = ReadRequest(
-            recordType = type,
+            modelType = type,
             endTime = Instant.now(),
         )
         return libraryRepository.readAll(request)

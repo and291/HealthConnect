@@ -12,7 +12,7 @@ import com.example.healthconnect.editor.impl.ui.editor.record.Editor
 import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
-import com.example.healthconnect.editor.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import kotlinx.coroutines.Job
@@ -20,13 +20,13 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class InsertRecordViewModel(
-    recordClass: KClass<Record>,
+    recordClass: KClass<out Model>,
     editorFactory: EditorFactory,
-    private val metadataMapper: MetadataMapper,
+    metadataMapper: MetadataMapper,
     private val insert: Insert,
 ) : ViewModel() {
 
-    private val editor: Editor<Record, Model> = editorFactory.create(recordClass)
+    private val editor: Editor<Record, Model> = editorFactory.createByModel(recordClass)
 
     private var _state: State<Model> by mutableStateOf(
         State.Edition(
@@ -69,24 +69,13 @@ class InsertRecordViewModel(
                     )
                 }
 
-                val modifiedRecord = try {
-                    editor.toRecord(currentState.model, metadataMapper)
-                } catch (e: Exception) {
-                    _state = State.Edition(
-                        model = currentState.model,
-                        errorCreatingEntity = "Error creating record: ${e.toString()}"
-                    )
-                    return
-                }
-
                 _state = State.InsertInProgress(
                     model = currentState.model,
-                    record = modifiedRecord,
                 )
                 insertJob = viewModelScope.launch {
                     _state = State.InsertResult(
                         model = currentState.model,
-                        result = insert(modifiedRecord),
+                        result = insert(currentState.model),
                     )
                 }
             }
@@ -116,7 +105,6 @@ class InsertRecordViewModel(
          */
         data class InsertInProgress<T : Model>(
             override val model: T,
-            val record: Record,
         ) : State<T>()
 
         /**
@@ -131,6 +119,6 @@ class InsertRecordViewModel(
 
     companion object {
 
-        val RECORD_CLASS_KEY: CreationExtras.Key<KClass<Record>> = CreationExtras.Key()
+        val RECORD_CLASS_KEY: CreationExtras.Key<KClass<out Model>> = CreationExtras.Key()
     }
 }

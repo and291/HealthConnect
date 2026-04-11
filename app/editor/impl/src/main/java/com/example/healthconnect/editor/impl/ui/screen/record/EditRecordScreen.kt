@@ -12,29 +12,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
-import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.metadata.Metadata
-import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.StringField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
+import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
+import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
 import com.example.healthconnect.editor.impl.di.Di
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.Event
 import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State
+import com.example.healthconnect.models.api.domain.record.BasalBodyTemperature
+import com.example.healthconnect.models.api.domain.record.Model
 import java.time.Instant
 import java.time.ZoneOffset
 
 
 @Composable
 fun EditRecordScreen(
-    initialRecord: Record,
+    model: Model,
     modifier: Modifier = Modifier,
     componentFactory: ComponentFactory = Di.componentFactory,
     viewModel: EditRecordViewModel = viewModel(
         factory = Di.recordViewModelFactory,
         extras = MutableCreationExtras().apply {
-            set(EditRecordViewModel.RECORD_KEY, initialRecord)
+            set(EditRecordViewModel.RECORD_KEY, model)
         }
     )
 ) {
@@ -82,15 +86,32 @@ fun EditRecordScreen(
 
 @Composable
 @Preview(showBackground = true, heightDp = 1600)
-fun CommonRecordScreenPreview() {
-
+private fun EditRecordScreenPreview() {
     EditRecordScreen(
-        initialRecord = BasalBodyTemperatureRecord(
-            time = Instant.EPOCH,
-            zoneOffset = ZoneOffset.UTC,
-            temperature = 36.celsius,
-            measurementLocation = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
-            metadata = Metadata.unknownRecordingMethod(),
+        model = BasalBodyTemperature(
+            metadata = MetadataField(
+                recordingMethod = SelectorField(
+                    value = Metadata.RECORDING_METHOD_UNKNOWN,
+                    type = SelectorField.Type.RecordingMethod(),
+                ),
+                id = StringField(value = "", type = StringField.Type.MetadataId(), readOnly = true),
+                dataOriginPackageName = StringField(value = "", type = StringField.Type.MetadataDataOrigin(), readOnly = true),
+                lastModifiedTime = StringField(value = "", type = StringField.Type.MetadataLastModifiedTime(), readOnly = true),
+                clientRecordId = StringField(value = "", type = StringField.Type.MetadataClientRecordId()),
+                clientRecordVersion = StringField(value = "", type = StringField.Type.MetadataClientRecordVersion()),
+            ),
+            time = TimeField.Instantaneous(
+                instant = Instant.EPOCH,
+                zoneOffset = ZoneOffset.UTC,
+            ),
+            temperature = ValueField.Dbl(
+                parsedValue = 36.6,
+                type = ValueField.Type.Temperature(),
+            ),
+            measurementLocation = SelectorField(
+                value = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
+                type = SelectorField.Type.MeasurementLocationBodyTemperature(),
+            ),
         )
     )
 }

@@ -6,7 +6,7 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Heart
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
-import com.example.healthconnect.editor.api.domain.record.HeartRate
+import com.example.healthconnect.models.api.domain.record.HeartRate
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import java.time.Instant
 import java.time.ZoneOffset

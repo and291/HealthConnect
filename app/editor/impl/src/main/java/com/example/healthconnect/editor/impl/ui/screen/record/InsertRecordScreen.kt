@@ -12,24 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.BasalBodyTemperatureRecord
-import androidx.health.connect.client.records.BodyTemperatureMeasurementLocation
-import androidx.health.connect.client.records.Record
-import androidx.health.connect.client.records.metadata.Metadata
-import androidx.health.connect.client.units.celsius
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.editor.impl.di.Di
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel.Event
 import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordViewModel.State
-import java.time.Instant
-import java.time.ZoneOffset
+import com.example.healthconnect.models.api.domain.record.BasalBodyTemperature
+import com.example.healthconnect.models.api.domain.record.Model
 import kotlin.reflect.KClass
 
 
 @Composable
 fun InsertRecordScreen(
-    recordClass: KClass<Record>,
+    recordClass: KClass<out Model>,
     modifier: Modifier = Modifier,
     componentFactory: ComponentFactory = Di.componentFactory,
     viewModel: InsertRecordViewModel = viewModel(
@@ -79,15 +74,6 @@ fun InsertRecordScreen(
 
 @Composable
 @Preview(showBackground = true, heightDp = 1600)
-fun InsertRecordScreenPreview() {
-
-    EditRecordScreen(
-        initialRecord = BasalBodyTemperatureRecord(
-            time = Instant.EPOCH,
-            zoneOffset = ZoneOffset.UTC,
-            temperature = 36.celsius,
-            measurementLocation = BodyTemperatureMeasurementLocation.MEASUREMENT_LOCATION_UNKNOWN,
-            metadata = Metadata.unknownRecordingMethod(),
-        )
-    )
+private fun InsertRecordScreenPreview() {
+    InsertRecordScreen(recordClass = BasalBodyTemperature::class)
 }

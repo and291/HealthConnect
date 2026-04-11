@@ -41,9 +41,6 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(project(":app:components:api"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

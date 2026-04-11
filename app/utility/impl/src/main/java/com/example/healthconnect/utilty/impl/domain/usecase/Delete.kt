@@ -1,11 +1,10 @@
 package com.example.healthconnect.utilty.impl.domain.usecase
 
-import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.Record
-import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.PayloadMapper
-import com.example.healthconnect.utilty.impl.domain.ResultMapper
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.domain.entity.Result
+import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
+import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
+import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import kotlin.reflect.KClass
 
 class Delete(
@@ -15,24 +14,17 @@ class Delete(
 ) {
 
     suspend operator fun invoke(
-        recordType: KClass<out Record>,
+        recordType: KClass<out Model>,
         metadataId: String,
-    ): Result {
-        val requiredPermission = HealthPermission.getWritePermission(recordType)
-        if (!libraryRepository.getGrantedPermissions().contains(requiredPermission)) {
-            return Result.PermissionRequired(requiredPermission)
-        }
-
-        return try {
-            libraryRepository.removeRecord(
-                recordType = recordType,
-                metadataId = metadataId,
-            )
-            Result.Success(
-                payload = payloadMapper.mapDeletedRecord()
-            )
-        } catch (e: Exception) {
-            resultMapper.mapException(e)
-        }
+    ): Result = try {
+        libraryRepository.removeRecord(
+            recordType = recordType,
+            metadataId = metadataId,
+        )
+        Result.Success(
+            payload = payloadMapper.mapDeletedRecord()
+        )
+    } catch (e: Exception) {
+        resultMapper.mapException(e)
     }
 }

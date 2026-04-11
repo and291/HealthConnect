@@ -1,5 +1,47 @@
 package com.example.healthconnect.editor.impl.ui.editor
 
+import com.example.healthconnect.models.api.domain.record.ActiveCaloriesBurned
+import com.example.healthconnect.models.api.domain.record.ActivityIntensity
+import com.example.healthconnect.models.api.domain.record.BasalBodyTemperature
+import com.example.healthconnect.models.api.domain.record.BasalMetabolicRate
+import com.example.healthconnect.models.api.domain.record.BloodGlucoseLevel
+import com.example.healthconnect.models.api.domain.record.BloodPressure
+import com.example.healthconnect.models.api.domain.record.BodyFat
+import com.example.healthconnect.models.api.domain.record.BodyTemperature
+import com.example.healthconnect.models.api.domain.record.BodyWaterMass
+import com.example.healthconnect.models.api.domain.record.BoneMass
+import com.example.healthconnect.models.api.domain.record.CervicalMucus
+import com.example.healthconnect.models.api.domain.record.CyclingPedalingCadence
+import com.example.healthconnect.models.api.domain.record.Distance
+import com.example.healthconnect.models.api.domain.record.ElevationGained
+import com.example.healthconnect.models.api.domain.record.ExerciseSession
+import com.example.healthconnect.models.api.domain.record.FloorsClimbed
+import com.example.healthconnect.models.api.domain.record.HeartRate
+import com.example.healthconnect.models.api.domain.record.HeartRateVariabilityRmssd
+import com.example.healthconnect.models.api.domain.record.Height
+import com.example.healthconnect.models.api.domain.record.Hydration
+import com.example.healthconnect.models.api.domain.record.IntermenstrualBleeding
+import com.example.healthconnect.models.api.domain.record.LeanBodyMass
+import com.example.healthconnect.models.api.domain.record.MenstruationFlow
+import com.example.healthconnect.models.api.domain.record.MenstruationPeriod
+import com.example.healthconnect.models.api.domain.record.MindfulnessSession
+import com.example.healthconnect.models.api.domain.record.Nutrition
+import com.example.healthconnect.models.api.domain.record.OvulationTest
+import com.example.healthconnect.models.api.domain.record.OxygenSaturation
+import com.example.healthconnect.models.api.domain.record.PlannedExerciseSession
+import com.example.healthconnect.models.api.domain.record.Power
+import com.example.healthconnect.models.api.domain.record.RespiratoryRate
+import com.example.healthconnect.models.api.domain.record.RestingHeartRate
+import com.example.healthconnect.models.api.domain.record.SexualActivity
+import com.example.healthconnect.models.api.domain.record.SkinTemperature
+import com.example.healthconnect.models.api.domain.record.SleepSession
+import com.example.healthconnect.models.api.domain.record.Speed
+import com.example.healthconnect.models.api.domain.record.Steps
+import com.example.healthconnect.models.api.domain.record.StepsCadence
+import com.example.healthconnect.models.api.domain.record.TotalCaloriesBurned
+import com.example.healthconnect.models.api.domain.record.Vo2Max
+import com.example.healthconnect.models.api.domain.record.Weight
+import com.example.healthconnect.models.api.domain.record.WheelchairPushes
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.ActivityIntensityRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
@@ -43,7 +85,7 @@ import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.WheelchairPushesRecord
-import com.example.healthconnect.editor.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.editor.impl.ui.editor.record.ActiveCaloriesBurnedEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.ActivityIntensityEditor
 import com.example.healthconnect.editor.impl.ui.editor.record.BasalBodyTemperatureEditor
@@ -92,7 +134,7 @@ import kotlin.reflect.KClass
 class EditorFactory {
 
     @Suppress("UNCHECKED_CAST")
-    fun create(
+    fun createByRecord(
         recordKClass: KClass<out Record>,
     ): Editor<Record, Model> = when (recordKClass) {
         BasalBodyTemperatureRecord::class -> BasalBodyTemperatureEditor()
@@ -137,6 +179,55 @@ class EditorFactory {
         PowerRecord::class -> PowerEditor()
         SpeedRecord::class -> SpeedEditor()
         StepsCadenceRecord::class -> StepsCadenceEditor()
+        else -> throw NotImplementedError()
+    } as Editor<Record, Model>
+
+    @Suppress("UNCHECKED_CAST")
+    fun createByModel(
+        modelKClass: KClass<out Model>,
+    ): Editor<Record, Model> = when (modelKClass) {
+        BasalBodyTemperature::class -> BasalBodyTemperatureEditor()
+        BodyTemperature::class -> BodyTemperatureEditor()
+        BasalMetabolicRate::class -> BasalMetabolicRateEditor()
+        BloodGlucoseLevel::class -> BloodGlucoseEditor()
+        BloodPressure::class -> BloodPressureEditor()
+        BodyFat::class -> BodyFatEditor()
+        BodyWaterMass::class -> BodyWaterMassEditor()
+        BoneMass::class -> BoneMassEditor()
+        CervicalMucus::class -> CervicalMucusEditor()
+        HeartRateVariabilityRmssd::class -> HeartRateVariabilityRmssdEditor()
+        Height::class -> HeightEditor()
+        IntermenstrualBleeding::class -> IntermenstrualBleedingEditor()
+        LeanBodyMass::class -> LeanBodyMassEditor()
+        Weight::class -> WeightEditor()
+        OxygenSaturation::class -> OxygenSaturationEditor()
+        RespiratoryRate::class -> RespiratoryRateEditor()
+        MenstruationFlow::class -> MenstruationFlowEditor()
+        OvulationTest::class -> OvulationTestEditor()
+        SexualActivity::class -> SexualActivityEditor()
+        Vo2Max::class -> Vo2MaxEditor()
+        RestingHeartRate::class -> RestingHeartRateEditor()
+        ActiveCaloriesBurned::class -> ActiveCaloriesBurnedEditor()
+        Distance::class -> DistanceEditor()
+        ElevationGained::class -> ElevationGainedEditor()
+        Hydration::class -> HydrationEditor()
+        ActivityIntensity::class -> ActivityIntensityEditor()
+        FloorsClimbed::class -> FloorsClimbedEditor()
+        MenstruationPeriod::class -> MenstruationPeriodEditor()
+        MindfulnessSession::class -> MindfulnessSessionEditor()
+        ExerciseSession::class -> ExerciseSessionEditor()
+        PlannedExerciseSession::class -> PlannedExerciseSessionEditor()
+        Nutrition::class -> NutritionEditor()
+        SkinTemperature::class -> SkinTemperatureEditor()
+        SleepSession::class -> SleepSessionEditor()
+        Steps::class -> StepsEditor()
+        TotalCaloriesBurned::class -> TotalCaloriesBurnedEditor()
+        WheelchairPushes::class -> WheelchairPushesEditor()
+        HeartRate::class -> HeartRateEditor()
+        CyclingPedalingCadence::class -> CyclingPedalingCadenceEditor()
+        Power::class -> PowerEditor()
+        Speed::class -> SpeedEditor()
+        StepsCadence::class -> StepsCadenceEditor()
         else -> throw NotImplementedError()
     } as Editor<Record, Model>
 }

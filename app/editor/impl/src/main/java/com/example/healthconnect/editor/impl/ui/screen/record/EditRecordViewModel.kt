@@ -8,26 +8,25 @@ import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.impl.ui.editor.record.Editor
-import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
-import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
-import com.example.healthconnect.editor.api.domain.record.Model
-import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State.*
+import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
+import com.example.healthconnect.editor.impl.ui.editor.record.Editor
+import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State.Edition
+import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State.UpdateInProgress
+import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordViewModel.State.UpdateResult
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class EditRecordViewModel(
-    initialRecord: Record,
+    private val initialModel: Model,
     editorFactory: EditorFactory,
-    private val metadataMapper: MetadataMapper,
     private val update: Update,
 ) : ViewModel() {
 
-    private val editor: Editor<Record, Model> = editorFactory.create(initialRecord::class)
-    private val initialModel = editor.toModel(initialRecord, metadataMapper)
+    private val editor: Editor<Record, Model> = editorFactory.createByModel(initialModel::class)
     val isChanged: Boolean
         get() = initialModel != _state.model
 
@@ -64,24 +63,13 @@ class EditRecordViewModel(
                 if (event.upsert) {
                     TODO()
                 } else {
-                    val modifiedRecord = try {
-                        editor.toRecord(currentState.model, metadataMapper)
-                    } catch (e: Exception) {
-                        _state = Edition(
-                            model = currentState.model,
-                            errorCreatingEntity = "Error creating record: ${e.toString()}"
-                        )
-                        return
-                    }
-
                     _state = UpdateInProgress(
                         model = currentState.model,
-                        record = modifiedRecord,
                     )
                     updateJob = viewModelScope.launch {
                         _state = UpdateResult(
                             model = currentState.model,
-                            result = update(modifiedRecord),
+                            result = update(currentState.model),
                         )
                     }
                 }
@@ -115,7 +103,6 @@ class EditRecordViewModel(
          */
         data class UpdateInProgress<T : Model>(
             override val model: T,
-            val record: Record,
         ) : State<T>()
 
         /**
@@ -130,6 +117,6 @@ class EditRecordViewModel(
 
     companion object {
 
-        val RECORD_KEY: CreationExtras.Key<Record> = CreationExtras.Key()
+        val RECORD_KEY: CreationExtras.Key<Model> = CreationExtras.Key()
     }
 }

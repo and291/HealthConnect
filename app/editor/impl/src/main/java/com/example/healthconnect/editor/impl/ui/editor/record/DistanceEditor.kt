@@ -5,7 +5,7 @@ import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.meters
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
-import com.example.healthconnect.editor.api.domain.record.Distance
+import com.example.healthconnect.models.api.domain.record.Distance
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import java.time.Instant
 import java.time.ZoneOffset

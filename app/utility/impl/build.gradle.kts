@@ -49,9 +49,6 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)
@@ -63,6 +60,7 @@ dependencies {
     implementation(project(":app:editor:api"))
     implementation(project(":app:navigation:api"))
     implementation(project(":app:components:api"))
+    implementation(project(":app:models:api"))
 
     // Use to implement health connects
     implementation(libs.androidx.connect.client)

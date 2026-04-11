@@ -1,7 +1,7 @@
 package com.example.healthconnect.utilty.api.navigation
 
 import androidx.annotation.StringRes
-import androidx.health.connect.client.records.Record
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.navigation.api.NavigationEntry
 import kotlin.reflect.KClass
 
@@ -15,5 +15,5 @@ sealed class UtilityNavigationEntry : NavigationEntry {
 
     data object Dashboard : UtilityNavigationEntry()
 
-    data class Records(val recordType: KClass<Record>, @param:StringRes val titleRes: Int) : UtilityNavigationEntry()
+    data class Records(val recordType: KClass<out Model>, @param:StringRes val titleRes: Int) : UtilityNavigationEntry()
 }

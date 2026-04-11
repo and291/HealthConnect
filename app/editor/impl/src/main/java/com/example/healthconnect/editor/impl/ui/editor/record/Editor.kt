@@ -5,8 +5,8 @@ import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.components.api.domain.entity.field.composite.Composite
 import com.example.healthconnect.components.api.domain.entity.field.composite.ListField
 import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
-import com.example.healthconnect.editor.api.domain.record.Model
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
+import com.example.healthconnect.models.api.domain.record.Model
 import java.util.UUID
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter

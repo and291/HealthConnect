@@ -24,9 +24,8 @@ class RecordViewModelFactory(
         extras: CreationExtras,
     ): T = when (modelClass) {
         EditRecordViewModel::class -> EditRecordViewModel(
-            initialRecord = checkNotNull(extras[EditRecordViewModel.RECORD_KEY]),
+            initialModel = checkNotNull(extras[EditRecordViewModel.RECORD_KEY]),
             editorFactory = editorFactory,
-            metadataMapper = metadataMapper,
             update = update,
         )
 

@@ -10,8 +10,8 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Strin
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
-import com.example.healthconnect.editor.api.domain.record.Model
-import com.example.healthconnect.editor.api.domain.record.Steps
+import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Steps
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -28,11 +28,22 @@ private fun ModelSummaryPreview() {
     Steps(
         metadata = MetadataField(
             id = StringField("abc-123", StringField.Type.MetadataId(), readOnly = true),
-            dataOriginPackageName = StringField("com.example.app", StringField.Type.MetadataDataOrigin(), readOnly = true),
-            recordingMethod = SelectorField(Metadata.RECORDING_METHOD_MANUAL_ENTRY, SelectorField.Type.RecordingMethod()),
+            dataOriginPackageName = StringField(
+                "com.example.app",
+                StringField.Type.MetadataDataOrigin(),
+                readOnly = true
+            ),
+            recordingMethod = SelectorField(
+                Metadata.RECORDING_METHOD_MANUAL_ENTRY,
+                SelectorField.Type.RecordingMethod()
+            ),
             clientRecordId = StringField("", StringField.Type.MetadataClientRecordId()),
             clientRecordVersion = StringField("1", StringField.Type.MetadataClientRecordVersion()),
-            lastModifiedTime = StringField("2024-01-15T09:00:00Z", StringField.Type.MetadataLastModifiedTime(), readOnly = true),
+            lastModifiedTime = StringField(
+                "2024-01-15T09:00:00Z",
+                StringField.Type.MetadataLastModifiedTime(),
+                readOnly = true
+            ),
         ),
         time = TimeField.Interval(
             startTime = Instant.parse("2024-01-15T09:00:00Z"),

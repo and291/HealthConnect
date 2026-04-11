@@ -39,15 +39,13 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":app:components:api"))
     implementation(project(":app:navigation:api"))
+    implementation(project(":app:models:api"))
 
     // Use to implement health connects
     implementation(libs.androidx.connect.client)
@@ -57,7 +55,4 @@ dependencies {
 
     //compose navigation v3
     implementation(libs.androidx.navigation3.runtime)
-
-    //kotlin reflection
-    implementation(kotlin("reflect"))
 }

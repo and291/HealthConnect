@@ -4,7 +4,7 @@ import androidx.health.connect.client.records.CervicalMucusRecord
 import androidx.health.connect.client.records.metadata.Metadata
 import com.example.healthconnect.components.api.domain.entity.field.atomic.SelectorField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
-import com.example.healthconnect.editor.api.domain.record.CervicalMucus
+import com.example.healthconnect.models.api.domain.record.CervicalMucus
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
 import java.time.Instant
 import java.time.ZoneOffset

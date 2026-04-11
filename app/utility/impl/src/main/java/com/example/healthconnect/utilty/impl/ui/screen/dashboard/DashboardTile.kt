@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.StepsRecord
+import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.utilty.impl.R
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 
@@ -77,7 +77,7 @@ fun DashboardTile(
 private fun DashboardTileWithCountPreview() {
     DashboardTile(
         item = DashboardItem(
-            recordType = StepsRecord::class,
+            recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
             count = 42,
@@ -91,7 +91,7 @@ private fun DashboardTileWithCountPreview() {
 private fun DashboardTileNoCountPreview() {
     DashboardTile(
         item = DashboardItem(
-            recordType = StepsRecord::class,
+            recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
             count = null,

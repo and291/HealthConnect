@@ -23,14 +23,14 @@ class EditorNavigationEntryProviderImpl : EditorNavigationEntryProvider {
         return when (key) {
             is EditorNavigationEntry.EditRecordScreen -> NavEntry(key) {
                 EditRecordScreen(
-                    initialRecord = key.record,
+                    model = key.model,
                     modifier = Modifier.padding(innerPadding ?: defaultPadding),
                 )
             }
 
             is EditorNavigationEntry.Insert -> NavEntry(key) {
                 InsertRecordScreen(
-                    recordClass = key.recordType
+                    recordClass = key.modelType
                 )
             }
         }

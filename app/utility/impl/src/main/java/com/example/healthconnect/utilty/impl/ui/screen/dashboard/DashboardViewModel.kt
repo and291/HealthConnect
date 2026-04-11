@@ -4,10 +4,10 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.healthconnect.utilty.impl.domain.SupportedRecords
+import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
@@ -60,18 +60,16 @@ class DashboardViewModel(
         }
     }
 
-    private suspend fun loadCounts(): Map<KClass<*>, Int?> {
-        val allTypes = SupportedRecords.instantaneous + SupportedRecords.interval + SupportedRecords.series
+    private suspend fun loadCounts(): Map<KClass<out Model>, Int?> {
         return coroutineScope {
-            allTypes.map { type ->
-                @Suppress("UNCHECKED_CAST")
-                async { type to readCount(type as KClass<out Record>) }
+            SupportedModels.all.map { type ->
+                async { type to readCount(type) }
             }.awaitAll().toMap()
         }
     }
 
     private suspend fun readCount(
-        type: KClass<out Record>
+        type: KClass<out Model>
     ): Int? = count(type).fold(null as Int?) { acc, result ->
         when (result) {
             is FlowResult.Data -> (acc ?: 0) + result.item
@@ -79,11 +77,10 @@ class DashboardViewModel(
         }
     }
 
-    private fun buildSegments(counts: Map<KClass<*>, Int?>): List<DashboardSegment> {
-        fun buildItems(types: List<KClass<*>>): List<DashboardItem> = types.map { type ->
-            @Suppress("UNCHECKED_CAST")
+    private fun buildSegments(counts: Map<KClass<out Model>, Int?>): List<DashboardSegment> {
+        fun buildItems(types: List<KClass<out Model>>): List<DashboardItem> = types.map { type ->
             DashboardItem(
-                recordType = type as KClass<out Record>,
+                recordType = type,
                 nameRes = nameMapper.nameRes(type),
                 icon = iconMapper.icon(type),
                 count = counts[type],
@@ -91,9 +88,9 @@ class DashboardViewModel(
         }
 
         return listOf(
-            DashboardSegment(title = "Instantaneous", items = buildItems(SupportedRecords.instantaneous)),
-            DashboardSegment(title = "Interval", items = buildItems(SupportedRecords.interval)),
-            DashboardSegment(title = "Series", items = buildItems(SupportedRecords.series)),
+            DashboardSegment(title = "Instantaneous", items = buildItems(SupportedModels.instantaneous)),
+            DashboardSegment(title = "Interval", items = buildItems(SupportedModels.interval)),
+            DashboardSegment(title = "Series", items = buildItems(SupportedModels.series)),
         )
     }
 
@@ -104,7 +101,7 @@ class DashboardViewModel(
 
     sealed class Effect {
         data class NavigateToRecords(
-            val recordType: KClass<out Record>,
+            val recordType: KClass<out Model>,
             @param:StringRes val nameRes: Int,
         ) : Effect()
         object ShowLibraryDataManager : Effect()
@@ -113,7 +110,7 @@ class DashboardViewModel(
     sealed class Event {
         data object Refresh : Event()
         data class OnTypeClick(
-            val recordType: KClass<out Record>,
+            val recordType: KClass<out Model>,
             @param:StringRes val nameRes: Int,
         ) : Event()
         data object OnLibraryDataManagerClick : Event()

@@ -2,26 +2,23 @@ package com.example.healthconnect.utilty.impl.di
 
 import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
-import androidx.health.connect.client.records.Record
-import androidx.health.connect.client.request.ReadRecordsRequest
-import androidx.health.connect.client.response.InsertRecordsResponse
-import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.editor.api.domain.record.Model
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
-import com.example.healthconnect.utilty.impl.domain.FlowResultMapper
+import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
+import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
+import com.example.healthconnect.utilty.impl.data.mapper.ReadRequestMapper
+import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
+import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.PayloadMapper
-import com.example.healthconnect.utilty.impl.domain.ReadRequestMapper
-import com.example.healthconnect.utilty.impl.domain.ResultMapper
 import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
-import com.example.healthconnect.utilty.impl.domain.usecase.Read
+import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
@@ -47,21 +44,20 @@ object Di { //TODO move to dagger. keep all features
                     return setOf("sdk:permission")
                 }
 
-                override suspend fun updateRecords(records: List<Record>) = error("No impl")
+                override suspend fun updateRecords(records: List<Model>) = error("No impl")
 
-                override suspend fun insertRecords(records: List<Record>): InsertRecordsResponse = error("No impl")
+                override suspend fun insertRecords(records: List<Model>): List<String> = error("No impl")
 
-                override suspend fun <T : Record> readRecords(request: ReadRecordsRequest<T>): ReadRecordsResponse<T> = error("No impl")
+                override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = error("No impl")
 
-                override suspend fun removeRecord(recordType: KClass<out Record>, metadataId: String) = error("No impl")
+                override fun <M : Model> readAll(request: ReadRequest<M>): Flow<FlowResult<Model>> = error("No impl")
 
-                override fun <R : Record> readAll(request: ReadRequest<R>): Flow<FlowResult<Model>> = error("No impl")
-
-                override fun <R : Record> count(request: ReadRequest<R>): Flow<FlowResult<Int>> = error("No impl")
+                override fun <M : Model> count(request: ReadRequest<M>): Flow<FlowResult<Int>> = error("No impl")
             }
         } else {
             LibraryRepositoryImpl(
                 applicationContext = applicationContext,
+                typeMapper = typeMapper,
                 readRequestMapper = readRequestMapper,
                 modelFactory = modelFactory,
                 flowResultMapper = flowResultMapper,
@@ -71,27 +67,28 @@ object Di { //TODO move to dagger. keep all features
 
     private val payloadMapper = PayloadMapper()
     private val resultMapper = ResultMapper()
-    private val readRequestMapper = ReadRequestMapper()
+    private val typeMapper = TypeMapper()
+    private val readRequestMapper = ReadRequestMapper(typeMapper)
     private val flowResultMapper = FlowResultMapper()
 
     val insert: Insert by lazy {
-        InsertImpl(libraryRepository, resultMapper, payloadMapper)
+        InsertImpl(libraryRepository, resultMapper)
     }
 
     val update: Update by lazy {
         UpdateImpl(libraryRepository, resultMapper, payloadMapper)
     }
 
-    private val read by lazy {
-        Read(libraryRepository, resultMapper, payloadMapper)
-    }
-
     private val delete by lazy {
         Delete(libraryRepository, resultMapper, payloadMapper)
     }
 
+    private val readAll by lazy {
+        ReadAll(libraryRepository)
+    }
+
     val recordsViewModelFactory by lazy {
-        RecordsViewModelFactory(read, delete, modelFactory)
+        RecordsViewModelFactory(readAll, delete)
     }
 
     private val recordTypeNameMapper by lazy { RecordTypeNameMapper() }

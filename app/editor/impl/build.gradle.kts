@@ -41,9 +41,6 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -52,6 +49,7 @@ dependencies {
     implementation(project(":app:utility:api"))
     implementation(project(":app:editor:api"))
     implementation(project(":app:navigation:api"))
+    implementation(project(":app:models:api"))
 
     // reflection
     implementation(kotlin("reflect"))

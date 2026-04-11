@@ -1,11 +1,11 @@
 package com.example.healthconnect.utilty.impl.domain.entity
 
-import androidx.health.connect.client.records.Record
+import com.example.healthconnect.models.api.domain.record.Model
 import java.time.Instant
 import kotlin.reflect.KClass
 
-data class ReadRequest<R : Record>(
-    val recordType: KClass<R>,
+data class ReadRequest<M : Model>(
+    val modelType: KClass<M>,
     val endTime: Instant,
     val dataOriginFilterPackageName: Set<String> = emptySet(),
     val ascendingOrder: Boolean = true,

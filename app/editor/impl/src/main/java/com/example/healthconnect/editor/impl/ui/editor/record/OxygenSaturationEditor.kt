@@ -6,7 +6,7 @@ import androidx.health.connect.client.units.percent
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.domain.record.OxygenSaturation
+import com.example.healthconnect.models.api.domain.record.OxygenSaturation
 import java.time.Instant
 import java.time.ZoneOffset
 
