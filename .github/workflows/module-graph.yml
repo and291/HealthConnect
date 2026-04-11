@@ -1,0 +1,42 @@
+name: Module Graph
+
+# On pull_request: generate diagrams and auto-commit them to the PR branch.
+# On push to main: same, catches any last-second drift after merge.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  module-graph:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # required to push the auto-commit back to the branch
+
+    steps:
+      # Check out the actual head branch, not the synthetic merge commit.
+      # Without ref: head_ref, git push would have no target branch on PRs.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Generate module graphs
+        run: ./gradlew generateInternalModuleGraph generateExternalModuleGraph
+
+      - name: Commit updated graphs
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- INTERNAL_MODULE_GRAPH.md EXTERNAL_MODULE_GRAPH.md; then
+            git add INTERNAL_MODULE_GRAPH.md EXTERNAL_MODULE_GRAPH.md
+            git commit -m "docs: regenerate module graphs [skip ci]"
+            git push
+          fi
