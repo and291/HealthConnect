@@ -1,7 +1,5 @@
 name: Module Graph
 
-# On pull_request: generate diagrams and auto-commit them to the PR branch.
-# On push to main: same, catches any last-second drift after merge.
 on:
   pull_request:
   push:
@@ -12,11 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write   # required to push the auto-commit back to the branch
+      contents: write        # push auto-commit on main
+      pull-requests: write   # post / update PR comment
 
     steps:
-      # Check out the actual head branch, not the synthetic merge commit.
-      # Without ref: head_ref, git push would have no target branch on PRs.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref || github.ref_name }}
@@ -31,7 +28,43 @@ jobs:
       - name: Generate module graphs
         run: ./gradlew generateInternalModuleGraph generateExternalModuleGraph
 
-      - name: Commit updated graphs
+      # ── Pull request: post or update a single bot comment with both diagrams ──
+      - name: Post diagrams as PR comment
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Build comment body from the two generated files
+          {
+            echo "<!-- module-graph -->"
+            echo "## Module graphs"
+            echo ""
+            cat INTERNAL_MODULE_GRAPH.md
+            echo ""
+            echo "---"
+            echo ""
+            cat EXTERNAL_MODULE_GRAPH.md
+          } > /tmp/comment.md
+
+          # Find an existing comment left by this workflow (identified by the marker)
+          COMMENT_ID=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.user.login == "github-actions[bot]"
+                              and (.body | startswith("<!-- module-graph -->"))) | .id' \
+            | head -1)
+
+          if [ -n "$COMMENT_ID" ]; then
+            # Update the existing comment so the PR thread stays clean
+            jq -n --rawfile body /tmp/comment.md '{"body": $body}' \
+              | gh api "repos/$REPO/issues/comments/$COMMENT_ID" -X PATCH --input -
+          else
+            gh pr comment "$PR_NUMBER" --body-file /tmp/comment.md
+          fi
+
+      # ── Main branch: commit updated .md files as persistent documentation ──
+      - name: Commit updated graphs (main)
+        if: github.event_name == 'push'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
