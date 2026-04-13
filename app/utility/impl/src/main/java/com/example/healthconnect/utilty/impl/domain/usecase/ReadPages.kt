@@ -19,6 +19,7 @@ class ReadPages(
             modelType = type,
             endTime = Instant.now(),
             pageSize = 30,
+            ascendingOrder = false,
         )
         return libraryRepository.readPages(request)
     }
