@@ -3,18 +3,18 @@ package com.example.healthconnect.utilty.impl.mapper
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.metadata.DataOrigin
 import com.example.healthconnect.models.api.domain.record.Steps
-import com.example.healthconnect.utilty.impl.data.mapper.ReadRequestMapper
+import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
-import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
+import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import org.junit.Assert
 import org.junit.Test
 import java.time.Instant
 
-class ReadRequestMapperTest {
+class ReadParamsMapperTest {
 
-    private val mapper = ReadRequestMapper(TypeMapper())
+    private val mapper = ReadParamsMapper(TypeMapper())
 
-    private fun baseRequest() = ReadRequest(
+    private fun baseRequest() = ReadParams(
         modelType = Steps::class,
         endTime = Instant.parse("2024-01-01T00:00:00Z"),
     )
