@@ -2,23 +2,24 @@ package com.example.healthconnect.utilty.impl.domain.usecase
 
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
+import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.channels.Channel
 import java.time.Instant
 import kotlin.reflect.KClass
 
-class Count(
+class ReadPages(
     private val libraryRepository: LibraryRepository,
 ) {
 
     operator fun invoke(
         type: KClass<out Model>
-    ): Flow<FlowResult<Int>> {
-        val params = ReadParams(
+    ): Channel<FlowResult<Page<Model>>> {
+        val request = ReadParams(
             modelType = type,
             endTime = Instant.now(),
-            pageSize = 5_000,
+            pageSize = 30,
         )
-        return libraryRepository.count(params)
+        return libraryRepository.readPages(request)
     }
 }

@@ -6,24 +6,26 @@ import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
-import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
-import com.example.healthconnect.utilty.impl.data.mapper.ReadRequestMapper
+import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
+import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
+import com.example.healthconnect.utilty.impl.domain.entity.Page
+import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
-import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
+import com.example.healthconnect.utilty.impl.domain.usecase.ReadPages
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -50,15 +52,17 @@ object Di { //TODO move to dagger. keep all features
 
                 override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = error("No impl")
 
-                override fun <M : Model> readAll(request: ReadRequest<M>): Flow<FlowResult<Model>> = error("No impl")
+                override fun <M : Model> readPages(params: ReadParams<M>): Channel<FlowResult<Page<Model>>> = error("No impl")
 
-                override fun <M : Model> count(request: ReadRequest<M>): Flow<FlowResult<Int>> = error("No impl")
+                override fun <M : Model> readAll(params: ReadParams<M>): Flow<FlowResult<Model>> = error("No impl")
+
+                override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("No impl")
             }
         } else {
             LibraryRepositoryImpl(
                 applicationContext = applicationContext,
                 typeMapper = typeMapper,
-                readRequestMapper = readRequestMapper,
+                readParamsMapper = readParamsMapper,
                 modelFactory = modelFactory,
                 flowResultMapper = flowResultMapper,
             )
@@ -68,7 +72,7 @@ object Di { //TODO move to dagger. keep all features
     private val payloadMapper = PayloadMapper()
     private val resultMapper = ResultMapper()
     private val typeMapper = TypeMapper()
-    private val readRequestMapper = ReadRequestMapper(typeMapper)
+    private val readParamsMapper = ReadParamsMapper(typeMapper)
     private val flowResultMapper = FlowResultMapper()
 
     val insert: Insert by lazy {
@@ -83,12 +87,12 @@ object Di { //TODO move to dagger. keep all features
         Delete(libraryRepository, resultMapper, payloadMapper)
     }
 
-    private val readAll by lazy {
-        ReadAll(libraryRepository)
+    private val readPages by lazy {
+        ReadPages(libraryRepository)
     }
 
     val recordsViewModelFactory by lazy {
-        RecordsViewModelFactory(readAll, delete)
+        RecordsViewModelFactory(readPages, delete)
     }
 
     private val recordTypeNameMapper by lazy { RecordTypeNameMapper() }
