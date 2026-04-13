@@ -3,7 +3,7 @@ package com.example.healthconnect.utilty.impl.ui.screen.dashboard
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
+import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
@@ -49,8 +49,8 @@ class DashboardViewModelTest {
             override suspend fun updateRecords(records: List<Model>) = Unit
             override suspend fun insertRecords(records: List<Model>): List<String> = error("not expected")
             override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = Unit
-            override fun <M : Model> readAll(request: ReadRequest<M>): Flow<FlowResult<Model>> = error("not expected")
-            override fun <M : Model> count(request: ReadRequest<M>): Flow<FlowResult<Int>> = countForType(request.modelType)
+            override fun <M : Model> readAll(params: ReadParams<M>): Flow<FlowResult<Model>> = error("not expected")
+            override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = countForType(params.modelType)
         }
         return DashboardViewModel(
             count = Count(repository),
