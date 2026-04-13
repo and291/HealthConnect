@@ -14,6 +14,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -62,48 +63,54 @@ fun DashboardScreen(
         }
 
         is DashboardViewModel.State.Data -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+            PullToRefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = { viewModel.onEvent(Event.Refresh) },
                 modifier = modifier.fillMaxSize(),
             ) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    OutlinedButton(
-                        onClick = {
-                            viewModel.onEvent(Event.OnLibraryDataManagerClick)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                    ) {
-                        Text("Health Connect's internal data manager")
-                    }
-                }
-                state.segments.forEach { segment ->
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(
-                            text = segment.title,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary,
+                        OutlinedButton(
+                            onClick = {
+                                viewModel.onEvent(Event.OnLibraryDataManagerClick)
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
-                        )
+                        ) {
+                            Text("Health Connect's internal data manager")
+                        }
                     }
-                    items(segment.items) { item ->
-                        DashboardTile(
-                            item = item,
-                            onClick = {
-                                viewModel.onEvent(
-                                    Event.OnTypeClick(
-                                        recordType = item.recordType,
-                                        nameRes = item.nameRes,
+                    state.segments.forEach { segment ->
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Text(
+                                text = segment.title,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                            )
+                        }
+                        items(segment.items) { item ->
+                            DashboardTile(
+                                item = item,
+                                onClick = {
+                                    viewModel.onEvent(
+                                        Event.OnTypeClick(
+                                            recordType = item.recordType,
+                                            nameRes = item.nameRes,
+                                        )
                                     )
-                                )
-                            },
-                        )
+                                },
+                            )
+                        }
                     }
                 }
             }

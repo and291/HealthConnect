@@ -45,7 +45,10 @@ class DashboardViewModel(
     fun onEvent(event: Event) {
         when (event) {
             Event.Refresh -> viewModelScope.launch {
-                _state = State.Loading
+                when (val current = _state) {
+                    is State.Loading -> Unit
+                    is State.Data -> _state = current.copy(isRefreshing = true)
+                }
                 val counts = loadCounts()
                 _state = State.Data(buildSegments(counts))
             }
@@ -96,7 +99,7 @@ class DashboardViewModel(
 
     sealed class State {
         data object Loading : State()
-        data class Data(val segments: List<DashboardSegment>) : State()
+        data class Data(val segments: List<DashboardSegment>, val isRefreshing: Boolean = false) : State()
     }
 
     sealed class Effect {

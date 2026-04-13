@@ -8,6 +8,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -159,6 +161,45 @@ class DashboardViewModelTest {
 
         val state = viewModel.state as DashboardViewModel.State.Data
         assertNull(state.countForType(Steps::class))
+    }
+
+    @Test
+    fun onRefresh_whenInDataState_setsIsRefreshingTrueBeforeCountsLoad() = runTest {
+        val blockCounts = CompletableDeferred<Unit>()
+        var firstRefreshDone = false
+        val viewModel = createViewModel(countForType = {
+            flow {
+                if (firstRefreshDone) blockCounts.await()
+                emit(FlowResult.Data(0))
+            }
+        })
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+        firstRefreshDone = true
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        assertTrue((viewModel.state as DashboardViewModel.State.Data).isRefreshing)
+        blockCounts.complete(Unit)
+        assertFalse((viewModel.state as DashboardViewModel.State.Data).isRefreshing)
+    }
+
+    @Test
+    fun onRefresh_whenInDataState_doesNotTransitionToLoading() = runTest {
+        val blockCounts = CompletableDeferred<Unit>()
+        var firstRefreshDone = false
+        val viewModel = createViewModel(countForType = {
+            flow {
+                if (firstRefreshDone) blockCounts.await()
+                emit(FlowResult.Data(0))
+            }
+        })
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+        firstRefreshDone = true
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        assertTrue(viewModel.state is DashboardViewModel.State.Data)
+        blockCounts.complete(Unit)
     }
 
     @Test
