@@ -1,5 +1,6 @@
 package com.example.healthconnect.utilty.impl.ui.screen.records
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,10 +44,6 @@ fun RecordsScreen(
 ) {
 
     val effect by viewModel.effect.collectAsState(null)
-
-    LaunchedEffect("") {
-        viewModel.onEvent(RecordsViewModel.Event.Refresh)
-    }
 
     LaunchedEffect(effect) {
         effect?.let { modification ->
@@ -98,6 +95,13 @@ fun RecordsScreen(
                                 viewModel.onEvent(event)
                             }
                     )
+                }
+                item {
+                    LaunchedEffect("") {
+                        Log.d("Pages", "empty bottom item displayed")
+                        viewModel.onEvent(RecordsViewModel.Event.NextPage)
+                    }
+                    CircularProgressIndicator()
                 }
             }
 

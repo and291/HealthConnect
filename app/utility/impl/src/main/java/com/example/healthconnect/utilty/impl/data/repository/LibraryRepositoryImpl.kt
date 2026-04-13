@@ -1,30 +1,38 @@
 package com.example.healthconnect.utilty.impl.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordsResponse
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
-import com.example.healthconnect.utilty.impl.data.mapper.ReadRequestMapper
+import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.entity.ReadRequest
+import com.example.healthconnect.utilty.impl.domain.entity.Page
+import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class LibraryRepositoryImpl(
     private val applicationContext: Context,
     private val typeMapper: TypeMapper,
-    private val readRequestMapper: ReadRequestMapper,
+    private val readParamsMapper: ReadParamsMapper,
     private val flowResultMapper: FlowResultMapper,
     private val modelFactory: ModelFactory,
 ) : LibraryRepository {
+
+    private val readPageScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val healthConnectClient by lazy { HealthConnectClient.getOrCreate(applicationContext) }
 
@@ -54,11 +62,33 @@ class LibraryRepositoryImpl(
         )
     }
 
-    override fun <M : Model> readAll(request: ReadRequest<M>): Flow<FlowResult<Model>> = flow {
+    override fun <M : Model> readPages(
+        params: ReadParams<M>,
+    ) = Channel<FlowResult<Page<Model>>>().also {
+        readPageScope.launch {
+            try {
+                var continuationToken: String? = null
+                while (true) {
+                    val response = readPage<Record, M>(params, continuationToken)
+                    val page = Page(
+                        items = response.records.map { r -> modelFactory.create(r) },
+                    )
+                    it.send(FlowResult.Data(page)).also { Log.d("Pages", "sending page: $page") }
+                    continuationToken = response.pageToken ?: break
+                }
+            } catch (e: Exception) {
+                Log.d("Pages", "error: ${e.message}")
+                it.send(flowResultMapper.mapTerminalState(e))
+            }
+            it.close().also { Log.d("Pages", "closing channel") }
+        }
+    }
+
+    override fun <M : Model> readAll(params: ReadParams<M>): Flow<FlowResult<Model>> = flow {
         try {
             var continuationToken: String? = null
             while (true) {
-                with(readPage(request, continuationToken)) {
+                with(readPage(params, continuationToken)) {
                     records.forEach {
                         val model = modelFactory.create(it)
                         emit(FlowResult.Data(model))
@@ -71,11 +101,11 @@ class LibraryRepositoryImpl(
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun <M : Model> count(request: ReadRequest<M>): Flow<FlowResult<Int>> = flow {
+    override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = flow {
         try {
             var continuationToken: String? = null
             while (true) {
-                val response = readPage<Record, M>(request, continuationToken)
+                val response = readPage<Record, M>(params, continuationToken)
                 with(response) {
                     emit(FlowResult.Data(records.size))
                     continuationToken = pageToken ?: break
@@ -87,10 +117,10 @@ class LibraryRepositoryImpl(
     }.flowOn(Dispatchers.IO)
 
     private suspend fun <R : Record, M : Model> readPage(
-        request: ReadRequest<M>,
+        params: ReadParams<M>,
         continuationToken: String? = null,
     ): ReadRecordsResponse<R> {
-        val readRecordsRequest = readRequestMapper.map<R, M>(request, continuationToken)
+        val readRecordsRequest = readParamsMapper.map<R, M>(params, continuationToken)
         return healthConnectClient.readRecords<R>(readRecordsRequest)
     }
 }

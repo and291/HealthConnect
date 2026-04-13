@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
-import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
+import com.example.healthconnect.utilty.impl.domain.usecase.ReadPages
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Companion.RECORD_TYPE_KEY
 import kotlin.reflect.KClass
 
 class RecordsViewModelFactory(
-    private val readAll: ReadAll,
+    private val readPages: ReadPages,
     private val delete: Delete,
 ) : ViewModelProvider.Factory {
 
@@ -18,7 +18,7 @@ class RecordsViewModelFactory(
     override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
         return when (modelClass) {
             RecordsViewModel::class -> RecordsViewModel(
-                readAll = readAll,
+                pages = readPages,
                 delete = delete,
                 recordType = checkNotNull(extras[RECORD_TYPE_KEY]),
             )
