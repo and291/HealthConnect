@@ -1,6 +1,6 @@
 package com.example.healthconnect.utilty.impl.ui.mapper
 
-import com.example.healthconnect.utilty.impl.domain.SupportedRecords
+import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import org.junit.Test
 
 class RecordTypeNameMapperTest {
@@ -9,7 +9,7 @@ class RecordTypeNameMapperTest {
 
     @Test
     fun allLibraryRecordsHaveNameResource() {
-        val allTypes = SupportedRecords.instantaneous + SupportedRecords.interval + SupportedRecords.series
+        val allTypes = SupportedModels.instantaneous + SupportedModels.interval + SupportedModels.series
         allTypes.forEach { type ->
             mapper.nameRes(type) // throws if missing
         }

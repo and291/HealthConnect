@@ -30,6 +30,7 @@ import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.Dashboard
 fun DashboardTile(
     item: DashboardItem,
     onClick: () -> Unit,
+    count: Int?,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
@@ -53,7 +54,7 @@ fun DashboardTile(
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary,
                 )
-                item.count?.let { count ->
+                count?.let { count ->
                     Badge(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -80,9 +81,9 @@ private fun DashboardTileWithCountPreview() {
             recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
-            count = 42,
         ),
         onClick = {},
+        count = 42,
     )
 }
 
@@ -94,8 +95,8 @@ private fun DashboardTileNoCountPreview() {
             recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
-            count = null,
         ),
         onClick = {},
+        count = null,
     )
 }

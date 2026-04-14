@@ -73,11 +73,13 @@ class LibraryRepositoryImpl(
 
     override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = flow {
         try {
+            var accumulatedCount = 0
             var continuationToken: String? = null
             while (true) {
                 val response = readPage<Record, M>(params, continuationToken)
                 with(response) {
-                    emit(FlowResult.Data(records.size))
+                    accumulatedCount += records.size
+                    emit(FlowResult.Data(accumulatedCount))
                     continuationToken = pageToken ?: break
                 }
             }

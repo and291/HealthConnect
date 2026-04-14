@@ -42,8 +42,14 @@ class DashboardViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Default [countForType] returns [FlowResult.Data] with 0 so the background [init] refresh
+     * that starts in [DashboardViewModel.init] always completes cleanly for tests that don't
+     * care about count values. Previously it defaulted to `error(...)`, which silently crashed
+     * the background coroutine (swallowed by the supervisor job) in every test.
+     */
     private fun createViewModel(
-        countForType: (KClass<out Model>) -> Flow<FlowResult<Int>> = { error("not expected") },
+        countForType: (KClass<out Model>) -> Flow<FlowResult<Int>> = { flowOf(FlowResult.Data(0)) },
     ): DashboardViewModel {
         val repository = object : LibraryRepository {
             override fun getSdkStatus() = 0
@@ -61,8 +67,13 @@ class DashboardViewModelTest {
         )
     }
 
-    private fun DashboardViewModel.State.Data.countForType(type: KClass<*>): Int? =
-        segments.flatMap { it.items }.firstOrNull { it.recordType == type }?.count
+    /**
+     * Count is stored in [DashboardViewModel.State.Data.itemsCount], not on [DashboardItem].
+     */
+    private fun DashboardViewModel.State.Data.countForType(type: KClass<out Model>): Int? =
+        itemsCount[type]
+
+    // region Effects
 
     @Test
     fun onLibraryDataManagerClick_emitsShowLibraryDataManagerEffect() = runTest {
@@ -99,8 +110,10 @@ class DashboardViewModelTest {
 
         viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(Steps::class, 42))
 
-        val effect = viewModel.effect.value
-        assertEquals(DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42), effect)
+        assertEquals(
+            DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42),
+            viewModel.effect.value,
+        )
     }
 
     @Test
@@ -122,32 +135,32 @@ class DashboardViewModelTest {
 
         assertEquals(
             DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42),
-            viewModel.effect.value
+            viewModel.effect.value,
         )
     }
 
-    @Test
-    fun onRefresh_transitionsStateToData() = runTest {
-        val viewModel = createViewModel(countForType = { flowOf(FlowResult.Data(0)) })
+    // endregion
 
-        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+    // region State
+
+    @Test
+    fun init_startsInDataState() = runTest {
+        val viewModel = createViewModel()
 
         assertTrue(viewModel.state is DashboardViewModel.State.Data)
     }
 
     @Test
-    fun onRefresh_accumulatesPaginatedCountsForType() = runTest {
+    fun onRefresh_loadsCountForType() = runTest {
         val viewModel = createViewModel(countForType = { type ->
-            if (type == Steps::class) flow {
-                emit(FlowResult.Data(3))
-                emit(FlowResult.Data(2))
-            } else flowOf(FlowResult.Data(0))
+            if (type == Steps::class) flowOf(FlowResult.Data(42))
+            else flowOf(FlowResult.Data(0))
         })
 
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
         val state = viewModel.state as DashboardViewModel.State.Data
-        assertEquals(5, state.countForType(Steps::class))
+        assertEquals(42, state.countForType(Steps::class))
     }
 
     @Test
@@ -161,6 +174,40 @@ class DashboardViewModelTest {
 
         val state = viewModel.state as DashboardViewModel.State.Data
         assertNull(state.countForType(Steps::class))
+    }
+
+    @Test
+    fun onRefresh_withTerminalAfterData_setsNullCountForType() = runTest {
+        val viewModel = createViewModel(countForType = { type ->
+            if (type == Steps::class) flow {
+                emit(FlowResult.Data(3))
+                emit(FlowResult.Terminal.UnhandledException(RuntimeException("fail")))
+            } else flowOf(FlowResult.Data(0))
+        })
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        val state = viewModel.state as DashboardViewModel.State.Data
+        assertNull(state.countForType(Steps::class))
+    }
+
+    @Test
+    fun onRefresh_whenInDataState_doesNotTransitionAwayFromData() = runTest {
+        val blockCounts = CompletableDeferred<Unit>()
+        var firstRefreshDone = false
+        val viewModel = createViewModel(countForType = {
+            flow {
+                if (firstRefreshDone) blockCounts.await()
+                emit(FlowResult.Data(0))
+            }
+        })
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+        firstRefreshDone = true
+
+        viewModel.onEvent(DashboardViewModel.Event.Refresh)
+
+        assertTrue(viewModel.state is DashboardViewModel.State.Data)
+        blockCounts.complete(Unit)
     }
 
     @Test
@@ -183,37 +230,5 @@ class DashboardViewModelTest {
         assertFalse((viewModel.state as DashboardViewModel.State.Data).isRefreshing)
     }
 
-    @Test
-    fun onRefresh_whenInDataState_doesNotTransitionToLoading() = runTest {
-        val blockCounts = CompletableDeferred<Unit>()
-        var firstRefreshDone = false
-        val viewModel = createViewModel(countForType = {
-            flow {
-                if (firstRefreshDone) blockCounts.await()
-                emit(FlowResult.Data(0))
-            }
-        })
-        viewModel.onEvent(DashboardViewModel.Event.Refresh)
-        firstRefreshDone = true
-
-        viewModel.onEvent(DashboardViewModel.Event.Refresh)
-
-        assertTrue(viewModel.state is DashboardViewModel.State.Data)
-        blockCounts.complete(Unit)
-    }
-
-    @Test
-    fun onRefresh_withTerminalAfterData_setsNullCountForType() = runTest {
-        val viewModel = createViewModel(countForType = { type ->
-            if (type == Steps::class) flow {
-                emit(FlowResult.Data(3))
-                emit(FlowResult.Terminal.UnhandledException(RuntimeException("fail")))
-            } else flowOf(FlowResult.Data(0))
-        })
-
-        viewModel.onEvent(DashboardViewModel.Event.Refresh)
-
-        val state = viewModel.state as DashboardViewModel.State.Data
-        assertNull(state.countForType(Steps::class))
-    }
+    // endregion
 }
