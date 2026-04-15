@@ -14,4 +14,9 @@ class FlowResultMapper {
         //default exception
         else -> FlowResult.Terminal.UnhandledException(e)
     }
+
+    /**
+     * Convenience method
+     */
+    fun mapTerminal(e: Throwable) = mapTerminalState(e as Exception)
 }
