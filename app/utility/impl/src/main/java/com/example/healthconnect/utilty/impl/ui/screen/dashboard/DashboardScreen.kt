@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -74,7 +75,7 @@ fun DashboardScreen(
                     uiState.segments.forEach { segment ->
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             Text(
-                                text = segment.title,
+                                text = stringResource(segment.title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier

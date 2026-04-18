@@ -1,4 +1,9 @@
 <resources>
+    <!-- Dashboard segment titles -->
+    <string name="dashboard_segment_instantaneous">Instantaneous</string>
+    <string name="dashboard_segment_interval">Interval</string>
+    <string name="dashboard_segment_series">Series</string>
+
     <!-- Record type names -->
     <string name="record_type_active_calories_burned">Active Calories Burned</string>
     <string name="record_type_activity_intensity">Activity Intensity</string>

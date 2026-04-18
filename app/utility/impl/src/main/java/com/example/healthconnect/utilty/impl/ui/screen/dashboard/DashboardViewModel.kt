@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.example.healthconnect.utilty.impl.R
 import kotlin.reflect.KClass
 
 class DashboardViewModel(
@@ -121,15 +122,15 @@ class DashboardViewModel(
 
         return listOf(
             DashboardSegment(
-                title = "Instantaneous",
+                title = R.string.dashboard_segment_instantaneous,
                 items = buildItems(SupportedModels.instantaneous)
             ),
             DashboardSegment(
-                title = "Interval",
+                title = R.string.dashboard_segment_interval,
                 items = buildItems(SupportedModels.interval)
             ),
             DashboardSegment(
-                title = "Series",
+                title = R.string.dashboard_segment_series,
                 items = buildItems(SupportedModels.series)
             ),
         )
