@@ -11,7 +11,6 @@ import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardSegment
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,7 +84,7 @@ class DashboardViewModel(
 
     private fun startRefreshData() {
         collectJob?.cancel()
-        collectJob = viewModelScope.launch(Dispatchers.Default) {
+        collectJob = viewModelScope.launch {
             val mutableMap = SupportedModels.all.associateWith { null as Int? }.toMutableMap()
             isRefreshingStateFlow.emit(true)
 
