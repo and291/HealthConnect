@@ -15,11 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.di.Di
@@ -34,7 +34,7 @@ fun DashboardScreen(
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = viewModel(factory = Di.dashboardViewModelFactory),
 ) {
-    val effect by viewModel.effect.collectAsState(null)
+    val effect by viewModel.effect.collectAsStateWithLifecycle()
     LaunchedEffect(effect) {
         effect?.let { e ->
             when (e) {
@@ -44,11 +44,11 @@ fun DashboardScreen(
             viewModel.effectConsumed(e)
         }
     }
-
-    when (val state = viewModel.state) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    when (val uiState = state) {
         is DashboardViewModel.State.Data -> {
             PullToRefreshBox(
-                isRefreshing = state.isRefreshing,
+                isRefreshing = uiState.isRefreshing,
                 onRefresh = { viewModel.onEvent(Event.Refresh) },
                 modifier = modifier.fillMaxSize(),
             ) {
@@ -71,7 +71,7 @@ fun DashboardScreen(
                             Text("Health Connect's internal data manager")
                         }
                     }
-                    state.segments.forEach { segment ->
+                    uiState.segments.forEach { segment ->
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             Text(
                                 text = segment.title,
@@ -93,7 +93,7 @@ fun DashboardScreen(
                                         )
                                     )
                                 },
-                                count = state.itemsCount[item.recordType]
+                                count = uiState.itemsCount[item.recordType]
                             )
                         }
                     }
