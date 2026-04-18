@@ -13,9 +13,13 @@ import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.fold
 import kotlin.reflect.KClass
 
 class LibraryRepositoryImpl(
@@ -54,43 +58,43 @@ class LibraryRepositoryImpl(
         )
     }
 
-    override fun <M : Model> readAll(params: ReadParams<M>): Flow<FlowResult<Model>> = flow {
-        try {
-            var continuationToken: String? = null
-            while (true) {
-                with(readPage(params, continuationToken)) {
-                    records.forEach {
-                        val model = modelFactory.create(it)
-                        emit(FlowResult.Data(model))
-                    }
-                    continuationToken = pageToken ?: break
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun <M : Model> readAll(
+        params: ReadParams<M>,
+    ): Flow<FlowResult<Model>> = readAllRecords<Record, M>(params)
+        .flatMapConcat { response ->
+            flow {
+                response.records.forEach { record ->
+                    emit(FlowResult.Data(modelFactory.create(record)) as FlowResult<Model>)
                 }
             }
-        } catch (e: Exception) {
-            emit(flowResultMapper.mapTerminalState(e))
         }
-    }.flowOn(Dispatchers.IO)
+        .catch { e -> emit(flowResultMapper.mapTerminal(e)) }
+        .flowOn(Dispatchers.IO)
 
-    override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = flow {
-        try {
-            var continuationToken: String? = null
-            while (true) {
-                val response = readPage<Record, M>(params, continuationToken)
-                with(response) {
-                    emit(FlowResult.Data(records.size))
-                    continuationToken = pageToken ?: break
-                }
-            }
-        } catch (e: Exception) {
-            emit(flowResultMapper.mapTerminalState(e))
-        }
-    }.flowOn(Dispatchers.IO)
+    override fun <M : Model> count(
+        params: ReadParams<M>,
+    ): Flow<FlowResult<Int>> = countAllRecords(params)
+        .catch { e -> emit(flowResultMapper.mapTerminal(e)) }
+        .flowOn(Dispatchers.IO)
 
-    private suspend fun <R : Record, M : Model> readPage(
-        request: ReadParams<M>,
-        continuationToken: String? = null,
-    ): ReadRecordsResponse<R> {
-        val readRecordsRequest = readParamsMapper.map<R, M>(request, continuationToken)
-        return healthConnectClient.readRecords<R>(readRecordsRequest)
+    private fun <M : Model> countAllRecords(
+        params: ReadParams<M>,
+    ): Flow<FlowResult<Int>> = flow {
+        val totalCount = readAllRecords<Record, M>(params)
+            .fold(0) { accumulated, response -> accumulated + response.records.size }
+        emit(FlowResult.Data(totalCount) as FlowResult<Int>)
+    }
+
+    private fun <R : Record, M : Model> readAllRecords(
+        params: ReadParams<M>,
+    ): Flow<ReadRecordsResponse<R>> = flow {
+        var continuationToken: String? = null
+        do {
+            val readRecordsRequest = readParamsMapper.map<R, M>(params, continuationToken)
+            val response = healthConnectClient.readRecords(readRecordsRequest)
+            emit(response)
+            continuationToken = response.pageToken
+        } while (continuationToken != null)
     }
 }

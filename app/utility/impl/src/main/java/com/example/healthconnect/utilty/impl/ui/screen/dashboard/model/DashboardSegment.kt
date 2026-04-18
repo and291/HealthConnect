@@ -1,6 +1,8 @@
 package com.example.healthconnect.utilty.impl.ui.screen.dashboard.model
 
+import androidx.annotation.StringRes
+
 data class DashboardSegment(
-    val title: String,
+    @StringRes val title: Int,
     val items: List<DashboardItem>,
 )

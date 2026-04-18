@@ -9,5 +9,4 @@ data class DashboardItem(
     val recordType: KClass<out Model>,
     @param:StringRes val nameRes: Int,
     val icon: ImageVector,
-    val count: Int?,
 )

@@ -3,11 +3,11 @@ package com.example.healthconnect.utilty.impl.domain
 import org.junit.Assert
 import org.junit.Test
 
-class SupportedRecordsTest {
+class SupportedModelsTest {
 
     @Test
     fun recordsAreUnique() {
-        val availableTypes = SupportedRecords.instantaneous + SupportedRecords.interval + SupportedRecords.series
+        val availableTypes = SupportedModels.instantaneous + SupportedModels.interval + SupportedModels.series
 
         // Ensure there are no duplicates in the combined list
         val recordTypeCounts = availableTypes.groupingBy { it }.eachCount()
