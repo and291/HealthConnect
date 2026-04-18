@@ -32,7 +32,7 @@ sealed class FlowResult<out T> {
         ) : Terminal()
 
         data class UnhandledException(
-            val exception: Exception,
+            val throwable: Throwable,
         ) : Terminal()
     }
 }
