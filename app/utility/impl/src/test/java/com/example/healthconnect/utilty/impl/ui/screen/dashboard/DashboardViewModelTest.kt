@@ -12,8 +12,11 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -70,8 +73,19 @@ class DashboardViewModelTest {
     /**
      * Count is stored in [DashboardViewModel.State.Data.itemsCount], not on [DashboardItem].
      */
-    private fun DashboardViewModel.State.Data.countForType(type: KClass<out Model>): Int? =
+    private fun DashboardViewModel.State.Data.countRecords(type: KClass<out Model>): Int? =
         itemsCount[type]
+
+    /**
+     * Activates the [DashboardViewModel.state] upstream so that [StateFlow.value] reflects live
+     * data. Required because [SharingStarted.WhileSubscribed] only runs the upstream while there
+     * is at least one subscriber — mirroring what [collectAsStateWithLifecycle] does in production.
+     */
+    private fun TestScope.collectState(viewModel: DashboardViewModel) {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.state.collect {}
+        }
+    }
 
     // region Effects
 
@@ -81,27 +95,7 @@ class DashboardViewModelTest {
 
         viewModel.onEvent(DashboardViewModel.Event.OnLibraryDataManagerClick)
 
-        assertEquals(DashboardViewModel.Effect.ShowLibraryDataManager, viewModel.effect.value)
-    }
-
-    @Test
-    fun effectConsumed_clearsShowLibraryDataManagerEffect() = runTest {
-        val viewModel = createViewModel()
-        viewModel.onEvent(DashboardViewModel.Event.OnLibraryDataManagerClick)
-
-        viewModel.effectConsumed(DashboardViewModel.Effect.ShowLibraryDataManager)
-
-        assertNull(viewModel.effect.value)
-    }
-
-    @Test
-    fun effectConsumed_doesNotClearEffect_whenDifferentEffectIsConsumed() = runTest {
-        val viewModel = createViewModel()
-        viewModel.onEvent(DashboardViewModel.Event.OnLibraryDataManagerClick)
-
-        viewModel.effectConsumed(DashboardViewModel.Effect.NavigateToRecords(Steps::class, 0))
-
-        assertEquals(DashboardViewModel.Effect.ShowLibraryDataManager, viewModel.effect.value)
+        assertEquals(DashboardViewModel.Effect.ShowLibraryDataManager, viewModel.effect.first())
     }
 
     @Test
@@ -112,30 +106,7 @@ class DashboardViewModelTest {
 
         assertEquals(
             DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42),
-            viewModel.effect.value,
-        )
-    }
-
-    @Test
-    fun effectConsumed_clearsNavigateToRecordsEffect() = runTest {
-        val viewModel = createViewModel()
-        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(Steps::class, 42))
-
-        viewModel.effectConsumed(DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42))
-
-        assertNull(viewModel.effect.value)
-    }
-
-    @Test
-    fun effectConsumed_doesNotClearNavigateToRecords_whenShowLibraryDataManagerConsumed() = runTest {
-        val viewModel = createViewModel()
-        viewModel.onEvent(DashboardViewModel.Event.OnTypeClick(Steps::class, 42))
-
-        viewModel.effectConsumed(DashboardViewModel.Effect.ShowLibraryDataManager)
-
-        assertEquals(
-            DashboardViewModel.Effect.NavigateToRecords(Steps::class, 42),
-            viewModel.effect.value,
+            viewModel.effect.first(),
         )
     }
 
@@ -146,49 +117,53 @@ class DashboardViewModelTest {
     @Test
     fun init_startsInDataState() = runTest {
         val viewModel = createViewModel()
+        collectState(viewModel)
 
-        assertTrue(viewModel.state is DashboardViewModel.State.Data)
+        assertTrue(viewModel.state.value is DashboardViewModel.State.Data)
     }
 
     @Test
-    fun onRefresh_loadsCountForType() = runTest {
+    fun onRefresh_loadsCountRecords() = runTest {
         val viewModel = createViewModel(countForType = { type ->
             if (type == Steps::class) flowOf(FlowResult.Data(42))
             else flowOf(FlowResult.Data(0))
         })
+        collectState(viewModel)
 
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
-        val state = viewModel.state as DashboardViewModel.State.Data
-        assertEquals(42, state.countForType(Steps::class))
+        val state = viewModel.state.value as DashboardViewModel.State.Data
+        assertEquals(42, state.countRecords(Steps::class))
     }
 
     @Test
-    fun onRefresh_withPermissionRequired_setsNullCountForType() = runTest {
+    fun onRefresh_withPermissionRequired_setsNullCountRecords() = runTest {
         val viewModel = createViewModel(countForType = { type ->
             if (type == Steps::class) flowOf(FlowResult.Terminal.PermissionRequired("hc.permission.STEPS"))
             else flowOf(FlowResult.Data(0))
         })
+        collectState(viewModel)
 
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
-        val state = viewModel.state as DashboardViewModel.State.Data
-        assertNull(state.countForType(Steps::class))
+        val state = viewModel.state.value as DashboardViewModel.State.Data
+        assertNull(state.countRecords(Steps::class))
     }
 
     @Test
-    fun onRefresh_withTerminalAfterData_setsNullCountForType() = runTest {
+    fun onRefresh_withTerminalAfterData_setsNullCountRecords() = runTest {
         val viewModel = createViewModel(countForType = { type ->
             if (type == Steps::class) flow {
                 emit(FlowResult.Data(3))
                 emit(FlowResult.Terminal.UnhandledException(RuntimeException("fail")))
             } else flowOf(FlowResult.Data(0))
         })
+        collectState(viewModel)
 
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
-        val state = viewModel.state as DashboardViewModel.State.Data
-        assertNull(state.countForType(Steps::class))
+        val state = viewModel.state.value as DashboardViewModel.State.Data
+        assertNull(state.countRecords(Steps::class))
     }
 
     @Test
@@ -201,12 +176,13 @@ class DashboardViewModelTest {
                 emit(FlowResult.Data(0))
             }
         })
+        collectState(viewModel)
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
         firstRefreshDone = true
 
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
-        assertTrue(viewModel.state is DashboardViewModel.State.Data)
+        assertTrue(viewModel.state.value is DashboardViewModel.State.Data)
         blockCounts.complete(Unit)
     }
 
@@ -220,14 +196,15 @@ class DashboardViewModelTest {
                 emit(FlowResult.Data(0))
             }
         })
+        collectState(viewModel)
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
         firstRefreshDone = true
 
         viewModel.onEvent(DashboardViewModel.Event.Refresh)
 
-        assertTrue((viewModel.state as DashboardViewModel.State.Data).isRefreshing)
+        assertTrue((viewModel.state.value as DashboardViewModel.State.Data).isRefreshing)
         blockCounts.complete(Unit)
-        assertFalse((viewModel.state as DashboardViewModel.State.Data).isRefreshing)
+        assertFalse((viewModel.state.value as DashboardViewModel.State.Data).isRefreshing)
     }
 
     // endregion

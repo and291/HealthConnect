@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.impl.R
 import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
@@ -12,17 +13,17 @@ import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardSegment
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import com.example.healthconnect.utilty.impl.R
 import kotlin.reflect.KClass
 
 class DashboardViewModel(
@@ -35,8 +36,9 @@ class DashboardViewModel(
     private val itemsCountStateFlow = MutableStateFlow<Map<KClass<out Model>, Int?>>(emptyMap())
     private val isRefreshingStateFlow = MutableStateFlow(false)
 
-    private val _effect = MutableStateFlow<Effect?>(null)
-    val effect: StateFlow<Effect?> = _effect.asStateFlow()
+    // trySend on an UNLIMITED channel never fails, so it's safe to call outside a coroutine.
+    private val _effect = Channel<Effect>(Channel.UNLIMITED)
+    val effect: Flow<Effect> = _effect.receiveAsFlow()
 
     private val segments = buildEmptySegments()
     val state: StateFlow<State> = itemsCountStateFlow
@@ -62,22 +64,16 @@ class DashboardViewModel(
         startRefreshData()
     }
 
-    fun effectConsumed(effect: Effect) {
-        if (_effect.value == effect) {
-            _effect.value = null
-        }
-    }
-
     fun onEvent(event: Event) {
         when (event) {
             Event.Refresh -> startRefreshData()
 
             is Event.OnTypeClick -> {
-                _effect.value = Effect.NavigateToRecords(event.recordType, event.nameRes)
+                _effect.trySend(Effect.NavigateToRecords(event.recordType, event.nameRes))
             }
 
             Event.OnLibraryDataManagerClick -> {
-                _effect.value = Effect.ShowLibraryDataManager
+                _effect.trySend(Effect.ShowLibraryDataManager)
             }
         }
     }

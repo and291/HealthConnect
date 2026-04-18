@@ -20,7 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.di.Di
@@ -35,16 +38,19 @@ fun DashboardScreen(
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = viewModel(factory = Di.dashboardViewModelFactory),
 ) {
-    val effect by viewModel.effect.collectAsStateWithLifecycle()
-    LaunchedEffect(effect) {
-        effect?.let { e ->
-            when (e) {
-                is Effect.NavigateToRecords -> onTypeClick(e.recordType, e.nameRes)
-                is Effect.ShowLibraryDataManager -> onShowLibraryDataManager()
+
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(Unit) {
+        viewModel.effect
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .collect { e ->
+                when (e) {
+                    is Effect.NavigateToRecords -> onTypeClick(e.recordType, e.nameRes)
+                    is Effect.ShowLibraryDataManager -> onShowLibraryDataManager()
+                }
             }
-            viewModel.effectConsumed(e)
-        }
     }
+
     val state by viewModel.state.collectAsStateWithLifecycle()
     when (val uiState = state) {
         is DashboardViewModel.State.Data -> {
