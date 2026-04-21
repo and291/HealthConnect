@@ -1,6 +1,7 @@
 package com.example.healthconnect.utilty.impl.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordsResponse
@@ -10,16 +11,18 @@ import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
+import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.fold
+import kotlinx.coroutines.flow.map
 import kotlin.reflect.KClass
 
 class LibraryRepositoryImpl(
@@ -58,18 +61,16 @@ class LibraryRepositoryImpl(
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun <M : Model> readAll(
         params: ReadParams<M>,
-    ): Flow<FlowResult<Model>> = readAllRecords<Record, M>(params)
-        .flatMapConcat { response ->
-            flow {
-                response.records.forEach { record ->
-                    emit(FlowResult.Data(modelFactory.create(record)) as FlowResult<Model>)
-                }
-            }
+    ): Flow<FlowResult<Page>> = readAllRecords<Record, M>(params)
+        .map { response ->
+            Log.d("FFFFFF", "handling next page: ${response.records.size}")
+            Page(response.records.map { modelFactory.create(it) })
         }
+        .map { page -> FlowResult.Data(page) as FlowResult<Page> }
         .catch { e -> emit(flowResultMapper.mapTerminal(e)) }
+        .buffer(Channel.RENDEZVOUS)
         .flowOn(Dispatchers.IO)
 
     override fun <M : Model> count(
