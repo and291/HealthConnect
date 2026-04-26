@@ -10,13 +10,12 @@ import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
+import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.fold
@@ -58,19 +57,11 @@ class LibraryRepositoryImpl(
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun <M : Model> readAll(
-        params: ReadParams<M>,
-    ): Flow<FlowResult<Model>> = readAllRecords<Record, M>(params)
-        .flatMapConcat { response ->
-            flow {
-                response.records.forEach { record ->
-                    emit(FlowResult.Data(modelFactory.create(record)) as FlowResult<Model>)
-                }
-            }
-        }
-        .catch { e -> emit(flowResultMapper.mapTerminal(e)) }
-        .flowOn(Dispatchers.IO)
+    override fun <M : Model> pager(params: ReadParams<M>): Pager = PageIterator(
+        readPage = { token -> readData<M, Record>(params, token) },
+        flowResultMapper = flowResultMapper,
+        modelFactory = modelFactory
+    )
 
     override fun <M : Model> count(
         params: ReadParams<M>,
@@ -91,10 +82,18 @@ class LibraryRepositoryImpl(
     ): Flow<ReadRecordsResponse<R>> = flow {
         var continuationToken: String? = null
         do {
-            val readRecordsRequest = readParamsMapper.map<R, M>(params, continuationToken)
-            val response = healthConnectClient.readRecords(readRecordsRequest)
+            val response = readData<M, R>(params, continuationToken)
             emit(response)
             continuationToken = response.pageToken
         } while (continuationToken != null)
     }
+
+    private suspend fun <M : Model, R : Record> readData(
+        params: ReadParams<M>,
+        continuationToken: String?,
+    ): ReadRecordsResponse<R> {
+        val readRecordsRequest = readParamsMapper.map<R, M>(params, continuationToken)
+        return healthConnectClient.readRecords(readRecordsRequest)
+    }
+
 }

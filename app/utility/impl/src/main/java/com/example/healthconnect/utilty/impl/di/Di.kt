@@ -6,13 +6,14 @@ import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
-import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
+import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
+import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
@@ -50,7 +51,7 @@ object Di { //TODO move to dagger. keep all features
 
                 override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = error("No impl")
 
-                override fun <M : Model> readAll(params: ReadParams<M>): Flow<FlowResult<Model>> = error("No impl")
+                override fun <M : Model> pager(params: ReadParams<M>): Pager = error("No impl")
 
                 override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("No impl")
             }

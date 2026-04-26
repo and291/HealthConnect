@@ -36,8 +36,7 @@ class DashboardViewModel(
     private val itemsCountStateFlow = MutableStateFlow<Map<KClass<out Model>, Int?>>(emptyMap())
     private val isRefreshingStateFlow = MutableStateFlow(false)
 
-    // trySend on an UNLIMITED channel never fails, so it's safe to call outside a coroutine.
-    private val _effect = Channel<Effect>(Channel.UNLIMITED)
+    private val _effect = Channel<Effect>(Channel.BUFFERED)
     val effect: Flow<Effect> = _effect.receiveAsFlow()
 
     private val segments = buildEmptySegments()
