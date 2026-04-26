@@ -10,18 +10,15 @@ import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
-import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.fold
-import kotlinx.coroutines.flow.onCompletion
 import kotlin.reflect.KClass
 
 class LibraryRepositoryImpl(
@@ -60,7 +57,11 @@ class LibraryRepositoryImpl(
         )
     }
 
-    override fun <M : Model> pager(params: ReadParams<M>): Pager = PageIterator(params)
+    override fun <M : Model> pager(params: ReadParams<M>): Pager = PageIterator(
+        readPage = { token -> readData<M, Record>(params, token) },
+        flowResultMapper = flowResultMapper,
+        modelFactory = modelFactory
+    )
 
     override fun <M : Model> count(
         params: ReadParams<M>,
@@ -95,44 +96,4 @@ class LibraryRepositoryImpl(
         return healthConnectClient.readRecords(readRecordsRequest)
     }
 
-    /**
-     * Encapsulates lib's pagination algorithm.
-     * Creates a flow of [Page] from library's storage.
-     * Call [requestNextPage] to read and receive next page
-     */
-    private inner class PageIterator<M : Model>(
-        private val params: ReadParams<M>,
-        startWithFirstPage: Boolean = true,
-    ) : Pager {
-
-        private val pageRequests = Channel<Unit>(Channel.CONFLATED)
-
-        init {
-            if(startWithFirstPage) {
-                pageRequests.trySend(Unit)
-            }
-        }
-
-        override val pages: Flow<FlowResult<Page>> = flow<FlowResult<Page>> {
-            var nextPageToken: String? = null
-            do {
-                pageRequests.receive()
-                val page = readData<M, Record>(params, nextPageToken).run {
-                    nextPageToken = pageToken
-                    Page(
-                        items = records.map { modelFactory.create(it) },
-                        hasNextPage = pageToken != null,
-                    )
-                }
-                emit(FlowResult.Data(page))
-            } while (nextPageToken != null)
-        }
-            .onCompletion { pageRequests.close() }
-            .catch { e -> emit(flowResultMapper.mapTerminal(e)) }
-            .flowOn(Dispatchers.IO)
-
-        override fun requestNextPage() {
-            pageRequests.trySend(Unit)
-        }
-    }
 }
