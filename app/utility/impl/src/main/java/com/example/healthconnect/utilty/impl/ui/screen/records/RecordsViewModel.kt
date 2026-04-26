@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.Page
+import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
@@ -16,7 +16,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
@@ -30,7 +29,7 @@ class RecordsViewModel(
     private val delete: Delete,
 ) : ViewModel() {
 
-    private val _effect = Channel<Effect>(Channel.UNLIMITED)
+    private val _effect = Channel<Effect>(Channel.BUFFERED)
     val effect: Flow<Effect> = _effect.receiveAsFlow()
 
     private val refreshChannel = Channel<Unit>(Channel.CONFLATED)
