@@ -105,7 +105,7 @@ class LibraryRepositoryImpl(
         startWithFirstPage: Boolean = true,
     ) : Pager {
 
-        private val pageRequests = Channel<Unit>(Channel.BUFFERED)
+        private val pageRequests = Channel<Unit>(Channel.CONFLATED)
 
         init {
             if(startWithFirstPage) {
