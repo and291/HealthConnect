@@ -54,7 +54,7 @@ class RecordsViewModel(
         currentPager = pager
 
         return pager.pages
-            .runningFold(State(emptyList(), isRefreshing = false, hasMorePages =  false)) { previousState, page ->
+            .runningFold(State(emptyList(), isRefreshing = true, hasMorePages =  false)) { previousState, page ->
                 val displayPage = when (page) {
                     is FlowResult.Data<Page> -> DisplayPage.Record(page.item.items)
                     is FlowResult.Terminal -> DisplayPage.Error(page.toString())
@@ -65,7 +65,6 @@ class RecordsViewModel(
                     isRefreshing = false,
                 )
             }
-            .drop(1)
     }
 
     fun onEvent(event: Event) {
