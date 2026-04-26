@@ -23,6 +23,24 @@ import java.time.ZoneOffset
 import androidx.health.connect.client.records.metadata.Metadata as HCMetadata
 
 @Composable
+internal fun RecordItem(
+    record: Model,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Button(onClick = onDelete) {
+            Text("X")
+        }
+        val contentModifier = Modifier.padding(start = 8.dp)
+        record.Summary(contentModifier)
+    }
+}
+
+@Composable
 @Preview(showBackground = true)
 private fun RecordItemPreview() {
     RecordItem(
@@ -59,22 +77,4 @@ private fun RecordItemPreview() {
         ),
         onDelete = {},
     )
-}
-
-@Composable
-fun RecordItem(
-    record: Model,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth(),
-    ) {
-        Button(onClick = onDelete) {
-            Text("X")
-        }
-        val contentModifier = Modifier.padding(start = 8.dp)
-        record.Summary(contentModifier)
-    }
 }
