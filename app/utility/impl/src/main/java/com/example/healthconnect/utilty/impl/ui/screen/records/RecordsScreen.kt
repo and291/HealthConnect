@@ -102,7 +102,7 @@ fun RecordsScreen(
                             },
                             modifier = Modifier
                                 .padding(vertical = 2.dp)
-                                .clickable { onRecordClick(record) }
+                                .clickable { viewModel.onEvent(Event.OnRecordClick(record)) }
                         )
                     }
                 }
