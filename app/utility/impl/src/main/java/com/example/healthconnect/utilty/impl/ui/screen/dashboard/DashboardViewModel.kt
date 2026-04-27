@@ -7,10 +7,10 @@ import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.R
 import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
-import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
+import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem.LoadingState
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardSegment
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -33,18 +33,16 @@ class DashboardViewModel(
 ) : ViewModel() {
 
     private var collectJob: Job? = null
-    private val itemsCountStateFlow = MutableStateFlow<Map<KClass<out Model>, Int?>>(emptyMap())
+    private val itemsCountStateFlow = MutableStateFlow<Map<KClass<out Model>, LoadingState>>(emptyMap())
     private val isRefreshingStateFlow = MutableStateFlow(false)
 
     private val _effect = Channel<Effect>(Channel.BUFFERED)
     val effect: Flow<Effect> = _effect.receiveAsFlow()
 
-    private val segments = buildEmptySegments()
     val state: StateFlow<State> = itemsCountStateFlow
         .combine(isRefreshingStateFlow) { map, isRefreshing ->
             State.Data(
-                segments = segments,
-                itemsCount = map,
+                segments = buildSegments(map),
                 isRefreshing = isRefreshing
             )
         }
@@ -52,8 +50,7 @@ class DashboardViewModel(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = State.Data(
-                segments = segments,
-                itemsCount = emptyMap(),
+                segments = buildSegments(emptyMap()),
                 isRefreshing = false,
             )
         )
@@ -80,13 +77,16 @@ class DashboardViewModel(
     private fun startRefreshData() {
         collectJob?.cancel()
         collectJob = viewModelScope.launch {
-            val mutableMap = SupportedModels.all.associateWith { null as Int? }.toMutableMap()
+            val mutableMap = SupportedModels.all.associateWith { LoadingState.InProgress as LoadingState }.toMutableMap()
             isRefreshingStateFlow.emit(true)
 
-            SupportedModels.all.map { type -> countRecords(type) }
+            SupportedModels.all
+                .map { type ->
+                    count(type).map { type to LoadingState.Loaded(it) }
+                }
                 .merge()
-                .collect { (type, value) ->
-                    mutableMap.replace(type, value)
+                .collect { (type, loadingState) ->
+                    mutableMap.replace(type, loadingState)
                     itemsCountStateFlow.emit(mutableMap.toMap())
                 }
 
@@ -94,16 +94,9 @@ class DashboardViewModel(
         }
     }
 
-    private fun countRecords(
-        type: KClass<out Model>,
-    ): Flow<Pair<KClass<out Model>, Int?>> = count(type).map {
-        when (it) {
-            is FlowResult.Data -> type to it.item
-            is FlowResult.Terminal -> type to null
-        }
-    }
-
-    private fun buildEmptySegments(): List<DashboardSegment> {
+    private fun buildSegments(
+        map: Map<KClass<out Model>, LoadingState>
+    ): List<DashboardSegment> {
         fun buildItems(
             types: List<KClass<out Model>>,
         ): List<DashboardItem> = types.map { type ->
@@ -111,6 +104,7 @@ class DashboardViewModel(
                 recordType = type,
                 nameRes = nameMapper.nameRes(type),
                 icon = iconMapper.icon(type),
+                state = map.getOrDefault(type, LoadingState.InProgress)
             )
         }
 
@@ -133,7 +127,6 @@ class DashboardViewModel(
     sealed class State {
         data class Data(
             val segments: List<DashboardSegment>,
-            val itemsCount: Map<KClass<out Model>, Int?> = emptyMap(),
             val isRefreshing: Boolean = false,
         ) : State()
     }

@@ -24,13 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.utilty.impl.R
+import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 
 @Composable
 fun DashboardTile(
     item: DashboardItem,
     onClick: () -> Unit,
-    count: Int?,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
@@ -54,13 +54,11 @@ fun DashboardTile(
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary,
                 )
-                count?.let { count ->
-                    Badge(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ) {
-                        Text(text = count.toString())
-                    }
+                Badge(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ) {
+                    Text(text = item.state.toString())
                 }
             }
             Text(
@@ -81,9 +79,9 @@ private fun DashboardTileWithCountPreview() {
             recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
+            state = DashboardItem.LoadingState.InProgress,
         ),
         onClick = {},
-        count = 42,
     )
 }
 
@@ -95,8 +93,8 @@ private fun DashboardTileNoCountPreview() {
             recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
+            state = DashboardItem.LoadingState.Loaded(FlowResult.Data(42))
         ),
         onClick = {},
-        count = null,
     )
 }
