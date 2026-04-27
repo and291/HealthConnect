@@ -22,6 +22,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
+import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
@@ -94,12 +95,18 @@ object Di { //TODO move to dagger. keep all features
 
     private val recordTypeNameMapper by lazy { RecordTypeNameMapper() }
     private val recordTypeIconMapper by lazy { RecordTypeIconMapper() }
+    private val flowResultTerminalIconMapper by lazy { FlowResultTerminalIconMapper() }
 
     private val count by lazy {
         Count(libraryRepository)
     }
 
     internal val dashboardViewModelFactory by lazy {
-        DashboardViewModelFactory(count, recordTypeNameMapper, recordTypeIconMapper)
+        DashboardViewModelFactory(
+            count,
+            recordTypeNameMapper,
+            recordTypeIconMapper,
+            flowResultTerminalIconMapper
+        )
     }
 }

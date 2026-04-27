@@ -7,6 +7,8 @@ import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.R
 import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
+import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
+import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
@@ -30,6 +32,7 @@ class DashboardViewModel(
     private val count: Count,
     private val nameMapper: RecordTypeNameMapper,
     private val iconMapper: RecordTypeIconMapper,
+    private val flowResultTerminalIconMapper: FlowResultTerminalIconMapper,
 ) : ViewModel() {
 
     private var collectJob: Job? = null
@@ -82,7 +85,14 @@ class DashboardViewModel(
 
             SupportedModels.all
                 .map { type ->
-                    count(type).map { type to LoadingState.Loaded(it) }
+                    count(type).map {
+                        type to when (it) {
+                            is FlowResult.Data<Int> -> LoadingState.Counted(it.item)
+                            is FlowResult.Terminal -> LoadingState.Failed(
+                                errorIcon = flowResultTerminalIconMapper.icon(it)
+                            )
+                        }
+                    }
                 }
                 .merge()
                 .collect { (type, loadingState) ->

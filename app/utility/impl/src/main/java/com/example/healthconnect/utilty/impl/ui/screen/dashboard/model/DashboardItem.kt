@@ -3,7 +3,6 @@ package com.example.healthconnect.utilty.impl.ui.screen.dashboard.model
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import kotlin.reflect.KClass
 
 data class DashboardItem(
@@ -16,8 +15,12 @@ data class DashboardItem(
 
         data object InProgress : LoadingState()
 
-        data class Loaded(
-            val result: FlowResult<Int>,
+        data class Counted(
+            val count: Int,
+        ) : LoadingState()
+
+        data class Failed(
+            val errorIcon: ImageVector,
         ) : LoadingState()
     }
 }
