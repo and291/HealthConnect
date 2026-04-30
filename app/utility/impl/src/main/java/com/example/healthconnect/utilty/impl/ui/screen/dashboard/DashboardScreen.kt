@@ -100,7 +100,6 @@ fun DashboardScreen(
                                         )
                                     )
                                 },
-                                count = uiState.itemsCount[item.recordType]
                             )
                         }
                     }

@@ -7,8 +7,10 @@ import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
+import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -69,14 +71,19 @@ class DashboardViewModelTest {
             count = Count(repository),
             nameMapper = RecordTypeNameMapper(),
             iconMapper = RecordTypeIconMapper(),
+            flowResultTerminalIconMapper = FlowResultTerminalIconMapper(),
         )
     }
 
     /**
-     * Count is stored in [DashboardViewModel.State.Data.itemsCount], not on [DashboardItem].
+     * Returns the count for [type] if the item is in [DashboardItem.LoadingState.Counted], null
+     * otherwise (i.e. still loading or failed). Traverses [segments] since the count is no longer
+     * stored in a flat map on the state.
      */
     private fun DashboardViewModel.State.Data.countRecords(type: KClass<out Model>): Int? =
-        itemsCount[type]
+        segments.flatMap { it.items }
+            .find { it.recordType == type }
+            ?.let { (it.state as? DashboardItem.LoadingState.Counted)?.count }
 
     /**
      * Activates the [DashboardViewModel.state] upstream so that [StateFlow.value] reflects live
@@ -139,9 +146,9 @@ class DashboardViewModelTest {
     }
 
     @Test
-    fun onRefresh_withPermissionRequired_setsNullCountRecords() = runTest {
+    fun onRefresh_withUnpermittedAccess_setsNullCountRecords() = runTest {
         val viewModel = createViewModel(countForType = { type ->
-            if (type == Steps::class) flowOf(FlowResult.Terminal.PermissionRequired("hc.permission.STEPS"))
+            if (type == Steps::class) flowOf(FlowResult.Terminal.UnpermittedAccess(SecurityException("no permission")))
             else flowOf(FlowResult.Data(0))
         })
         collectState(viewModel)

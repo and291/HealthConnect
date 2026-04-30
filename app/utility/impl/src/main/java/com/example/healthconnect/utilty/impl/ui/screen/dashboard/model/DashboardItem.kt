@@ -9,4 +9,18 @@ data class DashboardItem(
     val recordType: KClass<out Model>,
     @param:StringRes val nameRes: Int,
     val icon: ImageVector,
-)
+    val state: LoadingState,
+) {
+    sealed class LoadingState {
+
+        data object InProgress : LoadingState()
+
+        data class Counted(
+            val count: Int,
+        ) : LoadingState()
+
+        data class Failed(
+            val errorIcon: ImageVector,
+        ) : LoadingState()
+    }
+}

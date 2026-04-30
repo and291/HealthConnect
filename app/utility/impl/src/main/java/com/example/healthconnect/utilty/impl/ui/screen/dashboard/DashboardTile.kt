@@ -1,5 +1,9 @@
 package com.example.healthconnect.utilty.impl.ui.screen.dashboard
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Badge
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +36,6 @@ import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.Dashboard
 fun DashboardTile(
     item: DashboardItem,
     onClick: () -> Unit,
-    count: Int?,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
@@ -54,12 +59,33 @@ fun DashboardTile(
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary,
                 )
-                count?.let { count ->
-                    Badge(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ) {
-                        Text(text = count.toString())
+
+                AnimatedContent(
+                    targetState = item.state,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() },
+                    contentKey = { it::class },
+                    label = "badge",
+                ) { state ->
+                    when (state) {
+                        is DashboardItem.LoadingState.InProgress ->
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp
+                            )
+                        is DashboardItem.LoadingState.Counted ->
+                            Badge(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            ) {
+                                Text(text = state.count.toString())
+                            }
+                        is DashboardItem.LoadingState.Failed ->
+                            Icon(
+                                imageVector = state.errorIcon,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.error,
+                            )
                     }
                 }
             }
@@ -81,9 +107,9 @@ private fun DashboardTileWithCountPreview() {
             recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
+            state = DashboardItem.LoadingState.InProgress,
         ),
         onClick = {},
-        count = 42,
     )
 }
 
@@ -95,8 +121,8 @@ private fun DashboardTileNoCountPreview() {
             recordType = Steps::class,
             nameRes = R.string.record_type_steps,
             icon = Icons.AutoMirrored.Filled.DirectionsWalk,
+            state = DashboardItem.LoadingState.Failed(Icons.Default.Error)
         ),
         onClick = {},
-        count = null,
     )
 }
