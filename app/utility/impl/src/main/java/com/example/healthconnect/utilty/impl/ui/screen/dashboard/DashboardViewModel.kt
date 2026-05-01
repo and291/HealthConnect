@@ -74,6 +74,10 @@ class DashboardViewModel(
             Event.OnLibraryDataManagerClick -> {
                 _effect.trySend(Effect.ShowLibraryDataManager)
             }
+
+            Event.OnPermissionsClick -> {
+                _effect.trySend(Effect.NavigateToPermissions)
+            }
         }
     }
 
@@ -148,6 +152,7 @@ class DashboardViewModel(
         ) : Effect()
 
         object ShowLibraryDataManager : Effect()
+        object NavigateToPermissions : Effect()
     }
 
     sealed class Event {
@@ -158,5 +163,6 @@ class DashboardViewModel(
         ) : Event()
 
         data object OnLibraryDataManagerClick : Event()
+        data object OnPermissionsClick : Event()
     }
 }

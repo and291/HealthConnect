@@ -35,6 +35,7 @@ import kotlin.reflect.KClass
 fun DashboardScreen(
     onTypeClick: (KClass<out Model>, Int) -> Unit,
     onShowLibraryDataManager: () -> Unit,
+    onNavigateToPermissions: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = viewModel(factory = Di.dashboardViewModelFactory),
 ) {
@@ -47,6 +48,7 @@ fun DashboardScreen(
                 when (e) {
                     is Effect.NavigateToRecords -> onTypeClick(e.recordType, e.nameRes)
                     is Effect.ShowLibraryDataManager -> onShowLibraryDataManager()
+                    is Effect.NavigateToPermissions -> onNavigateToPermissions()
                 }
             }
     }
@@ -76,6 +78,16 @@ fun DashboardScreen(
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                         ) {
                             Text("Health Connect's internal data manager")
+                        }
+                    }
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        OutlinedButton(
+                            onClick = { viewModel.onEvent(Event.OnPermissionsClick) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                        ) {
+                            Text("Manage permissions")
                         }
                     }
                     uiState.segments.forEach { segment ->
@@ -114,6 +126,7 @@ fun DashboardScreen(
 private fun DashboardScreenPreview() {
     DashboardScreen(
         onTypeClick = { _, _ -> },
-        onShowLibraryDataManager = {}
+        onShowLibraryDataManager = {},
+        onNavigateToPermissions = {},
     )
 }
