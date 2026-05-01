@@ -16,6 +16,12 @@ import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
+import com.example.healthconnect.permissions.api.domain.HealthPermission
+import com.example.healthconnect.permissions.api.domain.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.PermissionResult
+import com.example.healthconnect.permissions.api.domain.PermissionStatus
+import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.utilty.impl.domain.mapper.RecordTypePermissionMapper
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Effect
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Event
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.State.DisplayPage
@@ -23,6 +29,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -59,6 +71,16 @@ class RecordsViewModelTest {
 
     // region helpers
 
+    private open inner class FakePermissionCoordinator : PermissionCoordinator {
+        private val _pendingRequest = MutableStateFlow<Set<String>?>(null)
+        override val pendingRequest: StateFlow<Set<String>?> = _pendingRequest.asStateFlow()
+        private val _results = MutableSharedFlow<PermissionResult>(replay = 0, extraBufferCapacity = 1)
+        override val results: SharedFlow<PermissionResult> = _results.asSharedFlow()
+        override suspend fun request(request: PermissionRequest) {}
+        override fun onActivityResult(grantedPermissionStrings: Set<String>) {}
+        override suspend fun getPermissionStatuses(): List<PermissionStatus> = emptyList()
+    }
+
     private class FakePager : Pager {
         private val channel = Channel<FlowResult<Page>>(Channel.UNLIMITED)
         override val pages: Flow<FlowResult<Page>> = channel.receiveAsFlow()
@@ -94,6 +116,8 @@ class RecordsViewModelTest {
             recordType = Steps::class,
             readAll = ReadAll(repository),
             delete = Delete(repository, ResultMapper(), PayloadMapper()),
+            coordinator = FakePermissionCoordinator(),
+            permissionMapper = RecordTypePermissionMapper(),
         )
     }
 

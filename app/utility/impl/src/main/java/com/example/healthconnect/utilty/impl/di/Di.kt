@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
@@ -21,6 +22,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
+import com.example.healthconnect.utilty.impl.domain.mapper.RecordTypePermissionMapper
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
@@ -34,6 +36,7 @@ object Di { //TODO move to dagger. keep all features
 
     lateinit var applicationContext: Context
     lateinit var modelFactory: ModelFactory
+    lateinit var permissionCoordinator: PermissionCoordinator
 
     private val libraryRepository by lazy {
         if (isPreview) {
@@ -90,7 +93,12 @@ object Di { //TODO move to dagger. keep all features
     }
 
     val recordsViewModelFactory by lazy {
-        RecordsViewModelFactory(readAll, delete)
+        RecordsViewModelFactory(
+            readAll = readAll,
+            delete = delete,
+            coordinator = permissionCoordinator,
+            permissionMapper = RecordTypePermissionMapper(),
+        )
     }
 
     private val recordTypeNameMapper by lazy { RecordTypeNameMapper() }

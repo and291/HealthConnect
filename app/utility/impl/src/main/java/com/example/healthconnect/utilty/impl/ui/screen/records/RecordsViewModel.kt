@@ -4,8 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.permissions.api.domain.HealthPermission
+import com.example.healthconnect.permissions.api.domain.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.PermissionResult
+import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
+import com.example.healthconnect.utilty.impl.domain.mapper.RecordTypePermissionMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
@@ -16,6 +21,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
@@ -27,6 +33,8 @@ class RecordsViewModel(
     private val recordType: KClass<out Model>,
     private val readAll: ReadAll,
     private val delete: Delete,
+    private val coordinator: PermissionCoordinator,
+    private val permissionMapper: RecordTypePermissionMapper,
 ) : ViewModel() {
 
     private val _effect = Channel<Effect>(Channel.BUFFERED)
@@ -53,9 +61,16 @@ class RecordsViewModel(
         currentPager = pager
 
         return pager.pages
-            .runningFold(State(emptyList(), isRefreshing = true, hasMorePages =  false)) { previousState, page ->
+            .runningFold(State(emptyList(), isRefreshing = true, hasMorePages = false)) { previousState, page ->
                 val displayPage = when (page) {
                     is FlowResult.Data<Page> -> DisplayPage.Record(page.item.items)
+
+                    is FlowResult.Terminal.UnpermittedAccess -> {
+                        val permission = permissionMapper.readPermission(recordType)
+                        requestPermissionAndRefreshOnGrant(permission)
+                        DisplayPage.PermissionDenied(permission)
+                    }
+
                     is FlowResult.Terminal -> DisplayPage.Error(page.toString())
                 }
                 State(
@@ -66,9 +81,20 @@ class RecordsViewModel(
             }
     }
 
+    private fun requestPermissionAndRefreshOnGrant(permission: HealthPermission) {
+        viewModelScope.launch {
+            if (coordinator.pendingRequest.value != null) return@launch
+            coordinator.request(PermissionRequest.Single(permission))
+            when (coordinator.results.first()) {
+                is PermissionResult.AllGranted  -> onEvent(Event.Refresh)
+                is PermissionResult.SomeGranted,
+                is PermissionResult.AllDenied   -> Unit // PermissionDenied page remains
+            }
+        }
+    }
+
     fun onEvent(event: Event) {
         when (event) {
-
             is Event.DeleteRecord -> viewModelScope.launch {
                 delete(recordType = event.recordType, metadataId = event.metadataId)
                 onEvent(Event.Refresh)
@@ -87,7 +113,6 @@ class RecordsViewModel(
         val hasMorePages: Boolean,
         val isRefreshing: Boolean,
     ) {
-
         sealed class DisplayPage {
 
             data class Record(
@@ -97,33 +122,26 @@ class RecordsViewModel(
             data class Error(
                 val message: String,
             ) : DisplayPage()
+
+            data class PermissionDenied(
+                val permission: HealthPermission,
+            ) : DisplayPage()
         }
     }
 
     sealed class Effect {
-
         data class OpenRecordScreen(
             val record: Model,
-        ) : Effect()
-
-        data class RequestSinglePermission(
-            val sdkPermission: String,
         ) : Effect()
     }
 
     sealed class Event {
-
-        data class OnRecordClick(
-            val record: Model,
-        ) : Event()
-
+        data class OnRecordClick(val record: Model) : Event()
         data class DeleteRecord(
             val recordType: KClass<out Model>,
             val metadataId: String,
         ) : Event()
-
         data object Refresh : Event()
-
         data object NextPage : Event()
     }
 
