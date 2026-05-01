@@ -8,6 +8,7 @@ import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import com.example.healthconnect.permissions.impl.domain.PermissionCoordinatorImpl
 import com.example.healthconnect.permissions.impl.navigation.PermissionNavigationEntryProviderImpl
 import com.example.healthconnect.permissions.impl.ui.PermissionsViewModelFactory
+import com.example.healthconnect.permissions.impl.ui.mapper.PermissionNameMapper
 import kotlin.reflect.KClass
 
 object Di {
@@ -33,8 +34,10 @@ object Di {
         }
     }
 
+    private val permissionNameMapper = PermissionNameMapper()
+
     val permissionsViewModelFactory: PermissionsViewModelFactory by lazy {
-        PermissionsViewModelFactory(coordinator)
+        PermissionsViewModelFactory(coordinator, permissionNameMapper)
     }
 
     val permissionNav: PermissionNavigationEntryProvider by lazy {

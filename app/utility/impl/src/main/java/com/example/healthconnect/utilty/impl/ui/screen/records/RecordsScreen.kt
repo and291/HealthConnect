@@ -113,7 +113,7 @@ fun RecordsScreen(
 
                     is DisplayPage.PermissionDenied -> item {
                         PermissionDeniedMessage(
-                            dataTypeName = page.permission.dataTypeName,
+                            dataTypeName = "", //TODO unite permission name and model name mappers?
                         )
                     }
                 }

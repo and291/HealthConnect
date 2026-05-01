@@ -1,5 +1,6 @@
 package com.example.healthconnect.permissions.impl.ui.screen
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthconnect.permissions.api.domain.HealthPermission
@@ -7,6 +8,7 @@ import com.example.healthconnect.permissions.api.domain.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.PermissionStatus
 import com.example.healthconnect.permissions.api.domain.PermissionType
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.impl.ui.mapper.PermissionNameMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class PermissionsViewModel(
     private val coordinator: PermissionCoordinator,
+    private val nameMapper: PermissionNameMapper,
 ) : ViewModel() {
 
     private val isLoading = MutableStateFlow(true)
@@ -25,8 +28,12 @@ class PermissionsViewModel(
     val state: StateFlow<State> = combine(isLoading, statuses) { loading, statusList ->
         State(
             isLoading = loading,
-            readPermissions = statusList.filter { it.permission.type == PermissionType.Read },
-            writePermissions = statusList.filter { it.permission.type == PermissionType.Write },
+            readPermissions = statusList
+                .filter { it.permission.type == PermissionType.Read }
+                .map { it.toUiItem() },
+            writePermissions = statusList
+                .filter { it.permission.type == PermissionType.Write }
+                .map { it.toUiItem() },
         )
     }.stateIn(
         scope = viewModelScope,
@@ -71,13 +78,21 @@ class PermissionsViewModel(
         }
     }
 
+    private fun PermissionStatus.toUiItem() =
+        PermissionUiItem(this, nameMapper.nameRes(permission.permissionString))
+
+    data class PermissionUiItem(
+        val status: PermissionStatus,
+        @StringRes val nameRes: Int,
+    )
+
     data class State(
         val isLoading: Boolean,
-        val readPermissions: List<PermissionStatus>,
-        val writePermissions: List<PermissionStatus>,
+        val readPermissions: List<PermissionUiItem>,
+        val writePermissions: List<PermissionUiItem>,
     ) {
         val hasAnyDenied: Boolean
-            get() = (readPermissions + writePermissions).any { !it.isGranted }
+            get() = (readPermissions + writePermissions).any { !it.status.isGranted }
     }
 
     sealed class Event {

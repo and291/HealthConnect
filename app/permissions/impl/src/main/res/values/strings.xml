@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Instantaneous -->
+    <string name="permission_name_basal_body_temperature">Basal Body Temperature</string>
+    <string name="permission_name_basal_metabolic_rate">Basal Metabolic Rate</string>
+    <string name="permission_name_blood_glucose">Blood Glucose</string>
+    <string name="permission_name_blood_pressure">Blood Pressure</string>
+    <string name="permission_name_body_fat">Body Fat</string>
+    <string name="permission_name_body_temperature">Body Temperature</string>
+    <string name="permission_name_body_water_mass">Body Water Mass</string>
+    <string name="permission_name_bone_mass">Bone Mass</string>
+    <string name="permission_name_cervical_mucus">Cervical Mucus</string>
+    <string name="permission_name_heart_rate_variability_rmssd">Heart Rate Variability Rmssd</string>
+    <string name="permission_name_height">Height</string>
+    <string name="permission_name_intermenstrual_bleeding">Intermenstrual Bleeding</string>
+    <string name="permission_name_lean_body_mass">Lean Body Mass</string>
+    <string name="permission_name_menstruation_flow">Menstruation Flow</string>
+    <string name="permission_name_ovulation_test">Ovulation Test</string>
+    <string name="permission_name_oxygen_saturation">Oxygen Saturation</string>
+    <string name="permission_name_respiratory_rate">Respiratory Rate</string>
+    <string name="permission_name_resting_heart_rate">Resting Heart Rate</string>
+    <string name="permission_name_sexual_activity">Sexual Activity</string>
+    <string name="permission_name_vo2_max">VO2 Max</string>
+    <string name="permission_name_weight">Weight</string>
+    <!-- Interval -->
+    <string name="permission_name_active_calories_burned">Active Calories Burned</string>
+    <string name="permission_name_activity_intensity">Activity Intensity</string>
+    <string name="permission_name_distance">Distance</string>
+    <string name="permission_name_elevation_gained">Elevation Gained</string>
+    <string name="permission_name_exercise_session">Exercise Session</string>
+    <string name="permission_name_floors_climbed">Floors Climbed</string>
+    <string name="permission_name_hydration">Hydration</string>
+    <string name="permission_name_menstruation_period">Menstruation Period</string>
+    <string name="permission_name_mindfulness_session">Mindfulness Session</string>
+    <string name="permission_name_nutrition">Nutrition</string>
+    <string name="permission_name_planned_exercise_session">Planned Exercise Session</string>
+    <string name="permission_name_skin_temperature">Skin Temperature</string>
+    <string name="permission_name_sleep_session">Sleep Session</string>
+    <string name="permission_name_steps">Steps</string>
+    <string name="permission_name_total_calories_burned">Total Calories Burned</string>
+    <string name="permission_name_wheelchair_pushes">Wheelchair Pushes</string>
+    <!-- Series -->
+    <string name="permission_name_cycling_pedaling_cadence">Cycling Pedaling Cadence</string>
+    <string name="permission_name_heart_rate">Heart Rate</string>
+    <string name="permission_name_power">Power</string>
+    <string name="permission_name_speed">Speed</string>
+    <string name="permission_name_steps_cadence">Steps Cadence</string>
+</resources>

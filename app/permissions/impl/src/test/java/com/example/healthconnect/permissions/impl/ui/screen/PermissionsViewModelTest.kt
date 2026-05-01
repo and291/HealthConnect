@@ -6,6 +6,7 @@ import com.example.healthconnect.permissions.api.domain.PermissionResult
 import com.example.healthconnect.permissions.api.domain.PermissionStatus
 import com.example.healthconnect.permissions.api.domain.PermissionType
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.impl.ui.mapper.PermissionNameMapper
 import com.example.healthconnect.permissions.impl.ui.screen.PermissionsViewModel.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -91,7 +92,7 @@ class PermissionsViewModelTest {
     }
 
     private fun viewModel(coordinator: FakePermissionCoordinator) =
-        PermissionsViewModel(coordinator)
+        PermissionsViewModel(coordinator, PermissionNameMapper())
 
     // endregion
 
@@ -109,8 +110,8 @@ class PermissionsViewModelTest {
         assertFalse(state.isLoading)
         assertEquals(1, state.readPermissions.size)
         assertEquals(1, state.writePermissions.size)
-        assertEquals(readSteps, state.readPermissions.first().permission)
-        assertEquals(writeSteps, state.writePermissions.first().permission)
+        assertEquals(readSteps, state.readPermissions.first().status.permission)
+        assertEquals(writeSteps, state.writePermissions.first().status.permission)
     }
 
     @Test
@@ -210,7 +211,7 @@ class PermissionsViewModelTest {
         coordinator.emitResult(PermissionResult.AllGranted(setOf(readSteps)))
 
         assertEquals("Expected reload after result", 2, callCount)
-        assertTrue(vm.state.value.readPermissions.first().isGranted)
+        assertTrue(vm.state.value.readPermissions.first().status.isGranted)
     }
 
     @Test

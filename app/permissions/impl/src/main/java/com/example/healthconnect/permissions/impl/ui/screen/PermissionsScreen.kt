@@ -25,13 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.permissions.api.domain.PermissionStatus
 import com.example.healthconnect.permissions.impl.di.Di
 import com.example.healthconnect.permissions.impl.ui.screen.PermissionsViewModel.Event
+import com.example.healthconnect.permissions.impl.ui.screen.PermissionsViewModel.PermissionUiItem
 
 @Composable
 fun PermissionsScreen(
@@ -74,10 +75,10 @@ fun PermissionsScreen(
             item {
                 PermissionGroupHeader("Read")
             }
-            items(state.readPermissions) { status ->
+            items(state.readPermissions) { item ->
                 PermissionRow(
-                    status = status,
-                    onRequest = { viewModel.onEvent(Event.RequestPermission(status.permission)) },
+                    item = item,
+                    onRequest = { viewModel.onEvent(Event.RequestPermission(item.status.permission)) },
                 )
             }
 
@@ -88,10 +89,10 @@ fun PermissionsScreen(
             item {
                 PermissionGroupHeader("Write")
             }
-            items(state.writePermissions) { status ->
+            items(state.writePermissions) { item ->
                 PermissionRow(
-                    status = status,
-                    onRequest = { viewModel.onEvent(Event.RequestPermission(status.permission)) },
+                    item = item,
+                    onRequest = { viewModel.onEvent(Event.RequestPermission(item.status.permission)) },
                 )
             }
         }
@@ -112,10 +113,11 @@ private fun PermissionGroupHeader(label: String) {
 
 @Composable
 private fun PermissionRow(
-    status: PermissionStatus,
+    item: PermissionUiItem,
     onRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val name = stringResource(item.nameRes)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -123,9 +125,9 @@ private fun PermissionRow(
             .padding(horizontal = 16.dp, vertical = 2.dp),
     ) {
         Icon(
-            imageVector = if (status.isGranted) Icons.Filled.Check else Icons.Filled.Close,
-            contentDescription = if (status.isGranted) "Granted" else "Denied",
-            tint = if (status.isGranted) {
+            imageVector = if (item.status.isGranted) Icons.Filled.Check else Icons.Filled.Close,
+            contentDescription = if (item.status.isGranted) "Granted" else "Denied",
+            tint = if (item.status.isGranted) {
                 MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.error
@@ -134,15 +136,15 @@ private fun PermissionRow(
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = status.permission.dataTypeName,
+            text = name,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f),
         )
-        if (!status.isGranted) {
+        if (!item.status.isGranted) {
             IconButton(onClick = onRequest) {
                 Icon(
                     imageVector = Icons.Filled.Lock,
-                    contentDescription = "Request ${status.permission.dataTypeName}",
+                    contentDescription = "Request $name",
                     tint = MaterialTheme.colorScheme.secondary,
                 )
             }
