@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
-import com.example.healthconnect.utilty.impl.domain.mapper.RecordTypePermissionMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel
@@ -15,7 +14,6 @@ class RecordsViewModelFactory(
     private val readAll: ReadAll,
     private val delete: Delete,
     private val coordinator: PermissionCoordinator,
-    private val permissionMapper: RecordTypePermissionMapper,
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -26,7 +24,6 @@ class RecordsViewModelFactory(
                 delete = delete,
                 recordType = checkNotNull(extras[RECORD_TYPE_KEY]),
                 coordinator = coordinator,
-                permissionMapper = permissionMapper,
             )
             else -> throw IllegalStateException("Unknown ViewModel class: ${modelClass.simpleName}")
         } as T

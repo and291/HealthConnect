@@ -14,6 +14,7 @@ import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
+import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
@@ -22,12 +23,12 @@ import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
-import com.example.healthconnect.utilty.impl.domain.mapper.RecordTypePermissionMapper
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
+import androidx.health.connect.client.records.Record
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -73,6 +74,10 @@ object Di { //TODO move to dagger. keep all features
     private val payloadMapper = PayloadMapper()
     private val resultMapper = ResultMapper()
     private val typeMapper = TypeMapper()
+
+    val allRecordTypes: List<KClass<out Record>> by lazy {
+        SupportedModels.all.map { typeMapper.toRecord(it) }
+    }
     private val readParamsMapper = ReadParamsMapper(typeMapper)
     private val flowResultMapper = FlowResultMapper()
 
@@ -97,7 +102,6 @@ object Di { //TODO move to dagger. keep all features
             readAll = readAll,
             delete = delete,
             coordinator = permissionCoordinator,
-            permissionMapper = RecordTypePermissionMapper(),
         )
     }
 

@@ -148,7 +148,7 @@ class DashboardViewModelTest {
     @Test
     fun onRefresh_withUnpermittedAccess_setsNullCountRecords() = runTest {
         val viewModel = createViewModel(countForType = { type ->
-            if (type == Steps::class) flowOf(FlowResult.Terminal.UnpermittedAccess(SecurityException("no permission")))
+            if (type == Steps::class) flowOf(FlowResult.Terminal.UnpermittedAccess(SecurityException("no permission"), "android.permission.health.READ_STEPS"))
             else flowOf(FlowResult.Data(0))
         })
         collectState(viewModel)

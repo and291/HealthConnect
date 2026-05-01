@@ -1,12 +1,15 @@
 package com.example.healthconnect.permissions.impl.domain
 
 import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
+import androidx.health.connect.client.records.Record
 import com.example.healthconnect.permissions.api.domain.HealthPermission
 import com.example.healthconnect.permissions.api.domain.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.PermissionResult
 import com.example.healthconnect.permissions.api.domain.PermissionStatus
+import com.example.healthconnect.permissions.api.domain.PermissionType
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
-import com.example.healthconnect.permissions.impl.data.AllHealthPermissions
+import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -37,6 +40,7 @@ import kotlinx.coroutines.sync.withLock
  */
 class PermissionCoordinatorImpl(
     private val permissionController: PermissionController,
+    private val allRecordTypes: List<KClass<out Record>>,
 ) : PermissionCoordinator {
 
     private val mutex = Mutex()
@@ -81,11 +85,19 @@ class PermissionCoordinatorImpl(
 
     override suspend fun getPermissionStatuses(): List<PermissionStatus> {
         val granted = permissionController.getGrantedPermissions()
-        return AllHealthPermissions.all.map { permission ->
-            PermissionStatus(
-                permission = permission,
-                isGranted = permission.permissionString in granted,
-            )
-        }
+        return allRecordTypes
+            .flatMap { recordClass ->
+                listOf(
+                    HealthPermission(LibraryHealthPermission.getReadPermission(recordClass), PermissionType.Read),
+                    HealthPermission(LibraryHealthPermission.getWritePermission(recordClass), PermissionType.Write),
+                )
+            }
+            .sortedBy { it.permissionString }
+            .map { permission ->
+                PermissionStatus(
+                    permission = permission,
+                    isGranted = permission.permissionString in granted,
+                )
+            }
     }
 }

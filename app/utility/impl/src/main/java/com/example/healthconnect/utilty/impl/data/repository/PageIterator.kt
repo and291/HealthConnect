@@ -29,6 +29,7 @@ internal class PageIterator(
     private val readPage: suspend (pageToken: String?) -> ReadRecordsResponse<Record>,
     private val flowResultMapper: FlowResultMapper,
     private val modelFactory: ModelFactory,
+    private val requiredPermission: String,
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     startWithFirstPage: Boolean = true,
 ) : Pager {
@@ -61,7 +62,7 @@ internal class PageIterator(
         } while (nextPageToken != null)
     }
         .onCompletion { pageRequests.close() }
-        .catch { e -> emit(flowResultMapper.mapTerminal(e)) }
+        .catch { e -> emit(flowResultMapper.mapTerminal(e, requiredPermission)) }
         .flowOn(dispatcher)
 
     override fun requestNextPage() {

@@ -23,6 +23,7 @@ sealed class FlowResult<out T> {
 
         data class UnpermittedAccess(
             val exception: SecurityException,
+            val missingPermission: String,
         ) : Terminal(exception)
 
         data class IoException(

@@ -2,15 +2,18 @@ package com.example.healthconnect.permissions.impl.di
 
 import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.records.Record
 import com.example.healthconnect.permissions.api.navigation.PermissionNavigationEntryProvider
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import com.example.healthconnect.permissions.impl.domain.PermissionCoordinatorImpl
 import com.example.healthconnect.permissions.impl.navigation.PermissionNavigationEntryProviderImpl
 import com.example.healthconnect.permissions.impl.ui.PermissionsViewModelFactory
+import kotlin.reflect.KClass
 
 object Di {
     var isPreview = true
     lateinit var applicationContext: Context
+    lateinit var allRecordTypes: List<KClass<out Record>>
 
     /**
      * The shared coordinator singleton.
@@ -25,6 +28,7 @@ object Di {
         } else {
             PermissionCoordinatorImpl(
                 permissionController = HealthConnectClient.getOrCreate(applicationContext).permissionController,
+                allRecordTypes = allRecordTypes,
             )
         }
     }

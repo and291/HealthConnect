@@ -7,6 +7,10 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Value
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.models.api.domain.record.Steps
+import com.example.healthconnect.permissions.api.domain.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.PermissionResult
+import com.example.healthconnect.permissions.api.domain.PermissionStatus
+import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
@@ -16,12 +20,6 @@ import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
-import com.example.healthconnect.permissions.api.domain.HealthPermission
-import com.example.healthconnect.permissions.api.domain.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.PermissionResult
-import com.example.healthconnect.permissions.api.domain.PermissionStatus
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
-import com.example.healthconnect.utilty.impl.domain.mapper.RecordTypePermissionMapper
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Effect
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Event
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.State.DisplayPage
@@ -71,7 +69,7 @@ class RecordsViewModelTest {
 
     // region helpers
 
-    private open inner class FakePermissionCoordinator : PermissionCoordinator {
+    private open class FakePermissionCoordinator : PermissionCoordinator {
         private val _pendingRequest = MutableStateFlow<Set<String>?>(null)
         override val pendingRequest: StateFlow<Set<String>?> = _pendingRequest.asStateFlow()
         private val _results = MutableSharedFlow<PermissionResult>(replay = 0, extraBufferCapacity = 1)
@@ -117,7 +115,6 @@ class RecordsViewModelTest {
             readAll = ReadAll(repository),
             delete = Delete(repository, ResultMapper(), PayloadMapper()),
             coordinator = FakePermissionCoordinator(),
-            permissionMapper = RecordTypePermissionMapper(),
         )
     }
 

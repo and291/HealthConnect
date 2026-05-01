@@ -7,10 +7,10 @@ import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.permissions.api.domain.HealthPermission
 import com.example.healthconnect.permissions.api.domain.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.PermissionResult
+import com.example.healthconnect.permissions.api.domain.PermissionType
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
-import com.example.healthconnect.utilty.impl.domain.mapper.RecordTypePermissionMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
@@ -34,7 +34,6 @@ class RecordsViewModel(
     private val readAll: ReadAll,
     private val delete: Delete,
     private val coordinator: PermissionCoordinator,
-    private val permissionMapper: RecordTypePermissionMapper,
 ) : ViewModel() {
 
     private val _effect = Channel<Effect>(Channel.BUFFERED)
@@ -66,7 +65,8 @@ class RecordsViewModel(
                     is FlowResult.Data<Page> -> DisplayPage.Record(page.item.items)
 
                     is FlowResult.Terminal.UnpermittedAccess -> {
-                        val permission = permissionMapper.readPermission(recordType)
+                        val permissionType = if (page.missingPermission.contains(".WRITE_")) PermissionType.Write else PermissionType.Read
+                        val permission = HealthPermission(page.missingPermission, permissionType)
                         requestPermissionAndRefreshOnGrant(permission)
                         DisplayPage.PermissionDenied(permission)
                     }

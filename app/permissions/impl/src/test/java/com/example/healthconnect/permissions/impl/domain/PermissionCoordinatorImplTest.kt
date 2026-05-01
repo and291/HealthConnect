@@ -1,11 +1,13 @@
 package com.example.healthconnect.permissions.impl.domain
 
 import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
+import androidx.health.connect.client.records.HeartRateRecord
+import androidx.health.connect.client.records.StepsRecord
 import com.example.healthconnect.permissions.api.domain.HealthPermission
 import com.example.healthconnect.permissions.api.domain.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.PermissionResult
 import com.example.healthconnect.permissions.api.domain.PermissionType
-import com.example.healthconnect.permissions.impl.data.AllHealthPermissions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -21,6 +23,8 @@ class PermissionCoordinatorImplTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
+    private val testRecordTypes = listOf(StepsRecord::class, HeartRateRecord::class)
+
     private val readSteps = HealthPermission("android.permission.health.READ_STEPS", PermissionType.Read)
     private val writeSteps = HealthPermission("android.permission.health.WRITE_STEPS", PermissionType.Write)
     private val readHeartRate = HealthPermission("android.permission.health.READ_HEART_RATE", PermissionType.Read)
@@ -32,7 +36,7 @@ class PermissionCoordinatorImplTest {
             override suspend fun getGrantedPermissions(): Set<String> = grantedOnQuery
             override suspend fun revokeAllPermissions() = Unit
         }
-        return PermissionCoordinatorImpl(fakeController)
+        return PermissionCoordinatorImpl(fakeController, testRecordTypes)
     }
 
     // endregion
@@ -124,7 +128,7 @@ class PermissionCoordinatorImplTest {
 
     @Test
     fun `getPermissionStatuses mapsGrantedPermissionsCorrectly`() = runTest(testDispatcher) {
-        val grantedString = AllHealthPermissions.read.first().permissionString
+        val grantedString = LibraryHealthPermission.getReadPermission(StepsRecord::class)
         val coordinator = coordinator(grantedOnQuery = setOf(grantedString))
 
         val statuses = coordinator.getPermissionStatuses()
@@ -140,6 +144,6 @@ class PermissionCoordinatorImplTest {
     fun `getPermissionStatuses returnsAllDeclaredPermissions`() = runTest(testDispatcher) {
         val coordinator = coordinator()
         val statuses = coordinator.getPermissionStatuses()
-        assertEquals(AllHealthPermissions.all.size, statuses.size)
+        assertEquals(testRecordTypes.size * 2, statuses.size)
     }
 }

@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
         com.example.healthconnect.permissions.impl.di.Di.also {
             it.isPreview = false
             it.applicationContext = this.application
+            it.allRecordTypes = com.example.healthconnect.utilty.impl.di.Di.allRecordTypes
         }
         com.example.healthconnect.utilty.impl.di.Di.also {
             it.isPreview = false
