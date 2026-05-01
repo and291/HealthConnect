@@ -57,6 +57,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //internal module dependencies
+    implementation(project(":app:permissions:api"))
     implementation(project(":app:utility:api"))
     implementation(project(":app:editor:api"))
     implementation(project(":app:navigation:api"))
