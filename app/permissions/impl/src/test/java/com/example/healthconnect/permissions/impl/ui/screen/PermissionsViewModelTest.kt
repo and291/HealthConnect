@@ -1,13 +1,17 @@
 package com.example.healthconnect.permissions.impl.ui.screen
 
+import com.example.healthconnect.models.api.domain.record.HeartRate
+import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
 import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
 import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
-import com.example.healthconnect.permissions.api.domain.framework.PermissionType
+import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
 import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
-import com.example.healthconnect.permissions.impl.ui.mapper.PermissionNameMapper
 import com.example.healthconnect.permissions.impl.ui.screen.PermissionsViewModel.Event
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
+import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,9 +36,29 @@ class PermissionsViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val readSteps = HealthPermission("android.permission.health.READ_STEPS", PermissionType.Read)
-    private val writeSteps = HealthPermission("android.permission.health.WRITE_STEPS", PermissionType.Write)
-    private val readHeartRate = HealthPermission("android.permission.health.READ_HEART_RATE", PermissionType.Read)
+    private val readSteps = HealthPermission("android.permission.health.READ_STEPS")
+    private val writeSteps = HealthPermission("android.permission.health.WRITE_STEPS")
+    private val readHeartRate = HealthPermission("android.permission.health.READ_HEART_RATE")
+    private val writeHeartRate = HealthPermission("android.permission.health.WRITE_HEART_RATE")
+
+    private val allModelTypes = listOf(Steps::class, HeartRate::class)
+
+    private val fakeResolver = object : LibraryPermissionResolver {
+        override fun readPermission(type: KClass<out Model>) = when (type) {
+            Steps::class -> readSteps
+            HeartRate::class -> readHeartRate
+            else -> error("unexpected type: $type")
+        }
+        override fun writePermission(type: KClass<out Model>) = when (type) {
+            Steps::class -> writeSteps
+            HeartRate::class -> writeHeartRate
+            else -> error("unexpected type: $type")
+        }
+    }
+
+    private val fakeNameMapper = object : RecordTypeNameMapper {
+        override fun nameRes(type: KClass<out Model>): Int = android.R.string.ok
+    }
 
     @Before
     fun setUp() {
@@ -91,8 +115,12 @@ class PermissionsViewModelTest {
         }
     }
 
-    private fun viewModel(coordinator: FakePermissionCoordinator) =
-        PermissionsViewModel(coordinator, PermissionNameMapper())
+    private fun viewModel(coordinator: FakePermissionCoordinator) = PermissionsViewModel(
+        coordinator = coordinator,
+        allModelTypes = allModelTypes,
+        recordTypeNameMapper = fakeNameMapper,
+        permissionResolver = fakeResolver,
+    )
 
     // endregion
 

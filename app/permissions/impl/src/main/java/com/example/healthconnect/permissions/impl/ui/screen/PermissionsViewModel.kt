@@ -7,7 +7,6 @@ import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
 import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
-import com.example.healthconnect.permissions.api.domain.framework.PermissionType
 import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
 import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
@@ -36,6 +35,14 @@ class PermissionsViewModel(
         )
     }.toMap()
 
+    private val readPermissionStrings: Set<String> = allModelTypes
+        .map { permissionResolver.readPermission(it).permissionString }
+        .toSet()
+
+    private val writePermissionStrings: Set<String> = allModelTypes
+        .map { permissionResolver.writePermission(it).permissionString }
+        .toSet()
+
     private val isLoading = MutableStateFlow(true)
     private val statuses = MutableStateFlow<List<PermissionStatus>>(emptyList())
 
@@ -43,10 +50,10 @@ class PermissionsViewModel(
         State(
             isLoading = loading,
             readPermissions = statusList
-                .filter { it.permission.type == PermissionType.Read }
+                .filter { it.permission.permissionString in readPermissionStrings }
                 .map { it.toUiItem() },
             writePermissions = statusList
-                .filter { it.permission.type == PermissionType.Write }
+                .filter { it.permission.permissionString in writePermissionStrings }
                 .map { it.toUiItem() },
         )
     }.stateIn(

@@ -8,7 +8,6 @@ import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
 import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
-import com.example.healthconnect.permissions.api.domain.framework.PermissionType
 import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.domain.entity.Page
@@ -68,8 +67,7 @@ class RecordsViewModel(
                     is FlowResult.Data<Page> -> DisplayPage.Record(page.item.items)
 
                     is FlowResult.Terminal.UnpermittedAccess -> {
-                        val permissionType = if (page.missingPermission.contains(".WRITE_")) PermissionType.Write else PermissionType.Read
-                        val permission = HealthPermission(page.missingPermission, permissionType)
+                        val permission = HealthPermission(page.missingPermission)
                         requestPermissionAndRefreshOnGrant(permission)
                         DisplayPage.PermissionDenied(
                             dataTypeNameRes = recordTypeNameMapper.nameRes(modelType),

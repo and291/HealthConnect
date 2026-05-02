@@ -9,7 +9,6 @@ import com.example.healthconnect.permissions.api.domain.framework.HealthPermissi
 import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
 import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
-import com.example.healthconnect.permissions.api.domain.framework.PermissionType
 import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,8 +32,8 @@ internal class FakePermissionCoordinator : PermissionCoordinator {
         val previewTypes = listOf(Steps::class, HeartRate::class, Weight::class, SleepSession::class, BloodPressure::class)
         return previewTypes.flatMap { type ->
             listOf(
-                PermissionStatus(HealthPermission("fake:read:${type.simpleName!!.lowercase()}", PermissionType.Read), isGranted = false),
-                PermissionStatus(HealthPermission("fake:write:${type.simpleName!!.lowercase()}", PermissionType.Write), isGranted = false),
+                PermissionStatus(HealthPermission("fake:read:${type.simpleName!!.lowercase()}"), isGranted = false),
+                PermissionStatus(HealthPermission("fake:write:${type.simpleName!!.lowercase()}"), isGranted = false),
             )
         }
     }

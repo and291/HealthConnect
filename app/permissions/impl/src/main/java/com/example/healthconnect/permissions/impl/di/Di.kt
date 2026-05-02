@@ -8,7 +8,6 @@ import com.example.healthconnect.models.api.domain.record.SleepSession
 import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.models.api.domain.record.Weight
 import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
-import com.example.healthconnect.permissions.api.domain.framework.PermissionType
 import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
 import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
 import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
@@ -49,9 +48,9 @@ object Di {
 
     private val fakePermissionResolver = object : LibraryPermissionResolver {
         override fun readPermission(type: KClass<out Model>) =
-            HealthPermission("fake:read:${type.simpleName!!.lowercase()}", PermissionType.Read)
+            HealthPermission("fake:read:${type.simpleName!!.lowercase()}")
         override fun writePermission(type: KClass<out Model>) =
-            HealthPermission("fake:write:${type.simpleName!!.lowercase()}", PermissionType.Write)
+            HealthPermission("fake:write:${type.simpleName!!.lowercase()}")
     }
 
     private val fakeRecordTypeNameMapper = object : RecordTypeNameMapper {
