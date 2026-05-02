@@ -1,6 +1,6 @@
-package com.example.healthconnect.permissions.api.domain
+package com.example.healthconnect.permissions.api.domain.framework
 
-/** Describes a permission request submitted to [com.example.healthconnect.permissions.api.usecase.PermissionCoordinator]. */
+/** Describes a permission request submitted to [com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator]. */
 sealed class PermissionRequest {
 
     /** Request a single permission. */

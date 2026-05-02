@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.permissions.api.usecase.LibraryPermissionResolver
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.permissions.impl.ui.screen.PermissionsViewModel
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import kotlin.reflect.KClass

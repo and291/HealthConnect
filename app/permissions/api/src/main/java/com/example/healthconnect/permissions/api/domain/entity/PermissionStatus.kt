@@ -1,4 +1,6 @@
-package com.example.healthconnect.permissions.api.domain
+package com.example.healthconnect.permissions.api.domain.entity
+
+import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
 
 /**
  * The current grant status of a single [HealthPermission].

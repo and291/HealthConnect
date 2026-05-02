@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.permissions.api.usecase.LibraryPermissionResolver
-import com.example.healthconnect.permissions.api.usecase.PermissionController
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper

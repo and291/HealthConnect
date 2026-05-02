@@ -3,7 +3,7 @@ package com.example.healthconnect.utilty.impl.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel

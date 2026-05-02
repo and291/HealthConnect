@@ -7,10 +7,10 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Value
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.models.api.domain.record.Steps
-import com.example.healthconnect.permissions.api.domain.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.PermissionResult
-import com.example.healthconnect.permissions.api.domain.PermissionStatus
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
+import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository

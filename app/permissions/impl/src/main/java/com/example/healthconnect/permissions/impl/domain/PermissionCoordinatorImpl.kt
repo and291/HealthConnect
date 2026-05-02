@@ -1,13 +1,13 @@
 package com.example.healthconnect.permissions.impl.domain
 
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.permissions.api.domain.HealthPermission
-import com.example.healthconnect.permissions.api.domain.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.PermissionResult
-import com.example.healthconnect.permissions.api.domain.PermissionStatus
-import com.example.healthconnect.permissions.api.usecase.LibraryPermissionResolver
-import com.example.healthconnect.permissions.api.usecase.PermissionController
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
+import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
+import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
+import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,6 +76,9 @@ class PermissionCoordinatorImpl(
         }
 
         _results.tryEmit(result)
+        // No mutex needed: this runs on the main thread and can't race with itself.
+        // Visibility to request() is guaranteed because tryEmit() below establishes
+        // a happens-before edge that any coroutine re-entering mutex.withLock() will observe.
         inFlightPermissions = null
         _pendingRequest.tryEmit(null)
     }

@@ -1,6 +1,6 @@
-package com.example.healthconnect.permissions.api.domain
+package com.example.healthconnect.permissions.api.domain.framework
 
-/** The outcome of a permission request, emitted on [com.example.healthconnect.permissions.api.usecase.PermissionCoordinator.results]. */
+/** The outcome of a permission request, emitted on [com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator.results]. */
 sealed class PermissionResult {
 
     /** Every requested permission was granted. */

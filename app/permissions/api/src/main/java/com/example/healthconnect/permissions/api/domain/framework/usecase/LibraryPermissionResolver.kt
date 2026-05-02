@@ -1,7 +1,7 @@
-package com.example.healthconnect.permissions.api.usecase
+package com.example.healthconnect.permissions.api.domain.framework.usecase
 
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.permissions.api.domain.HealthPermission
+import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
 import kotlin.reflect.KClass
 
 interface LibraryPermissionResolver {

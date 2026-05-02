@@ -4,10 +4,10 @@ import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.StepsRecord
-import com.example.healthconnect.permissions.api.domain.HealthPermission
-import com.example.healthconnect.permissions.api.domain.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.PermissionResult
-import com.example.healthconnect.permissions.api.domain.PermissionType
+import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
+import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
+import com.example.healthconnect.permissions.api.domain.framework.PermissionType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

@@ -1,8 +1,8 @@
-package com.example.healthconnect.permissions.api.usecase
+package com.example.healthconnect.permissions.api.domain.framework.usecase
 
-import com.example.healthconnect.permissions.api.domain.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.PermissionResult
-import com.example.healthconnect.permissions.api.domain.PermissionStatus
+import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
+import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 

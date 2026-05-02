@@ -1,4 +1,4 @@
-package com.example.healthconnect.permissions.api.domain
+package com.example.healthconnect.permissions.api.domain.framework
 
 /**
  * Represents a single Health Connect permission.

@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.permissions.api.domain.HealthPermission
-import com.example.healthconnect.permissions.api.domain.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.PermissionResult
-import com.example.healthconnect.permissions.api.domain.PermissionType
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
+import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
+import com.example.healthconnect.permissions.api.domain.framework.PermissionType
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete

@@ -1,7 +1,7 @@
 package com.example.healthconnect.utilty.impl.data
 
 import androidx.health.connect.client.HealthConnectClient
-import com.example.healthconnect.permissions.api.usecase.PermissionController
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
 
 class PermissionControllerImpl(
     private val healthConnectClient: HealthConnectClient,

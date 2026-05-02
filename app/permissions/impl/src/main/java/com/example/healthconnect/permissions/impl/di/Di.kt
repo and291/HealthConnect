@@ -7,14 +7,12 @@ import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.models.api.domain.record.SleepSession
 import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.models.api.domain.record.Weight
-import com.example.healthconnect.permissions.api.domain.HealthPermission
-import com.example.healthconnect.permissions.api.domain.PermissionType
-import com.example.healthconnect.permissions.api.navigation.PermissionNavigationEntryProvider
-import com.example.healthconnect.permissions.api.usecase.LibraryPermissionResolver
-import com.example.healthconnect.permissions.api.usecase.PermissionController
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
+import com.example.healthconnect.permissions.api.domain.framework.PermissionType
+import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.permissions.impl.domain.PermissionCoordinatorImpl
-import com.example.healthconnect.permissions.impl.navigation.PermissionNavigationEntryProviderImpl
 import com.example.healthconnect.permissions.impl.ui.PermissionsViewModelFactory
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import kotlin.reflect.KClass
@@ -66,9 +64,5 @@ object Di {
         } else {
             PermissionsViewModelFactory(coordinator, allModelTypes, recordTypeNameMapper, permissionResolver)
         }
-    }
-
-    val permissionNav: PermissionNavigationEntryProvider by lazy {
-        PermissionNavigationEntryProviderImpl()
     }
 }

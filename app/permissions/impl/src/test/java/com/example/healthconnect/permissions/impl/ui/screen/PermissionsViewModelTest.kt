@@ -1,11 +1,11 @@
 package com.example.healthconnect.permissions.impl.ui.screen
 
-import com.example.healthconnect.permissions.api.domain.HealthPermission
-import com.example.healthconnect.permissions.api.domain.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.PermissionResult
-import com.example.healthconnect.permissions.api.domain.PermissionStatus
-import com.example.healthconnect.permissions.api.domain.PermissionType
-import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
+import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
+import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
+import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
+import com.example.healthconnect.permissions.api.domain.framework.PermissionType
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.permissions.impl.ui.mapper.PermissionNameMapper
 import com.example.healthconnect.permissions.impl.ui.screen.PermissionsViewModel.Event
 import kotlinx.coroutines.Dispatchers
