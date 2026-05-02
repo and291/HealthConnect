@@ -9,7 +9,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapperImpl
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +69,7 @@ class DashboardViewModelTest {
         }
         return DashboardViewModel(
             count = Count(repository),
-            nameMapper = RecordTypeNameMapper(),
+            nameMapper = RecordTypeNameMapperImpl(),
             iconMapper = RecordTypeIconMapper(),
             flowResultTerminalIconMapper = FlowResultTerminalIconMapper(),
         )

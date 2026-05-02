@@ -5,7 +5,7 @@ import org.junit.Test
 
 class RecordTypeNameMapperTest {
 
-    private val mapper = RecordTypeNameMapper()
+    private val mapper = RecordTypeNameMapperImpl()
 
     @Test
     fun allLibraryRecordsHaveNameResource() {

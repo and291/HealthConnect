@@ -1,13 +1,14 @@
 package com.example.healthconnect.permissions.impl.domain
 
-import androidx.health.connect.client.PermissionController
-import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
-import androidx.health.connect.client.records.HeartRateRecord
-import androidx.health.connect.client.records.StepsRecord
+import com.example.healthconnect.models.api.domain.record.HeartRate
+import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.models.api.domain.record.Steps
 import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
 import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
-import com.example.healthconnect.permissions.api.domain.framework.PermissionType
+import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
+import kotlin.reflect.KClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -23,20 +24,26 @@ class PermissionCoordinatorImplTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val testRecordTypes = listOf(StepsRecord::class, HeartRateRecord::class)
+    private val testRecordTypes = listOf(Steps::class, HeartRate::class)
 
-    private val readSteps = HealthPermission("android.permission.health.READ_STEPS", PermissionType.Read)
-    private val writeSteps = HealthPermission("android.permission.health.WRITE_STEPS", PermissionType.Write)
-    private val readHeartRate = HealthPermission("android.permission.health.READ_HEART_RATE", PermissionType.Read)
+    private val readSteps = HealthPermission("android.permission.health.READ_STEPS")
+    private val writeSteps = HealthPermission("android.permission.health.WRITE_STEPS")
+    private val readHeartRate = HealthPermission("android.permission.health.READ_HEART_RATE")
 
     // region helpers
+
+    private val fakeResolver = object : LibraryPermissionResolver {
+        override fun readPermission(type: KClass<out Model>): HealthPermission =
+            HealthPermission("read.${type.simpleName}")
+        override fun writePermission(type: KClass<out Model>): HealthPermission =
+            HealthPermission("write.${type.simpleName}")
+    }
 
     private fun coordinator(grantedOnQuery: Set<String> = emptySet()): PermissionCoordinatorImpl {
         val fakeController = object : PermissionController {
             override suspend fun getGrantedPermissions(): Set<String> = grantedOnQuery
-            override suspend fun revokeAllPermissions() = Unit
         }
-        return PermissionCoordinatorImpl(fakeController, testRecordTypes)
+        return PermissionCoordinatorImpl(fakeController, fakeResolver, testRecordTypes)
     }
 
     // endregion
@@ -128,7 +135,7 @@ class PermissionCoordinatorImplTest {
 
     @Test
     fun `getPermissionStatuses mapsGrantedPermissionsCorrectly`() = runTest(testDispatcher) {
-        val grantedString = LibraryHealthPermission.getReadPermission(StepsRecord::class)
+        val grantedString = fakeResolver.readPermission(Steps::class).permissionString
         val coordinator = coordinator(grantedOnQuery = setOf(grantedString))
 
         val statuses = coordinator.getPermissionStatuses()

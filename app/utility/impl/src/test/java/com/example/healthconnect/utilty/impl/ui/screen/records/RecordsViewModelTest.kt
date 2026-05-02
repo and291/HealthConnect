@@ -115,6 +115,9 @@ class RecordsViewModelTest {
             readAll = ReadAll(repository),
             delete = Delete(repository, ResultMapper(), PayloadMapper()),
             coordinator = FakePermissionCoordinator(),
+            recordTypeNameMapper = object : com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper {
+                override fun nameRes(type: KClass<out Model>): Int = android.R.string.ok
+            },
         )
     }
 
