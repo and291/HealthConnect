@@ -1,13 +1,12 @@
 package com.example.healthconnect.permissions.impl.domain
 
-import androidx.health.connect.client.PermissionController
-import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
-import androidx.health.connect.client.records.Record
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.permissions.api.domain.HealthPermission
 import com.example.healthconnect.permissions.api.domain.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.PermissionResult
 import com.example.healthconnect.permissions.api.domain.PermissionStatus
-import com.example.healthconnect.permissions.api.domain.PermissionType
+import com.example.healthconnect.permissions.api.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.usecase.PermissionController
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -34,13 +33,11 @@ import kotlinx.coroutines.sync.withLock
  *               _results.tryEmit(result)
  *  results.first() ◄─────────────────────────────────────────────────
  * ```
- *
- * @param permissionController Used only by [getPermissionStatuses] to query current grants.
- *   Obtain via `HealthConnectClient.getOrCreate(context).permissionController`.
  */
 class PermissionCoordinatorImpl(
     private val permissionController: PermissionController,
-    private val allRecordTypes: List<KClass<out Record>>,
+    private val permissionResolver: LibraryPermissionResolver,
+    private val allModelTypes: List<KClass<out Model>>,
 ) : PermissionCoordinator {
 
     private val mutex = Mutex()
@@ -85,13 +82,8 @@ class PermissionCoordinatorImpl(
 
     override suspend fun getPermissionStatuses(): List<PermissionStatus> {
         val granted = permissionController.getGrantedPermissions()
-        return allRecordTypes
-            .flatMap { recordClass ->
-                listOf(
-                    HealthPermission(LibraryHealthPermission.getReadPermission(recordClass), PermissionType.Read),
-                    HealthPermission(LibraryHealthPermission.getWritePermission(recordClass), PermissionType.Write),
-                )
-            }
+        return allModelTypes
+            .flatMap { listOf(permissionResolver.readPermission(it), permissionResolver.writePermission(it)) }
             .sortedBy { it.permissionString }
             .map { permission ->
                 PermissionStatus(

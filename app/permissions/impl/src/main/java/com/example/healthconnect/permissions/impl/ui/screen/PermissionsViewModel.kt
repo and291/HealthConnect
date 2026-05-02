@@ -1,15 +1,17 @@
 package com.example.healthconnect.permissions.impl.ui.screen
 
 import androidx.annotation.StringRes
-import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.permissions.api.domain.HealthPermission
 import com.example.healthconnect.permissions.api.domain.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.PermissionStatus
 import com.example.healthconnect.permissions.api.domain.PermissionType
+import com.example.healthconnect.permissions.api.usecase.LibraryPermissionResolver
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
-import com.example.healthconnect.permissions.impl.ui.mapper.PermissionNameMapper
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
+import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,14 +22,17 @@ import kotlinx.coroutines.launch
 
 class PermissionsViewModel(
     private val coordinator: PermissionCoordinator,
-    nameMapper: PermissionNameMapper,
+    allModelTypes: List<KClass<out Model>>,
+    recordTypeNameMapper: RecordTypeNameMapper,
+    permissionResolver: LibraryPermissionResolver,
 ) : ViewModel() {
 
     // Both read and write for the same record type share the data-type label.
-    private val permissionNames: Map<String, Int> = nameMapper.names.entries.flatMap { (recordClass, nameResId) ->
+    private val permissionNames: Map<String, Int> = allModelTypes.flatMap { modelClass ->
+        val nameRes = recordTypeNameMapper.nameRes(modelClass)
         listOf(
-            LibraryHealthPermission.getReadPermission(recordClass) to nameResId,
-            LibraryHealthPermission.getWritePermission(recordClass) to nameResId,
+            permissionResolver.readPermission(modelClass).permissionString to nameRes,
+            permissionResolver.writePermission(modelClass).permissionString to nameRes,
         )
     }.toMap()
 

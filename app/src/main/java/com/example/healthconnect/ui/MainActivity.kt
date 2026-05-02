@@ -47,7 +47,10 @@ class MainActivity : ComponentActivity() {
         com.example.healthconnect.permissions.impl.di.Di.also {
             it.isPreview = false
             it.applicationContext = this.application
-            it.allRecordTypes = com.example.healthconnect.utilty.impl.di.Di.allRecordTypes
+            it.permissionController = com.example.healthconnect.utilty.impl.di.Di.permissionController
+            it.permissionResolver = com.example.healthconnect.utilty.impl.di.Di.permissionResolver
+            it.recordTypeNameMapper = com.example.healthconnect.utilty.impl.di.Di.recordTypeNameMapper
+            it.allModelTypes = com.example.healthconnect.utilty.impl.di.Di.allModelTypes
         }
         com.example.healthconnect.utilty.impl.di.Di.also {
             it.isPreview = false

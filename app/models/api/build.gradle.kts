@@ -1,12 +1,13 @@
+import com.android.build.api.dsl.LibraryExtension
+
 plugins {
     alias(libs.plugins.android.library)
 }
 
-android {
+extensions.configure<LibraryExtension> {
     namespace = "com.example.healthconnect.models.api"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
+    compileSdkExtension = 19
 
     defaultConfig {
         minSdk = 26

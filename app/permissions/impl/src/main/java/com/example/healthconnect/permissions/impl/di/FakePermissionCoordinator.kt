@@ -1,11 +1,10 @@
 package com.example.healthconnect.permissions.impl.di
 
-import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
-import androidx.health.connect.client.records.BloodPressureRecord
-import androidx.health.connect.client.records.HeartRateRecord
-import androidx.health.connect.client.records.SleepSessionRecord
-import androidx.health.connect.client.records.StepsRecord
-import androidx.health.connect.client.records.WeightRecord
+import com.example.healthconnect.models.api.domain.record.BloodPressure
+import com.example.healthconnect.models.api.domain.record.HeartRate
+import com.example.healthconnect.models.api.domain.record.SleepSession
+import com.example.healthconnect.models.api.domain.record.Steps
+import com.example.healthconnect.models.api.domain.record.Weight
 import com.example.healthconnect.permissions.api.domain.HealthPermission
 import com.example.healthconnect.permissions.api.domain.PermissionRequest
 import com.example.healthconnect.permissions.api.domain.PermissionResult
@@ -21,6 +20,9 @@ import kotlinx.coroutines.flow.StateFlow
  * No-op [PermissionCoordinator] used when [Di.isPreview] is true.
  * Returns a representative subset of permissions as denied so the Permissions preview
  * renders a realistic state.
+ *
+ * Permission strings use the same scheme as [Di.fakePermissionResolver] so the ViewModel's
+ * name lookup succeeds in preview.
  */
 internal class FakePermissionCoordinator : PermissionCoordinator {
     override val pendingRequest: StateFlow<Set<String>?> = MutableStateFlow(null)
@@ -28,17 +30,11 @@ internal class FakePermissionCoordinator : PermissionCoordinator {
     override suspend fun request(request: PermissionRequest) = Unit
     override fun onActivityResult(grantedPermissionStrings: Set<String>) = Unit
     override suspend fun getPermissionStatuses(): List<PermissionStatus> {
-        val previewTypes = listOf(
-            StepsRecord::class,
-            HeartRateRecord::class,
-            WeightRecord::class,
-            SleepSessionRecord::class,
-            BloodPressureRecord::class,
-        )
-        return previewTypes.flatMap { recordClass ->
+        val previewTypes = listOf(Steps::class, HeartRate::class, Weight::class, SleepSession::class, BloodPressure::class)
+        return previewTypes.flatMap { type ->
             listOf(
-                PermissionStatus(HealthPermission(LibraryHealthPermission.getReadPermission(recordClass), PermissionType.Read), isGranted = false),
-                PermissionStatus(HealthPermission(LibraryHealthPermission.getWritePermission(recordClass), PermissionType.Write), isGranted = false),
+                PermissionStatus(HealthPermission("fake:read:${type.simpleName!!.lowercase()}", PermissionType.Read), isGranted = false),
+                PermissionStatus(HealthPermission("fake:write:${type.simpleName!!.lowercase()}", PermissionType.Write), isGranted = false),
             )
         }
     }

@@ -4,9 +4,14 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.permissions.api.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.usecase.PermissionController
 import com.example.healthconnect.permissions.api.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.data.LibraryPermissionResolverImpl
+import com.example.healthconnect.utilty.impl.data.PermissionControllerImpl
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
@@ -26,9 +31,8 @@ import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapperImpl
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
-import androidx.health.connect.client.records.Record
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -38,6 +42,22 @@ object Di { //TODO move to dagger. keep all features
     lateinit var applicationContext: Context
     lateinit var modelFactory: ModelFactory
     lateinit var permissionCoordinator: PermissionCoordinator
+
+    private val healthConnectClient: HealthConnectClient by lazy {
+        HealthConnectClient.getOrCreate(applicationContext)
+    }
+
+    val permissionController: PermissionController by lazy {
+        PermissionControllerImpl(healthConnectClient)
+    }
+
+    val permissionResolver: LibraryPermissionResolver by lazy {
+        LibraryPermissionResolverImpl(typeMapper)
+    }
+
+    val recordTypeNameMapper: RecordTypeNameMapper by lazy { RecordTypeNameMapperImpl() }
+
+    val allModelTypes: List<KClass<out Model>> = SupportedModels.all
 
     private val libraryRepository by lazy {
         if (isPreview) {
@@ -74,10 +94,6 @@ object Di { //TODO move to dagger. keep all features
     private val payloadMapper = PayloadMapper()
     private val resultMapper = ResultMapper()
     private val typeMapper = TypeMapper()
-
-    val allRecordTypes: List<KClass<out Record>> by lazy {
-        SupportedModels.all.map { typeMapper.toRecord(it) }
-    }
     private val readParamsMapper = ReadParamsMapper(typeMapper)
     private val flowResultMapper = FlowResultMapper()
 
@@ -105,7 +121,6 @@ object Di { //TODO move to dagger. keep all features
         )
     }
 
-    private val recordTypeNameMapper by lazy { RecordTypeNameMapper() }
     private val recordTypeIconMapper by lazy { RecordTypeIconMapper() }
     private val flowResultTerminalIconMapper by lazy { FlowResultTerminalIconMapper() }
 

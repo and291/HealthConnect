@@ -40,6 +40,7 @@ kotlin {
 
 dependencies {
     implementation(project(":app:navigation:api"))
+    implementation(project(":app:models:api"))
 
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.foundation.layout)

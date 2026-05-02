@@ -49,8 +49,8 @@ kotlin {
 dependencies {
     implementation(project(":app:permissions:api"))
     implementation(project(":app:navigation:api"))
-
-    implementation(libs.androidx.connect.client)
+    implementation(project(":app:utility:api"))
+    implementation(project(":app:models:api"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
