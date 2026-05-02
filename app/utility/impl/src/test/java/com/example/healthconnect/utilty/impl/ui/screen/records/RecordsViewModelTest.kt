@@ -111,7 +111,7 @@ class RecordsViewModelTest {
             override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("not expected")
         }
         return RecordsViewModel(
-            recordType = Steps::class,
+            modelType = Steps::class,
             readAll = ReadAll(repository),
             delete = Delete(repository, ResultMapper(), PayloadMapper()),
             coordinator = FakePermissionCoordinator(),

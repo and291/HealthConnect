@@ -118,6 +118,7 @@ object Di { //TODO move to dagger. keep all features
             readAll = readAll,
             delete = delete,
             coordinator = permissionCoordinator,
+            recordTypeNameMapper = recordTypeNameMapper,
         )
     }
 

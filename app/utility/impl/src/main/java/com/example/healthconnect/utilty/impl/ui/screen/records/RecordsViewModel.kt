@@ -1,5 +1,6 @@
 package com.example.healthconnect.utilty.impl.ui.screen.records
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -9,6 +10,7 @@ import com.example.healthconnect.permissions.api.domain.framework.PermissionRequ
 import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
 import com.example.healthconnect.permissions.api.domain.framework.PermissionType
 import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
@@ -30,10 +32,11 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class RecordsViewModel(
-    private val recordType: KClass<out Model>,
+    private val modelType: KClass<out Model>,
     private val readAll: ReadAll,
     private val delete: Delete,
     private val coordinator: PermissionCoordinator,
+    private val recordTypeNameMapper: RecordTypeNameMapper,
 ) : ViewModel() {
 
     private val _effect = Channel<Effect>(Channel.BUFFERED)
@@ -56,7 +59,7 @@ class RecordsViewModel(
     }
 
     private fun pagedFlow(): Flow<State> {
-        val pager = readAll(recordType)
+        val pager = readAll(modelType)
         currentPager = pager
 
         return pager.pages
@@ -68,7 +71,10 @@ class RecordsViewModel(
                         val permissionType = if (page.missingPermission.contains(".WRITE_")) PermissionType.Write else PermissionType.Read
                         val permission = HealthPermission(page.missingPermission, permissionType)
                         requestPermissionAndRefreshOnGrant(permission)
-                        DisplayPage.PermissionDenied(permission)
+                        DisplayPage.PermissionDenied(
+                            dataTypeNameRes = recordTypeNameMapper.nameRes(modelType),
+                            permission = permission,
+                        )
                     }
 
                     is FlowResult.Terminal -> DisplayPage.Error(page.toString())
@@ -124,6 +130,7 @@ class RecordsViewModel(
             ) : DisplayPage()
 
             data class PermissionDenied(
+                @StringRes val dataTypeNameRes: Int,
                 val permission: HealthPermission,
             ) : DisplayPage()
         }

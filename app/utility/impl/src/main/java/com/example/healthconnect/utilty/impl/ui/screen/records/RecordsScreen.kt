@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -113,7 +114,7 @@ fun RecordsScreen(
 
                     is DisplayPage.PermissionDenied -> item {
                         PermissionDeniedMessage(
-                            dataTypeName = "", //TODO unite permission name and model name mappers?
+                            dataTypeName = stringResource(page.dataTypeNameRes),
                         )
                     }
                 }
