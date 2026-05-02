@@ -44,13 +44,14 @@ import com.example.healthconnect.models.api.domain.record.TotalCaloriesBurned
 import com.example.healthconnect.models.api.domain.record.Vo2Max
 import com.example.healthconnect.models.api.domain.record.Weight
 import com.example.healthconnect.models.api.domain.record.WheelchairPushes
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.R
 import kotlin.reflect.KClass
 
-class RecordTypeNameMapper {
+class RecordTypeNameMapperImpl : RecordTypeNameMapper {
 
     @StringRes
-    fun nameRes(type: KClass<out Model>): Int = requireNotNull(names[type]) {
+    override fun nameRes(type: KClass<out Model>): Int = requireNotNull(names[type]) {
         "No string resource for record type ${type.simpleName}"
     }
 

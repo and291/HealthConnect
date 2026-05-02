@@ -14,12 +14,15 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABL
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import androidx.health.connect.client.PermissionController
+import androidx.lifecycle.lifecycleScope
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.ui.navigation.AppNavigationEntry
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.ui.theme.HealthConnectTheme
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -27,8 +30,8 @@ class MainActivity : ComponentActivity() {
 
     private val requestPermissionActivityContract =
         PermissionController.createRequestPermissionResultContract()
-    private val permissionResult = registerForActivityResult(requestPermissionActivityContract) {
-
+    private val permissionResult = registerForActivityResult(requestPermissionActivityContract) { granted ->
+        com.example.healthconnect.permissions.impl.di.Di.coordinator.onActivityResult(granted)
     }
     private val requestPermission: (String) -> Unit = { sdkPermission ->
         permissionResult.launch(setOf(sdkPermission))
@@ -41,15 +44,32 @@ class MainActivity : ComponentActivity() {
             it.isPreview = false
             it.applicationContext = this.application
         }
+        com.example.healthconnect.permissions.impl.di.Di.also {
+            it.isPreview = false
+            it.applicationContext = this.application
+            it.permissionController = com.example.healthconnect.utilty.impl.di.Di.permissionController
+            it.permissionResolver = com.example.healthconnect.utilty.impl.di.Di.permissionResolver
+            it.recordTypeNameMapper = com.example.healthconnect.utilty.impl.di.Di.recordTypeNameMapper
+            it.allModelTypes = com.example.healthconnect.utilty.impl.di.Di.allModelTypes
+        }
         com.example.healthconnect.utilty.impl.di.Di.also {
             it.isPreview = false
             it.applicationContext = this.application
             it.modelFactory = com.example.healthconnect.editor.impl.di.Di.modelFactory
+            it.permissionCoordinator = com.example.healthconnect.permissions.impl.di.Di.coordinator
         }
         com.example.healthconnect.editor.impl.di.Di.also {
             it.fieldProvider = com.example.healthconnect.components.impl.di.Di.fieldProvider
             it.update = com.example.healthconnect.utilty.impl.di.Di.update
             it.insert = com.example.healthconnect.utilty.impl.di.Di.insert
+        }
+
+        // Observe coordinator.pendingRequest and launch the system permission dialog.
+        // The Activity is the only place allowed to call permissionResult.launch().
+        lifecycleScope.launch {
+            com.example.healthconnect.permissions.impl.di.Di.coordinator.pendingRequest
+                .filterNotNull()
+                .collect { strings -> permissionResult.launch(strings) }
         }
 
         //injects for current activity below

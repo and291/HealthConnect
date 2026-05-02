@@ -19,6 +19,7 @@ import com.example.healthconnect.ui.navigation.AppNavigationEntry.Splash
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Unavailable
 import com.example.healthconnect.ui.screen.SdkUnavailableScreen
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredScreen
+import com.example.healthconnect.permissions.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 
 // Define keys that will identify content
@@ -80,6 +81,12 @@ fun CreateNavDisplay(
                 key = key,
                 backStack = backStack,
                 innerPadding = innerPadding
+            )
+
+            is PermissionNavigationEntry -> Di.permissionNav.getNavEntry(
+                key = key,
+                backStack = backStack,
+                innerPadding = innerPadding,
             )
 
             else -> NavEntry(key) { Text("Unknown route") }

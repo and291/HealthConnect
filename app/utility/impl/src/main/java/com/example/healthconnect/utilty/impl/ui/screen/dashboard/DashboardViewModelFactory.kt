@@ -6,7 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import kotlin.reflect.KClass
 
 class DashboardViewModelFactory(

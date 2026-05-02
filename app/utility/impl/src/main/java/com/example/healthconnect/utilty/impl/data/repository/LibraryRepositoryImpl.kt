@@ -2,6 +2,7 @@ package com.example.healthconnect.utilty.impl.data.repository
 
 import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordsResponse
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
@@ -57,17 +58,24 @@ class LibraryRepositoryImpl(
         )
     }
 
-    override fun <M : Model> pager(params: ReadParams<M>): Pager = PageIterator(
-        readPage = { token -> readData<M, Record>(params, token) },
-        flowResultMapper = flowResultMapper,
-        modelFactory = modelFactory
-    )
+    override fun <M : Model> pager(params: ReadParams<M>): Pager {
+        val readPermission = HealthPermission.getReadPermission(typeMapper.toRecord(params.modelType))
+        return PageIterator(
+            readPage = { token -> readData<M, Record>(params, token) },
+            flowResultMapper = flowResultMapper,
+            modelFactory = modelFactory,
+            requiredPermission = readPermission,
+        )
+    }
 
     override fun <M : Model> count(
         params: ReadParams<M>,
-    ): Flow<FlowResult<Int>> = countAllRecords(params)
-        .catch { e -> emit(flowResultMapper.mapTerminal(e)) }
-        .flowOn(Dispatchers.IO)
+    ): Flow<FlowResult<Int>> {
+        val readPermission = HealthPermission.getReadPermission(typeMapper.toRecord(params.modelType))
+        return countAllRecords(params)
+            .catch { e -> emit(flowResultMapper.mapTerminal(e, readPermission)) }
+            .flowOn(Dispatchers.IO)
+    }
 
     private fun <M : Model> countAllRecords(
         params: ReadParams<M>,

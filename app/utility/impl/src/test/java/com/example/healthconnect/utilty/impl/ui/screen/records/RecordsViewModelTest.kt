@@ -7,6 +7,10 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Value
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.models.api.domain.record.Steps
+import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
+import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
+import com.example.healthconnect.permissions.api.domain.entity.PermissionStatus
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
@@ -23,6 +27,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -59,6 +69,16 @@ class RecordsViewModelTest {
 
     // region helpers
 
+    private open class FakePermissionCoordinator : PermissionCoordinator {
+        private val _pendingRequest = MutableStateFlow<Set<String>?>(null)
+        override val pendingRequest: StateFlow<Set<String>?> = _pendingRequest.asStateFlow()
+        private val _results = MutableSharedFlow<PermissionResult>(replay = 0, extraBufferCapacity = 1)
+        override val results: SharedFlow<PermissionResult> = _results.asSharedFlow()
+        override suspend fun request(request: PermissionRequest) {}
+        override fun onActivityResult(grantedPermissionStrings: Set<String>) {}
+        override suspend fun getPermissionStatuses(): List<PermissionStatus> = emptyList()
+    }
+
     private class FakePager : Pager {
         private val channel = Channel<FlowResult<Page>>(Channel.UNLIMITED)
         override val pages: Flow<FlowResult<Page>> = channel.receiveAsFlow()
@@ -91,9 +111,13 @@ class RecordsViewModelTest {
             override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("not expected")
         }
         return RecordsViewModel(
-            recordType = Steps::class,
+            modelType = Steps::class,
             readAll = ReadAll(repository),
             delete = Delete(repository, ResultMapper(), PayloadMapper()),
+            coordinator = FakePermissionCoordinator(),
+            recordTypeNameMapper = object : com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper {
+                override fun nameRes(type: KClass<out Model>): Int = android.R.string.ok
+            },
         )
     }
 

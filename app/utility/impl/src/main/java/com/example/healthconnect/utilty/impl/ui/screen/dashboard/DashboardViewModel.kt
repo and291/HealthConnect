@@ -10,7 +10,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem.LoadingState
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardSegment
@@ -73,6 +73,10 @@ class DashboardViewModel(
 
             Event.OnLibraryDataManagerClick -> {
                 _effect.trySend(Effect.ShowLibraryDataManager)
+            }
+
+            Event.OnPermissionsClick -> {
+                _effect.trySend(Effect.NavigateToPermissions)
             }
         }
     }
@@ -148,6 +152,7 @@ class DashboardViewModel(
         ) : Effect()
 
         object ShowLibraryDataManager : Effect()
+        object NavigateToPermissions : Effect()
     }
 
     sealed class Event {
@@ -158,5 +163,6 @@ class DashboardViewModel(
         ) : Event()
 
         data object OnLibraryDataManagerClick : Event()
+        data object OnPermissionsClick : Event()
     }
 }

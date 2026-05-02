@@ -4,8 +4,14 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
+import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
+import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.data.LibraryPermissionResolverImpl
+import com.example.healthconnect.utilty.impl.data.PermissionControllerImpl
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
@@ -13,6 +19,7 @@ import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
+import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
@@ -24,7 +31,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapperImpl
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
@@ -34,6 +41,23 @@ object Di { //TODO move to dagger. keep all features
 
     lateinit var applicationContext: Context
     lateinit var modelFactory: ModelFactory
+    lateinit var permissionCoordinator: PermissionCoordinator
+
+    private val healthConnectClient: HealthConnectClient by lazy {
+        HealthConnectClient.getOrCreate(applicationContext)
+    }
+
+    val permissionController: PermissionController by lazy {
+        PermissionControllerImpl(healthConnectClient)
+    }
+
+    val permissionResolver: LibraryPermissionResolver by lazy {
+        LibraryPermissionResolverImpl(typeMapper)
+    }
+
+    val recordTypeNameMapper: RecordTypeNameMapper by lazy { RecordTypeNameMapperImpl() }
+
+    val allModelTypes: List<KClass<out Model>> = SupportedModels.all
 
     private val libraryRepository by lazy {
         if (isPreview) {
@@ -90,10 +114,14 @@ object Di { //TODO move to dagger. keep all features
     }
 
     val recordsViewModelFactory by lazy {
-        RecordsViewModelFactory(readAll, delete)
+        RecordsViewModelFactory(
+            readAll = readAll,
+            delete = delete,
+            coordinator = permissionCoordinator,
+            recordTypeNameMapper = recordTypeNameMapper,
+        )
     }
 
-    private val recordTypeNameMapper by lazy { RecordTypeNameMapper() }
     private val recordTypeIconMapper by lazy { RecordTypeIconMapper() }
     private val flowResultTerminalIconMapper by lazy { FlowResultTerminalIconMapper() }
 

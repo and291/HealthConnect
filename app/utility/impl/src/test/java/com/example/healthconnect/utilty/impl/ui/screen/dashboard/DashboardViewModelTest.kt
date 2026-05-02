@@ -9,7 +9,7 @@ import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapperImpl
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +69,7 @@ class DashboardViewModelTest {
         }
         return DashboardViewModel(
             count = Count(repository),
-            nameMapper = RecordTypeNameMapper(),
+            nameMapper = RecordTypeNameMapperImpl(),
             iconMapper = RecordTypeIconMapper(),
             flowResultTerminalIconMapper = FlowResultTerminalIconMapper(),
         )
@@ -148,7 +148,7 @@ class DashboardViewModelTest {
     @Test
     fun onRefresh_withUnpermittedAccess_setsNullCountRecords() = runTest {
         val viewModel = createViewModel(countForType = { type ->
-            if (type == Steps::class) flowOf(FlowResult.Terminal.UnpermittedAccess(SecurityException("no permission")))
+            if (type == Steps::class) flowOf(FlowResult.Terminal.UnpermittedAccess(SecurityException("no permission"), "android.permission.health.READ_STEPS"))
             else flowOf(FlowResult.Data(0))
         })
         collectState(viewModel)

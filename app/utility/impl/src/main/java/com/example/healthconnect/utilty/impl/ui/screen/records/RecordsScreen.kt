@@ -2,20 +2,29 @@ package com.example.healthconnect.utilty.impl.ui.screen.records
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -32,10 +41,8 @@ import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.State.DisplayPage
 import kotlin.reflect.KClass
 
-
 @Composable
 fun RecordsScreen(
-    requestPermission: (String) -> Unit,
     onRecordClick: (Model) -> Unit,
     onInsertRecordClick: () -> Unit,
     recordType: KClass<out Model>,
@@ -48,14 +55,12 @@ fun RecordsScreen(
         }
     ),
 ) {
-
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(Unit) {
         viewModel.effect
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .collect { e ->
                 when (e) {
-                    is Effect.RequestSinglePermission -> requestPermission(e.sdkPermission)
                     is Effect.OpenRecordScreen -> onRecordClick(e.record)
                 }
             }
@@ -94,15 +99,22 @@ fun RecordsScreen(
                         RecordItem(
                             record = record,
                             onDelete = {
-                                val event = Event.DeleteRecord(
-                                    recordType = recordType,
-                                    metadataId = record.metadata.id.value
+                                viewModel.onEvent(
+                                    Event.DeleteRecord(
+                                        recordType = recordType,
+                                        metadataId = record.metadata.id.value,
+                                    )
                                 )
-                                viewModel.onEvent(event)
                             },
                             modifier = Modifier
                                 .padding(vertical = 2.dp)
-                                .clickable { viewModel.onEvent(Event.OnRecordClick(record)) }
+                                .clickable { viewModel.onEvent(Event.OnRecordClick(record)) },
+                        )
+                    }
+
+                    is DisplayPage.PermissionDenied -> item {
+                        PermissionDeniedMessage(
+                            dataTypeName = stringResource(page.dataTypeNameRes),
                         )
                     }
                 }
@@ -120,11 +132,35 @@ fun RecordsScreen(
 }
 
 @Composable
+private fun PermissionDeniedMessage(
+    dataTypeName: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 24.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Lock,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.error,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "$dataTypeName permission required",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.error,
+        )
+    }
+}
+
+@Composable
 @Preview(widthDp = 480, heightDp = 720, showBackground = true)
-fun RecordsScreenPreview() {
+private fun RecordsScreenPreview() {
     @Suppress("UNCHECKED_CAST")
     RecordsScreen(
-        requestPermission = {},
         onRecordClick = {},
         onInsertRecordClick = {},
         recordType = Steps::class,

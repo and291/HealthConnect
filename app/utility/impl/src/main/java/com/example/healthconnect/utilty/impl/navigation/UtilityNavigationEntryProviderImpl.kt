@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
+import com.example.healthconnect.permissions.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardScreen
@@ -36,13 +37,15 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
                         )
                     },
                     onShowLibraryDataManager = showInternalDataManager,
+                    onNavigateToPermissions = {
+                        backStack.add(PermissionNavigationEntry.Overview)
+                    },
                     modifier = Modifier.padding(innerPadding ?: defaultPadding),
                 )
             }
 
             is UtilityNavigationEntry.Records -> NavEntry(key) {
                 RecordsScreen(
-                    requestPermission = requestPermission,
                     onRecordClick = {
                         backStack.add(EditorNavigationEntry.EditRecordScreen(it))
                     },

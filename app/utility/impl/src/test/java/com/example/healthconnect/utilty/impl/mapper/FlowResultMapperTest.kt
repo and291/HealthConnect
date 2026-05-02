@@ -15,7 +15,7 @@ class FlowResultMapperTest {
     fun remoteException_mapsToIpcFailure() {
         val exception = RemoteException("ipc error")
 
-        val result = mapper.mapTerminal(exception)
+        val result = mapper.mapTerminal(exception, "")
 
         Assert.assertEquals(FlowResult.Terminal.IpcFailure(exception), result)
     }
@@ -24,16 +24,26 @@ class FlowResultMapperTest {
     fun securityException_mapsToUnpermittedAccess() {
         val exception = SecurityException("permission denied")
 
-        val result = mapper.mapTerminal(exception)
+        val result = mapper.mapTerminal(exception, "")
 
-        Assert.assertEquals(FlowResult.Terminal.UnpermittedAccess(exception), result)
+        Assert.assertEquals(FlowResult.Terminal.UnpermittedAccess(exception, ""), result)
+    }
+
+    @Test
+    fun securityException_withMissingPermission_propagatesMissingPermission() {
+        val exception = SecurityException("permission denied")
+        val permission = "android.permission.health.READ_STEPS"
+
+        val result = mapper.mapTerminal(exception, permission) as FlowResult.Terminal.UnpermittedAccess
+
+        Assert.assertEquals(permission, result.missingPermission)
     }
 
     @Test
     fun ioException_mapsToIoException() {
         val exception = IOException("disk error")
 
-        val result = mapper.mapTerminal(exception)
+        val result = mapper.mapTerminal(exception, "")
 
         Assert.assertEquals(FlowResult.Terminal.IoException(exception), result)
     }
@@ -42,7 +52,7 @@ class FlowResultMapperTest {
     fun unknownException_mapsToUnhandledException() {
         val exception = IllegalStateException("unexpected")
 
-        val result = mapper.mapTerminal(exception)
+        val result = mapper.mapTerminal(exception, "")
 
         Assert.assertEquals(FlowResult.Terminal.UnhandledException(exception), result)
     }
@@ -51,7 +61,7 @@ class FlowResultMapperTest {
     fun mappedTerminal_holdsOriginalExceptionReference() {
         val exception = RuntimeException("original")
 
-        val result = mapper.mapTerminal(exception) as FlowResult.Terminal.UnhandledException
+        val result = mapper.mapTerminal(exception, "") as FlowResult.Terminal.UnhandledException
 
         Assert.assertSame(exception, result.throwable)
     }

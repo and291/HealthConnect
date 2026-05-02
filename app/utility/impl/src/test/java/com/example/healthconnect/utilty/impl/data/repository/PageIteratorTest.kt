@@ -76,6 +76,7 @@ class PageIteratorTest {
         readPage = readPage,
         flowResultMapper = FlowResultMapper(),
         modelFactory = modelFactory,
+        requiredPermission = "",
         dispatcher = UnconfinedTestDispatcher(testScheduler),
         startWithFirstPage = startWithFirstPage,
     )
