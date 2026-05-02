@@ -1,6 +1,7 @@
 package com.example.healthconnect.permissions.impl.ui.screen
 
 import androidx.annotation.StringRes
+import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.healthconnect.permissions.api.domain.HealthPermission
@@ -19,8 +20,16 @@ import kotlinx.coroutines.launch
 
 class PermissionsViewModel(
     private val coordinator: PermissionCoordinator,
-    private val nameMapper: PermissionNameMapper,
+    nameMapper: PermissionNameMapper,
 ) : ViewModel() {
+
+    // Both read and write for the same record type share the data-type label.
+    private val permissionNames: Map<String, Int> = nameMapper.names.entries.flatMap { (recordClass, nameResId) ->
+        listOf(
+            LibraryHealthPermission.getReadPermission(recordClass) to nameResId,
+            LibraryHealthPermission.getWritePermission(recordClass) to nameResId,
+        )
+    }.toMap()
 
     private val isLoading = MutableStateFlow(true)
     private val statuses = MutableStateFlow<List<PermissionStatus>>(emptyList())
@@ -79,7 +88,9 @@ class PermissionsViewModel(
     }
 
     private fun PermissionStatus.toUiItem() =
-        PermissionUiItem(this, nameMapper.nameRes(permission.permissionString))
+        PermissionUiItem(this, requireNotNull(permissionNames[permission.permissionString]) {
+            "No name resource for permission ${permission.permissionString}"
+        })
 
     data class PermissionUiItem(
         val status: PermissionStatus,

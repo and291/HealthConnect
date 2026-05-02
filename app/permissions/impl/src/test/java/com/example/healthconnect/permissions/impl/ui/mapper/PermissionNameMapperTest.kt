@@ -1,6 +1,5 @@
 package com.example.healthconnect.permissions.impl.ui.mapper
 
-import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.ActivityIntensityRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
@@ -97,10 +96,9 @@ class PermissionNameMapperTest {
     )
 
     @Test
-    fun `all record types resolve read and write permission strings without throwing`() {
+    fun `all record types resolve name resources without throwing`() {
         allRecordTypes.forEach { recordClass ->
-            mapper.nameRes(LibraryHealthPermission.getReadPermission(recordClass))
-            mapper.nameRes(LibraryHealthPermission.getWritePermission(recordClass))
+            mapper.nameRes(recordClass)
         }
     }
 }

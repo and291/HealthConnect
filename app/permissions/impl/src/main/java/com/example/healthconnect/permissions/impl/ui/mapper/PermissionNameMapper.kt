@@ -1,7 +1,6 @@
 package com.example.healthconnect.permissions.impl.ui.mapper
 
 import androidx.annotation.StringRes
-import androidx.health.connect.client.permission.HealthPermission as LibraryHealthPermission
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.ActivityIntensityRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
@@ -50,7 +49,7 @@ import kotlin.reflect.KClass
 
 class PermissionNameMapper {
 
-    private val names: Map<KClass<out Record>, Int> = mapOf(
+    val names: Map<KClass<out Record>, Int> = mapOf(
         // Instantaneous
         BasalBodyTemperatureRecord::class to R.string.permission_name_basal_body_temperature,
         BasalMetabolicRateRecord::class to R.string.permission_name_basal_metabolic_rate,
@@ -98,16 +97,8 @@ class PermissionNameMapper {
         StepsCadenceRecord::class to R.string.permission_name_steps_cadence,
     )
 
-    // Both read and write for the same record type share the data-type label.
-    private val byPermissionString: Map<String, Int> = names.entries.flatMap { (recordClass, nameResId) ->
-        listOf(
-            LibraryHealthPermission.getReadPermission(recordClass) to nameResId,
-            LibraryHealthPermission.getWritePermission(recordClass) to nameResId,
-        )
-    }.toMap()
-
     @StringRes
-    fun nameRes(permissionString: String): Int = requireNotNull(byPermissionString[permissionString]) {
-        "No name resource for permission $permissionString"
+    fun nameRes(recordClass: KClass<out Record>): Int = requireNotNull(names[recordClass]) {
+        "No name resource for record class $recordClass"
     }
 }
