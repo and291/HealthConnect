@@ -4,13 +4,12 @@ import androidx.health.connect.client.records.*
 import com.example.healthconnect.utilty.api.domain.record.*
 import kotlin.reflect.KClass
 
+/**
+ * Maps a domain [Model] into HealthConnect [Record].
+ */
 class TypeMapper {
 
-    fun toRecord(type: KClass<out Model>): KClass<out Record> = requireNotNull(mapping[type]) {
-        "No type for model ${type.simpleName}"
-    }
-
-    private val mapping: Map<KClass<out Model>, KClass<out Record>> = mapOf(
+    private val modelToRecord: Map<KClass<out Model>, KClass<out Record>> = mapOf(
         // Instantaneous
         BasalBodyTemperature::class to BasalBodyTemperatureRecord::class,
         BasalMetabolicRate::class to BasalMetabolicRateRecord::class,
@@ -57,4 +56,13 @@ class TypeMapper {
         Speed::class to SpeedRecord::class,
         StepsCadence::class to StepsCadenceRecord::class,
     )
+
+    fun toRecord(
+        modelType: KClass<out Model>
+    ): KClass<out Record> = requireNotNull(modelToRecord[modelType]) {
+        "No type for model ${modelType.simpleName}"
+    }
+
+    // Reified helper
+    inline fun <reified M : Model> toRecord(): KClass<out Record> = toRecord(M::class)
 }
