@@ -19,7 +19,6 @@ import com.example.healthconnect.ui.navigation.AppNavigationEntry.Splash
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Unavailable
 import com.example.healthconnect.ui.screen.SdkUnavailableScreen
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredScreen
-import com.example.healthconnect.permissions.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 
 // Define keys that will identify content
@@ -34,7 +33,6 @@ sealed class AppNavigationEntry : NavigationEntry {
 fun CreateNavDisplay(
     backStack: SnapshotStateList<NavigationEntry>,
     innerPadding: PaddingValues,
-    requestPermission: (String) -> Unit,
     activity: Activity,
     libraryNavigation: LibraryNavigation,
 ) {
@@ -70,7 +68,6 @@ fun CreateNavDisplay(
             is UtilityNavigationEntry -> Di.utilityNav.getNavEntry(
                 key = key,
                 backStack = backStack,
-                requestPermission = requestPermission,
                 showInternalDataManager = {
                     activity.startActivity(libraryNavigation.chooseManageDataIntent())
                 },

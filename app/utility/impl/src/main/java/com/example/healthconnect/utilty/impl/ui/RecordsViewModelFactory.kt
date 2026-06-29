@@ -3,7 +3,6 @@ package com.example.healthconnect.utilty.impl.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
@@ -14,7 +13,6 @@ import kotlin.reflect.KClass
 class RecordsViewModelFactory(
     private val readAll: ReadAll,
     private val delete: Delete,
-    private val coordinator: PermissionCoordinator,
     private val recordTypeNameMapper: RecordTypeNameMapper,
 ) : ViewModelProvider.Factory {
 
@@ -25,7 +23,6 @@ class RecordsViewModelFactory(
                 readAll = readAll,
                 delete = delete,
                 modelType = checkNotNull(extras[RECORD_TYPE_KEY]),
-                coordinator = coordinator,
                 recordTypeNameMapper = recordTypeNameMapper,
             )
             else -> throw IllegalStateException("Unknown ViewModel class: ${modelClass.simpleName}")

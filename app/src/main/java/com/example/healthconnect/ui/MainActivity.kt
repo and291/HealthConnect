@@ -13,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
-import androidx.health.connect.client.PermissionController
-import androidx.lifecycle.lifecycleScope
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.ui.navigation.AppNavigationEntry
@@ -28,15 +26,6 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var activityViewModel: ActivityViewModel
 
-    private val requestPermissionActivityContract =
-        PermissionController.createRequestPermissionResultContract()
-    private val permissionResult = registerForActivityResult(requestPermissionActivityContract) { granted ->
-        com.example.healthconnect.permissions.impl.di.Di.coordinator.onActivityResult(granted)
-    }
-    private val requestPermission: (String) -> Unit = { sdkPermission ->
-        permissionResult.launch(setOf(sdkPermission))
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //TODO consider moving DI initialization into Application.onCreate() or other entry point
@@ -44,19 +33,10 @@ class MainActivity : ComponentActivity() {
             it.isPreview = false
             it.applicationContext = this.application
         }
-        com.example.healthconnect.permissions.impl.di.Di.also {
-            it.isPreview = false
-            it.applicationContext = this.application
-            it.permissionController = com.example.healthconnect.utilty.impl.di.Di.permissionController
-            it.permissionResolver = com.example.healthconnect.utilty.impl.di.Di.permissionResolver
-            it.recordTypeNameMapper = com.example.healthconnect.utilty.impl.di.Di.recordTypeNameMapper
-            it.allModelTypes = com.example.healthconnect.utilty.impl.di.Di.allModelTypes
-        }
         com.example.healthconnect.utilty.impl.di.Di.also {
             it.isPreview = false
             it.applicationContext = this.application
             it.modelFactory = com.example.healthconnect.editor.impl.di.Di.modelFactory
-            it.permissionCoordinator = com.example.healthconnect.permissions.impl.di.Di.coordinator
         }
         com.example.healthconnect.editor.impl.di.Di.also {
             it.fieldProvider = com.example.healthconnect.components.impl.di.Di.fieldProvider
@@ -85,7 +65,6 @@ class MainActivity : ComponentActivity() {
                     CreateNavDisplay(
                         backStack = backStack,
                         innerPadding = innerPadding,
-                        requestPermission = requestPermission,
                         activity = this,
                         libraryNavigation = Di.libraryNavigation,
                     )

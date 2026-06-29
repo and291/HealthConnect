@@ -5,10 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.permissions.api.domain.framework.HealthPermission
-import com.example.healthconnect.permissions.api.domain.framework.PermissionRequest
-import com.example.healthconnect.permissions.api.domain.framework.PermissionResult
-import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
@@ -22,7 +18,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
@@ -34,7 +29,6 @@ class RecordsViewModel(
     private val modelType: KClass<out Model>,
     private val readAll: ReadAll,
     private val delete: Delete,
-    private val coordinator: PermissionCoordinator,
     private val recordTypeNameMapper: RecordTypeNameMapper,
 ) : ViewModel() {
 
@@ -67,11 +61,9 @@ class RecordsViewModel(
                     is FlowResult.Data<Page> -> DisplayPage.Record(page.item.items)
 
                     is FlowResult.Terminal.UnpermittedAccess -> {
-                        val permission = HealthPermission(page.missingPermission)
-                        requestPermissionAndRefreshOnGrant(permission)
+                        requestPermissionAndRefreshOnGrant()
                         DisplayPage.PermissionDenied(
                             dataTypeNameRes = recordTypeNameMapper.nameRes(modelType),
-                            permission = permission,
                         )
                     }
 
@@ -129,7 +121,6 @@ class RecordsViewModel(
 
             data class PermissionDenied(
                 @StringRes val dataTypeNameRes: Int,
-                val permission: HealthPermission,
             ) : DisplayPage()
         }
     }
