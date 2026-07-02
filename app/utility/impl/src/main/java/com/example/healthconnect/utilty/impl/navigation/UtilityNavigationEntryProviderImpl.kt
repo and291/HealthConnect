@@ -9,18 +9,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
-import com.example.healthconnect.permissions.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardScreen
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsScreen
 
-class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
+class UtilityNavigationEntryProviderImpl(
+    private val permissionOverview: NavigationEntry
+) : UtilityNavigationEntryProvider {
 
     override fun getNavEntry(
         key: UtilityNavigationEntry,
         backStack: SnapshotStateList<NavigationEntry>,
-        requestPermission: (String) -> Unit,
         showInternalDataManager: () -> Unit,
         innerPadding: PaddingValues?,
     ): NavEntry<NavigationEntry> {
@@ -38,7 +38,7 @@ class UtilityNavigationEntryProviderImpl : UtilityNavigationEntryProvider {
                     },
                     onShowLibraryDataManager = showInternalDataManager,
                     onNavigateToPermissions = {
-                        backStack.add(PermissionNavigationEntry.Overview)
+                        backStack.add(permissionOverview)
                     },
                     modifier = Modifier.padding(innerPadding ?: defaultPadding),
                 )

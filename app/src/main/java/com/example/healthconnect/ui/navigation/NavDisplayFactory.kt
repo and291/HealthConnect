@@ -14,6 +14,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
+import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.ProviderUpdateRequired
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Splash
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Unavailable

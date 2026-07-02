@@ -10,17 +10,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import com.example.healthconnect.di.Di
+import com.example.healthconnect.integration.permission_overview.data.PermissionEntryMapper
+import com.example.healthconnect.integration.permission_overview.data.PermissionResolverImpl
+import com.example.healthconnect.integration.permission_overview.ui.PermissionContractProviderImpl
 import com.example.healthconnect.navigation.api.NavigationEntry
+import com.example.healthconnect.permission_overview.api.di.PermissionOverviewFeatureScope
 import com.example.healthconnect.ui.navigation.AppNavigationEntry
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
-import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.ui.theme.HealthConnectTheme
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.launch
+import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 
 class MainActivity : ComponentActivity() {
 
@@ -43,14 +46,12 @@ class MainActivity : ComponentActivity() {
             it.update = com.example.healthconnect.utilty.impl.di.Di.update
             it.insert = com.example.healthconnect.utilty.impl.di.Di.insert
         }
-
-        // Observe coordinator.pendingRequest and launch the system permission dialog.
-        // The Activity is the only place allowed to call permissionResult.launch().
-        lifecycleScope.launch {
-            com.example.healthconnect.permissions.impl.di.Di.coordinator.pendingRequest
-                .filterNotNull()
-                .collect { strings -> permissionResult.launch(strings) }
-        }
+        val permissionOverviewScope = PermissionOverviewFeatureScope(
+            application = application,
+            permissions = PermissionEntryMapper().map(com.example.healthconnect.utilty.impl.di.Di.permissionRepository.libraryPermissions()),
+            permissionContractProvider = PermissionContractProviderImpl(),
+            resolver = PermissionResolverImpl(HealthConnectClient.getOrCreate(applicationContext).permissionController) //TODO handle errors. Rethink class instantiation
+        ).apply { init() }
 
         //injects for current activity below
         activityViewModel = Di.parameterlessViewModelFactory.create(ActivityViewModel::class.java)

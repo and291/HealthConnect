@@ -1,0 +1,25 @@
+package com.example.healthconnect.permission_overview.api.navigation
+
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavEntry
+import com.example.healthconnect.navigation.api.NavigationEntry
+import com.example.healthconnect.permission_overview.ui.screen.PermissionsRoute
+
+class PermissionNavigationEntryProviderImpl : PermissionNavigationEntryProvider {
+
+    override fun getNavEntry(
+        key: PermissionNavigationEntry,
+        backStack: SnapshotStateList<NavigationEntry>,
+        innerPadding: PaddingValues?,
+    ): NavEntry<NavigationEntry> = when (key) {
+        PermissionNavigationEntry.Overview -> NavEntry(key) {
+            PermissionsRoute(
+                modifier = Modifier.padding(innerPadding ?: PaddingValues(all = 0.dp)),
+            )
+        }
+    }
+}

@@ -77,16 +77,8 @@ class RecordsViewModel(
             }
     }
 
-    private fun requestPermissionAndRefreshOnGrant(permission: HealthPermission) {
-        viewModelScope.launch {
-            if (coordinator.pendingRequest.value != null) return@launch
-            coordinator.request(PermissionRequest.Single(permission))
-            when (coordinator.results.first()) {
-                is PermissionResult.AllGranted  -> onEvent(Event.Refresh)
-                is PermissionResult.SomeGranted,
-                is PermissionResult.AllDenied   -> Unit // PermissionDenied page remains
-            }
-        }
+    private fun requestPermissionAndRefreshOnGrant() {
+        TODO("Not yet implemented")
     }
 
     fun onEvent(event: Event) {
