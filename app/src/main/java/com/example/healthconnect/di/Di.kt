@@ -6,8 +6,9 @@ import com.example.healthconnect.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProvider
 import com.example.healthconnect.editor.impl.navigation.EditorNavigationEntryProviderImpl
-import com.example.healthconnect.permissions.api.navigation.PermissionNavigationEntryProvider
-import com.example.healthconnect.permissions.impl.navigation.PermissionNavigationEntryProviderImpl
+import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntry
+import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProvider
+import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProviderImpl
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.navigation.LibraryNavigation
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
@@ -42,7 +43,9 @@ object Di { //move to dagger. keep all features
         LibraryNavigation(applicationContext)
     }
 
-    val utilityNav: UtilityNavigationEntryProvider = UtilityNavigationEntryProviderImpl()
+    val utilityNav: UtilityNavigationEntryProvider = UtilityNavigationEntryProviderImpl(
+        permissionOverview = PermissionNavigationEntry.Overview
+    )
     val editorNav: EditorNavigationEntryProvider = EditorNavigationEntryProviderImpl()
     val permissionNav: PermissionNavigationEntryProvider = PermissionNavigationEntryProviderImpl()
 }

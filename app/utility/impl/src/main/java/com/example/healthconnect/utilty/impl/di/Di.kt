@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.permissions.api.domain.framework.usecase.LibraryPermissionResolver
-import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionController
-import com.example.healthconnect.permissions.api.domain.framework.usecase.PermissionCoordinator
+import com.example.healthconnect.utilty.api.data.PermissionRepository
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
-import com.example.healthconnect.utilty.impl.data.LibraryPermissionResolverImpl
-import com.example.healthconnect.utilty.impl.data.PermissionControllerImpl
+import com.example.healthconnect.utilty.impl.data.LibraryPermissionDataSource
+import com.example.healthconnect.utilty.impl.data.PermissionRepositoryImpl
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
@@ -41,23 +39,21 @@ object Di { //TODO move to dagger. keep all features
 
     lateinit var applicationContext: Context
     lateinit var modelFactory: ModelFactory
-    lateinit var permissionCoordinator: PermissionCoordinator
 
-    private val healthConnectClient: HealthConnectClient by lazy {
-        HealthConnectClient.getOrCreate(applicationContext)
+    val permissionRepository: PermissionRepository by lazy {
+        PermissionRepositoryImpl(
+            allModels = SupportedModels.all,
+            source = libraryPermissionDataSource,
+            nameMapper = recordTypeNameMapper,
+            typeMapper = typeMapper
+        )
     }
 
-    val permissionController: PermissionController by lazy {
-        PermissionControllerImpl(healthConnectClient)
-    }
-
-    val permissionResolver: LibraryPermissionResolver by lazy {
-        LibraryPermissionResolverImpl(typeMapper)
+    private val libraryPermissionDataSource by lazy {
+        LibraryPermissionDataSource()
     }
 
     val recordTypeNameMapper: RecordTypeNameMapper by lazy { RecordTypeNameMapperImpl() }
-
-    val allModelTypes: List<KClass<out Model>> = SupportedModels.all
 
     private val libraryRepository by lazy {
         if (isPreview) {
@@ -117,7 +113,6 @@ object Di { //TODO move to dagger. keep all features
         RecordsViewModelFactory(
             readAll = readAll,
             delete = delete,
-            coordinator = permissionCoordinator,
             recordTypeNameMapper = recordTypeNameMapper,
         )
     }
