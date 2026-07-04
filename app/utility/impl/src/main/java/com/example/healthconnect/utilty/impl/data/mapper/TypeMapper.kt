@@ -63,6 +63,6 @@ class TypeMapper {
         "No type for model ${modelType.simpleName}"
     }
 
-    // Reified helper
+    @Suppress("unused")
     inline fun <reified M : Model> toRecord(): KClass<out Record> = toRecord(M::class)
 }

@@ -1,17 +1,54 @@
 package com.example.healthconnect.utilty.impl.ui.mapper
 
 import androidx.annotation.StringRes
-import com.example.healthconnect.utilty.api.domain.record.*
+import com.example.healthconnect.utilty.api.domain.record.ActiveCaloriesBurned
+import com.example.healthconnect.utilty.api.domain.record.ActivityIntensity
+import com.example.healthconnect.utilty.api.domain.record.BasalBodyTemperature
+import com.example.healthconnect.utilty.api.domain.record.BasalMetabolicRate
+import com.example.healthconnect.utilty.api.domain.record.BloodGlucoseLevel
+import com.example.healthconnect.utilty.api.domain.record.BloodPressure
+import com.example.healthconnect.utilty.api.domain.record.BodyFat
+import com.example.healthconnect.utilty.api.domain.record.BodyTemperature
+import com.example.healthconnect.utilty.api.domain.record.BodyWaterMass
+import com.example.healthconnect.utilty.api.domain.record.BoneMass
+import com.example.healthconnect.utilty.api.domain.record.CervicalMucus
+import com.example.healthconnect.utilty.api.domain.record.CyclingPedalingCadence
+import com.example.healthconnect.utilty.api.domain.record.Distance
+import com.example.healthconnect.utilty.api.domain.record.ElevationGained
+import com.example.healthconnect.utilty.api.domain.record.ExerciseSession
+import com.example.healthconnect.utilty.api.domain.record.FloorsClimbed
+import com.example.healthconnect.utilty.api.domain.record.HeartRate
+import com.example.healthconnect.utilty.api.domain.record.HeartRateVariabilityRmssd
+import com.example.healthconnect.utilty.api.domain.record.Height
+import com.example.healthconnect.utilty.api.domain.record.Hydration
+import com.example.healthconnect.utilty.api.domain.record.IntermenstrualBleeding
+import com.example.healthconnect.utilty.api.domain.record.LeanBodyMass
+import com.example.healthconnect.utilty.api.domain.record.MenstruationFlow
+import com.example.healthconnect.utilty.api.domain.record.MenstruationPeriod
+import com.example.healthconnect.utilty.api.domain.record.MindfulnessSession
+import com.example.healthconnect.utilty.api.domain.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Nutrition
+import com.example.healthconnect.utilty.api.domain.record.OvulationTest
+import com.example.healthconnect.utilty.api.domain.record.OxygenSaturation
+import com.example.healthconnect.utilty.api.domain.record.PlannedExerciseSession
+import com.example.healthconnect.utilty.api.domain.record.Power
+import com.example.healthconnect.utilty.api.domain.record.RespiratoryRate
+import com.example.healthconnect.utilty.api.domain.record.RestingHeartRate
+import com.example.healthconnect.utilty.api.domain.record.SexualActivity
+import com.example.healthconnect.utilty.api.domain.record.SkinTemperature
+import com.example.healthconnect.utilty.api.domain.record.SleepSession
+import com.example.healthconnect.utilty.api.domain.record.Speed
+import com.example.healthconnect.utilty.api.domain.record.Steps
+import com.example.healthconnect.utilty.api.domain.record.StepsCadence
+import com.example.healthconnect.utilty.api.domain.record.TotalCaloriesBurned
+import com.example.healthconnect.utilty.api.domain.record.Vo2Max
+import com.example.healthconnect.utilty.api.domain.record.Weight
+import com.example.healthconnect.utilty.api.domain.record.WheelchairPushes
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.R
 import kotlin.reflect.KClass
 
 class RecordTypeNameMapperImpl : RecordTypeNameMapper {
-
-    @StringRes
-    override fun nameRes(type: KClass<out Model>): Int = requireNotNull(names[type]) {
-        "No string resource for record type ${type.simpleName}"
-    }
 
     private val names: Map<KClass<out Model>, Int> = mapOf(
         // Instantaneous
@@ -60,4 +97,12 @@ class RecordTypeNameMapperImpl : RecordTypeNameMapper {
         Speed::class to R.string.record_type_speed,
         StepsCadence::class to R.string.record_type_steps_cadence,
     )
+
+    @StringRes
+    override fun nameRes(type: KClass<out Model>): Int = requireNotNull(names[type]) {
+        "No string resource for record type ${type.simpleName}"
+    }
+
+    @Suppress("unused")
+    inline fun <reified M: Model> nameRes(): Int = nameRes(M::class)
 }
