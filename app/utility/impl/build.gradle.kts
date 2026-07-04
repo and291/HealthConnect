@@ -58,7 +58,6 @@ dependencies {
 
     //internal module dependencies
     implementation(project(":app:utility:api"))
-    implementation(project(":app:navigation:api"))
     implementation(project(":app:components:api"))
 
     //kotlin reflection

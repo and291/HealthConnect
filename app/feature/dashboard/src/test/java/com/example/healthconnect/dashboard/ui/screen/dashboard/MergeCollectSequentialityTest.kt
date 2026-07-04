@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.dashboard
+package com.example.healthconnect.dashboard.ui.screen.dashboard
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow

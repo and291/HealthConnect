@@ -35,7 +35,6 @@ import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMap
 import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapperImpl
-import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -132,19 +131,19 @@ object Di { //TODO move to dagger. keep all features
         ReadAll(libraryRepository)
     }
 
-    private val recordTypeIconMapper by lazy { RecordTypeIconMapper() }
-    private val flowResultTerminalIconMapper by lazy { FlowResultTerminalIconMapper() }
+    val recordTypeIconMapper by lazy { RecordTypeIconMapper() }
+    val flowResultTerminalIconMapper by lazy { FlowResultTerminalIconMapper() }
 
-    private val count by lazy {
+    val count by lazy {
         Count(libraryRepository)
     }
 
-    internal val dashboardViewModelFactory by lazy {
-        DashboardViewModelFactory(
-            count,
-            recordTypeNameMapper,
-            recordTypeIconMapper,
-            flowResultTerminalIconMapper
-        )
-    }
+    val supportedInstantaneous: List<KClass<out com.example.healthconnect.utilty.api.record.Model>>
+        get() = SupportedModels.instantaneous
+
+    val supportedInterval: List<KClass<out com.example.healthconnect.utilty.api.record.Model>>
+        get() = SupportedModels.interval
+
+    val supportedSeries: List<KClass<out com.example.healthconnect.utilty.api.record.Model>>
+        get() = SupportedModels.series
 }

@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.api.navigation
+package com.example.healthconnect.dashboard.api.navigation
 
 import com.example.healthconnect.navigation.api.NavigationEntry
 
@@ -8,7 +8,8 @@ import com.example.healthconnect.navigation.api.NavigationEntry
  * Naming convention: [%moduleName%]NavigationEntry
  * Each destination must extend [com.example.healthconnect.navigation.api.NavigationEntry] — a base type from this project's navigation framework.
  */
-sealed class UtilityNavigationEntry : NavigationEntry {
+sealed class DashboardNavigationEntry : NavigationEntry {
 
-    data object Dashboard : UtilityNavigationEntry()
+    /** Grid of all supported record types with their stored-record counts. App start screen. */
+    data object Dashboard : DashboardNavigationEntry()
 }

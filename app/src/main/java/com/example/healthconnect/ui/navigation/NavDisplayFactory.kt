@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.example.healthconnect.dashboard.api.navigation.DashboardNavigationEntry
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
@@ -21,7 +22,6 @@ import com.example.healthconnect.ui.navigation.AppNavigationEntry.Splash
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Unavailable
 import com.example.healthconnect.ui.screen.SdkUnavailableScreen
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredScreen
-import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 
 // Define keys that will identify content
 sealed class AppNavigationEntry : NavigationEntry {
@@ -67,7 +67,7 @@ fun CreateNavDisplay(
                 Splash -> NavEntry(key) { Text("Splash route") }
             }
 
-            is UtilityNavigationEntry -> Di.utilityNav.getNavEntry(
+            is DashboardNavigationEntry -> Di.dashboardNav.getNavEntry(
                 key = key,
                 backStack = backStack,
                 showInternalDataManager = {

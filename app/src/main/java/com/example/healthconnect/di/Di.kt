@@ -2,12 +2,13 @@ package com.example.healthconnect.di
 
 import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
+import com.example.healthconnect.dashboard.api.navigation.DashboardNavigationEntryProvider
+import com.example.healthconnect.dashboard.api.navigation.DashboardNavigationEntryProviderImpl
 import com.example.healthconnect.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProvider
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProviderImpl
-import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProvider
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProviderImpl
@@ -17,8 +18,6 @@ import com.example.healthconnect.record_list.api.navigation.RecordListNavigation
 import com.example.healthconnect.record_list.api.navigation.RecordListNavigationEntryProviderImpl
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.navigation.LibraryNavigation
-import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
-import com.example.healthconnect.utilty.impl.navigation.UtilityNavigationEntryProviderImpl
 import kotlin.reflect.KClass
 
 object Di { //move to dagger. keep all features
@@ -50,9 +49,9 @@ object Di { //move to dagger. keep all features
         LibraryNavigation(applicationContext)
     }
 
-    val utilityNav: UtilityNavigationEntryProvider = UtilityNavigationEntryProviderImpl(
+    val dashboardNav: DashboardNavigationEntryProvider = DashboardNavigationEntryProviderImpl(
         permissionOverview = PermissionNavigationEntry.Overview,
-        getRecordsEntry = { type: KClass<out Model>, titleRes: Int ->
+        getRecordsEntry = { type: KClass<*>, titleRes: Int ->
             RecordListNavigationEntry.List(recordType = type, titleRes = titleRes)
         }
     )

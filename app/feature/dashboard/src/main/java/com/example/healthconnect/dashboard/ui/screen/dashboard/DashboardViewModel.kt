@@ -1,19 +1,14 @@
-package com.example.healthconnect.utilty.impl.ui.screen.dashboard
+package com.example.healthconnect.dashboard.ui.screen.dashboard
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.healthconnect.utilty.api.record.Model
-import com.example.healthconnect.utilty.impl.R
-import com.example.healthconnect.utilty.impl.domain.SupportedModels
-import com.example.healthconnect.utilty.impl.domain.usecase.Count
-import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
-import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
-import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
-import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem.LoadingState
-import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardSegment
+import com.example.healthconnect.dashboard.api.domain.entity.CountResult
+import com.example.healthconnect.dashboard.api.domain.usecase.CountRecords
+import com.example.healthconnect.dashboard.api.domain.usecase.GetDashboardCatalog
+import com.example.healthconnect.dashboard.ui.screen.dashboard.model.DashboardItem
+import com.example.healthconnect.dashboard.ui.screen.dashboard.model.DashboardItem.LoadingState
+import com.example.healthconnect.dashboard.ui.screen.dashboard.model.DashboardSegment
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -29,14 +24,14 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class DashboardViewModel(
-    private val count: Count,
-    private val nameMapper: RecordTypeNameMapper,
-    private val iconMapper: RecordTypeIconMapper,
-    private val flowResultTerminalIconMapper: FlowResultTerminalIconMapper,
+    getCatalog: GetDashboardCatalog,
+    private val countRecords: CountRecords,
 ) : ViewModel() {
 
+    private val catalog = getCatalog()
+
     private var collectJob: Job? = null
-    private val itemsCountStateFlow = MutableStateFlow<Map<KClass<out Model>, LoadingState>>(emptyMap())
+    private val itemsCountStateFlow = MutableStateFlow<Map<KClass<*>, LoadingState>>(emptyMap())
     private val isRefreshingStateFlow = MutableStateFlow(false)
 
     private val _effect = Channel<Effect>(Channel.BUFFERED)
@@ -84,19 +79,13 @@ class DashboardViewModel(
     private fun startRefreshData() {
         collectJob?.cancel()
         collectJob = viewModelScope.launch {
-            val mutableMap = SupportedModels.all.associateWith { LoadingState.InProgress as LoadingState }.toMutableMap()
+            val allTypes = catalog.flatMap { it.types }
+            val mutableMap = allTypes.associate { it.type to (LoadingState.InProgress as LoadingState) }.toMutableMap()
             isRefreshingStateFlow.emit(true)
 
-            SupportedModels.all
-                .map { type ->
-                    count(type).map {
-                        type to when (it) {
-                            is FlowResult.Data<Int> -> LoadingState.Counted(it.item)
-                            is FlowResult.Terminal -> LoadingState.Failed(
-                                errorIcon = flowResultTerminalIconMapper.icon(it)
-                            )
-                        }
-                    }
+            allTypes
+                .map { descriptor ->
+                    countRecords(descriptor.type).map { descriptor.type to it.toLoadingState() }
                 }
                 .merge()
                 .collect { (type, loadingState) ->
@@ -108,33 +97,24 @@ class DashboardViewModel(
         }
     }
 
-    private fun buildSegments(
-        map: Map<KClass<out Model>, LoadingState>
-    ): List<DashboardSegment> {
-        fun buildItems(
-            types: List<KClass<out Model>>,
-        ): List<DashboardItem> = types.map { type ->
-            DashboardItem(
-                recordType = type,
-                nameRes = nameMapper.nameRes(type),
-                icon = iconMapper.icon(type),
-                state = map.getOrDefault(type, LoadingState.InProgress)
-            )
-        }
+    private fun CountResult.toLoadingState(): LoadingState = when (this) {
+        is CountResult.Counted -> LoadingState.Counted(count)
+        is CountResult.Failed -> LoadingState.Failed(errorIcon = errorIcon)
+    }
 
-        return listOf(
-            DashboardSegment(
-                title = R.string.dashboard_segment_instantaneous,
-                items = buildItems(SupportedModels.instantaneous)
-            ),
-            DashboardSegment(
-                title = R.string.dashboard_segment_interval,
-                items = buildItems(SupportedModels.interval)
-            ),
-            DashboardSegment(
-                title = R.string.dashboard_segment_series,
-                items = buildItems(SupportedModels.series)
-            ),
+    private fun buildSegments(
+        map: Map<KClass<*>, LoadingState>
+    ): List<DashboardSegment> = catalog.map { category ->
+        DashboardSegment(
+            title = category.titleRes,
+            items = category.types.map { descriptor ->
+                DashboardItem(
+                    recordType = descriptor.type,
+                    nameRes = descriptor.nameRes,
+                    icon = descriptor.icon,
+                    state = map.getOrDefault(descriptor.type, LoadingState.InProgress),
+                )
+            }
         )
     }
 
@@ -147,7 +127,7 @@ class DashboardViewModel(
 
     sealed class Effect {
         data class NavigateToRecords(
-            val recordType: KClass<out Model>,
+            val recordType: KClass<*>,
             @param:StringRes val nameRes: Int,
         ) : Effect()
 
@@ -158,7 +138,7 @@ class DashboardViewModel(
     sealed class Event {
         data object Refresh : Event()
         data class OnTypeClick(
-            val recordType: KClass<out Model>,
+            val recordType: KClass<*>,
             @param:StringRes val nameRes: Int,
         ) : Event()
 
