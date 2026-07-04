@@ -15,6 +15,13 @@ import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABL
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
 import com.example.healthconnect.di.Di
+import com.example.healthconnect.editor.api.di.EditorFeatureScope
+import com.example.healthconnect.integration.editor.ComponentFactoryImpl
+import com.example.healthconnect.integration.editor.CreateEditableImpl
+import com.example.healthconnect.integration.editor.EditableFactoryImpl
+import com.example.healthconnect.integration.editor.GetEditableImpl
+import com.example.healthconnect.integration.editor.InsertImpl
+import com.example.healthconnect.integration.editor.UpdateImpl
 import com.example.healthconnect.integration.permission_overview.data.PermissionEntryMapper
 import com.example.healthconnect.integration.permission_overview.data.PermissionResolverImpl
 import com.example.healthconnect.integration.permission_overview.ui.PermissionContractProviderImpl
@@ -41,16 +48,22 @@ class MainActivity : ComponentActivity() {
             it.applicationContext = this.application
             it.modelFactory = com.example.healthconnect.editor.impl.di.Di.modelFactory
         }
-        com.example.healthconnect.editor.impl.di.Di.also {
-            it.fieldProvider = com.example.healthconnect.components.impl.di.Di.fieldProvider
-            it.update = com.example.healthconnect.utilty.impl.di.Di.update
-            it.insert = com.example.healthconnect.utilty.impl.di.Di.insert
-        }
         val permissionOverviewScope = PermissionOverviewFeatureScope(
             application = application,
             permissions = PermissionEntryMapper().map(com.example.healthconnect.utilty.impl.di.Di.permissionRepository.libraryPermissions()),
             permissionContractProvider = PermissionContractProviderImpl(),
             resolver = PermissionResolverImpl(HealthConnectClient.getOrCreate(applicationContext).permissionController) //TODO handle errors. Rethink class instantiation
+        ).apply { init() }
+
+        val editorFeatureScope = EditorFeatureScope(
+            getEditable = GetEditableImpl(
+                modelFactory = com.example.healthconnect.editor.impl.di.Di.modelFactory,
+            ),
+            update = UpdateImpl(),
+            componentFactory = ComponentFactoryImpl(),
+            editableFactory = EditableFactoryImpl(),
+            createEditable = CreateEditableImpl(),
+            insert = InsertImpl()
         ).apply { init() }
 
         //injects for current activity below

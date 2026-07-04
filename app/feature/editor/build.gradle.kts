@@ -40,4 +40,14 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":app:navigation:api"))
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
+
+    implementation(libs.androidx.navigation3.runtime)
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 }

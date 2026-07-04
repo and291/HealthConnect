@@ -1,4 +1,4 @@
-package com.example.healthconnect.editor.impl.navigation
+package com.example.healthconnect.editor.api.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -6,10 +6,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
-import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
-import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProvider
-import com.example.healthconnect.editor.impl.ui.screen.record.EditRecordScreen
-import com.example.healthconnect.editor.impl.ui.screen.record.InsertRecordScreen
+import com.example.healthconnect.editor.ui.edit.EditRecordScreen
+import com.example.healthconnect.editor.ui.edit.InsertRecordScreen
 import com.example.healthconnect.navigation.api.NavigationEntry
 
 class EditorNavigationEntryProviderImpl : EditorNavigationEntryProvider {
@@ -23,14 +21,15 @@ class EditorNavigationEntryProviderImpl : EditorNavigationEntryProvider {
         return when (key) {
             is EditorNavigationEntry.EditRecordScreen -> NavEntry(key) {
                 EditRecordScreen(
-                    model = key.model,
+                    editableUUID = key.model.getUuid(),
+                    recordClass = key.recordClass,
                     modifier = Modifier.padding(innerPadding ?: defaultPadding),
                 )
             }
 
             is EditorNavigationEntry.Insert -> NavEntry(key) {
                 InsertRecordScreen(
-                    recordClass = key.modelType
+                    recordClass = key.modelType,
                 )
             }
         }

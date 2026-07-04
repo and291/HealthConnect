@@ -1,5 +1,7 @@
 package com.example.healthconnect.utilty.impl.domain
 
+import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.response.ReadRecordResponse
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
@@ -17,4 +19,5 @@ interface LibraryRepository {
     suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String)
     fun <M : Model> pager(params: ReadParams<M>): Pager
     fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>>
+    suspend fun <R : Record> fetchRecordById(kClass: KClass<R>, recordId: String): ReadRecordResponse<R>
 }
