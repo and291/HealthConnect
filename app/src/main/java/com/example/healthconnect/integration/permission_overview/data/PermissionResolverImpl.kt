@@ -5,7 +5,7 @@ import com.example.healthconnect.permission_overview.api.domain.PermissionResolv
 import com.example.healthconnect.permission_overview.api.domain.entity.IsGranted
 import com.example.healthconnect.permission_overview.api.domain.entity.Permission
 
-class PermissionResolverImpl(
+internal class PermissionResolverImpl(
     private val controller: PermissionController
 ) : PermissionResolver {
 

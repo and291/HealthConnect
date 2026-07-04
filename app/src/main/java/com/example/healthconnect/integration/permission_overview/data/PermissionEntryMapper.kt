@@ -5,7 +5,7 @@ import com.example.healthconnect.permission_overview.api.domain.entity.Permissio
 import com.example.healthconnect.permission_overview.api.domain.entity.ReadWrite
 import com.example.healthconnect.utilty.api.data.LibraryPermission
 
-class PermissionEntryMapper {
+internal class PermissionEntryMapper {
     fun map(
         permissions: Set<LibraryPermission>,
     ): Set<PermissionEntry> = permissions.map { permission ->

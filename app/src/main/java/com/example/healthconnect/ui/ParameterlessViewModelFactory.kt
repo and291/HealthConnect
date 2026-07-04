@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.healthconnect.domain.LibraryRepository
 
 //TODO change naming as current is not actually correct: this single VM requires constructor parameter
-class ParameterlessViewModelFactory(
+internal class ParameterlessViewModelFactory(
     private val libraryRepository: LibraryRepository,
 ) : ViewModelProvider.Factory {
 

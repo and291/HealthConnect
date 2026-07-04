@@ -39,7 +39,7 @@ import com.example.healthconnect.ui.navigation.AppNavigationEntry
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
 import com.example.healthconnect.ui.theme.HealthConnectTheme
 
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
 
     private lateinit var activityViewModel: ActivityViewModel
 

@@ -6,7 +6,7 @@ import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper

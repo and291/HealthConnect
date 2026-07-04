@@ -5,36 +5,23 @@ import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordResponse
 import com.example.healthconnect.utilty.api.data.PermissionRepository
+import com.example.healthconnect.utilty.api.domain.record.Model
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.data.LibraryPermissionDataSource
 import com.example.healthconnect.utilty.impl.data.PermissionRepositoryImpl
-import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
-import com.example.healthconnect.utilty.impl.data.mapper.PayloadMapper
-import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
-import com.example.healthconnect.utilty.impl.data.mapper.ResultMapper
-import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
+import com.example.healthconnect.utilty.impl.data.mapper.*
 import com.example.healthconnect.utilty.impl.data.repository.LibraryRepositoryImpl
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.record.factory.ModelFactory
-import com.example.healthconnect.utilty.impl.domain.usecase.Count
-import com.example.healthconnect.utilty.impl.domain.usecase.Delete
-import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
-import com.example.healthconnect.utilty.impl.domain.usecase.GetEditable
-import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
-import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
-import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
-import com.example.healthconnect.utilty.impl.impl.ui.editor.EditorFactory
-import com.example.healthconnect.utilty.impl.impl.ui.editor.record.factory.ModelFactoryImpl
-import com.example.healthconnect.utilty.impl.ui.mapper.DeviceMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
-import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapperImpl
+import com.example.healthconnect.utilty.impl.domain.usecase.*
+import com.example.healthconnect.utilty.impl.ui.editor.EditorFactory
+import com.example.healthconnect.utilty.impl.ui.editor.record.factory.ModelFactoryImpl
+import com.example.healthconnect.utilty.impl.ui.mapper.*
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -44,7 +31,10 @@ object Di { //TODO move to dagger. keep all features
     lateinit var applicationContext: Context
 
     val modelFactory: ModelFactory by lazy {
-        ModelFactoryImpl(metadataMapper, editorFactory)
+        ModelFactoryImpl(
+            metadataMapper,
+            editorFactory
+        )
     }
 
     val editorFactory = EditorFactory()
@@ -71,23 +61,19 @@ object Di { //TODO move to dagger. keep all features
     private val libraryRepository by lazy {
         if (isPreview) {
             object : LibraryRepository {
-                override fun getSdkStatus(): Int {
-                    return HealthConnectClient.SDK_AVAILABLE
-                }
+                override fun getSdkStatus(): Int = HealthConnectClient.SDK_AVAILABLE
 
-                override suspend fun getGrantedPermissions(): Set<String> {
-                    return setOf("sdk:permission")
-                }
+                override suspend fun getGrantedPermissions(): Set<String> = setOf("sdk:permission")
 
-                override suspend fun updateRecords(records: List<com.example.healthconnect.utilty.api.record.Model>) = error("No impl")
+                override suspend fun updateRecords(records: List<Model>) = error("No impl")
 
-                override suspend fun insertRecords(records: List<com.example.healthconnect.utilty.api.record.Model>): List<String> = error("No impl")
+                override suspend fun insertRecords(records: List<Model>): List<String> = error("No impl")
 
-                override suspend fun removeRecord(recordType: KClass<out com.example.healthconnect.utilty.api.record.Model>, metadataId: String) = error("No impl")
+                override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = error("No impl")
 
-                override fun <M : com.example.healthconnect.utilty.api.record.Model> pager(params: ReadParams<M>): Pager = error("No impl")
+                override fun <M : Model> pager(params: ReadParams<M>): Pager = error("No impl")
 
-                override fun <M : com.example.healthconnect.utilty.api.record.Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("No impl")
+                override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("No impl")
 
                 override suspend fun <R : Record> fetchRecordById(
                     kClass: KClass<R>,
@@ -138,12 +124,12 @@ object Di { //TODO move to dagger. keep all features
         Count(libraryRepository)
     }
 
-    val supportedInstantaneous: List<KClass<out com.example.healthconnect.utilty.api.record.Model>>
+    val supportedInstantaneous: List<KClass<out Model>>
         get() = SupportedModels.instantaneous
 
-    val supportedInterval: List<KClass<out com.example.healthconnect.utilty.api.record.Model>>
+    val supportedInterval: List<KClass<out Model>>
         get() = SupportedModels.interval
 
-    val supportedSeries: List<KClass<out com.example.healthconnect.utilty.api.record.Model>>
+    val supportedSeries: List<KClass<out Model>>
         get() = SupportedModels.series
 }

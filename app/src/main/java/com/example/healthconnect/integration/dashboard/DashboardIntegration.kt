@@ -5,7 +5,7 @@ import com.example.healthconnect.dashboard.api.domain.entity.DashboardCategory
 import com.example.healthconnect.dashboard.api.domain.entity.DashboardType
 import com.example.healthconnect.dashboard.api.domain.usecase.CountRecords
 import com.example.healthconnect.dashboard.api.domain.usecase.GetDashboardCatalog
-import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Model
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
 import com.example.healthconnect.utilty.impl.R
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
@@ -21,7 +21,7 @@ import com.example.healthconnect.utilty.impl.di.Di as UtilityDi
  * Assembles the dashboard catalog from the supported record types (see utility's `SupportedModels`)
  * and the name/icon mappers. Segment titles come from utility's string resources.
  */
-class GetDashboardCatalogImpl(
+internal class GetDashboardCatalogImpl(
     private val nameMapper: RecordTypeNameMapper,
     private val iconMapper: RecordTypeIconMapper,
 ) : GetDashboardCatalog {
@@ -47,7 +47,7 @@ class GetDashboardCatalogImpl(
     )
 }
 
-class CountRecordsImpl(
+internal class CountRecordsImpl(
     private val count: Count,
     private val iconMapper: FlowResultTerminalIconMapper,
 ) : CountRecords {

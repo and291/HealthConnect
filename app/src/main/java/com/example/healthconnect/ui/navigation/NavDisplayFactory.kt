@@ -24,7 +24,7 @@ import com.example.healthconnect.ui.screen.SdkUnavailableScreen
 import com.example.healthconnect.ui.screen.SdkUpdateRequiredScreen
 
 // Define keys that will identify content
-sealed class AppNavigationEntry : NavigationEntry {
+internal sealed class AppNavigationEntry : NavigationEntry {
     data object Splash : AppNavigationEntry()
     data object Unavailable : AppNavigationEntry()
     data object ProviderUpdateRequired : AppNavigationEntry()
@@ -32,7 +32,7 @@ sealed class AppNavigationEntry : NavigationEntry {
 
 
 @Composable
-fun CreateNavDisplay(
+internal fun CreateNavDisplay(
     backStack: SnapshotStateList<NavigationEntry>,
     innerPadding: PaddingValues,
     activity: Activity,

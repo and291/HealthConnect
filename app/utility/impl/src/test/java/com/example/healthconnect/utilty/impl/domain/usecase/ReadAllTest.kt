@@ -2,8 +2,8 @@ package com.example.healthconnect.utilty.impl.domain.usecase
 
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordResponse
-import com.example.healthconnect.utilty.api.record.Model
-import com.example.healthconnect.utilty.api.record.Steps
+import com.example.healthconnect.utilty.api.domain.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Steps
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager

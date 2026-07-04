@@ -9,7 +9,7 @@ import com.example.healthconnect.ui.theme.HealthConnectTheme
 
 
 @Composable
-fun SdkUnavailableScreen(
+internal fun SdkUnavailableScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(

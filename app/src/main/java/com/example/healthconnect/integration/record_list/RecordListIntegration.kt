@@ -8,7 +8,7 @@ import com.example.healthconnect.record_list.api.domain.entity.RecordPager
 import com.example.healthconnect.record_list.api.domain.usecase.DeleteRecord
 import com.example.healthconnect.record_list.api.domain.usecase.LoadRecords
 import com.example.healthconnect.record_list.api.ui.RecordSummaryFactory
-import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Model
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
@@ -20,14 +20,14 @@ import kotlinx.coroutines.flow.map
 import kotlin.reflect.KClass
 
 /** Wraps a utility [Model] as the record-list module's opaque [RecordModel] handle. */
-class RecordModelAdapter(val model: Model) : RecordModel {
+internal class RecordModelAdapter(val model: Model) : RecordModel {
     override fun metadataId(): String = model.metadata.id.value
 }
 
 fun unwrap(record: RecordModel): Model = (record as RecordModelAdapter).model
 
 /** Adapts the utility paging [Pager] (and its richer [FlowResult]) to the module's [RecordPager]. */
-class RecordPagerAdapter(private val pager: Pager) : RecordPager {
+internal class RecordPagerAdapter(private val pager: Pager) : RecordPager {
 
     override val pages: Flow<RecordPage> = pager.pages.map { it.toRecordPage() }
 
@@ -45,21 +45,21 @@ class RecordPagerAdapter(private val pager: Pager) : RecordPager {
     }
 }
 
-class LoadRecordsImpl(private val readAll: ReadAll) : LoadRecords {
+internal class LoadRecordsImpl(private val readAll: ReadAll) : LoadRecords {
     override fun invoke(recordType: KClass<*>): RecordPager {
         @Suppress("UNCHECKED_CAST")
         return RecordPagerAdapter(readAll(recordType as KClass<out Model>))
     }
 }
 
-class DeleteRecordImpl(private val delete: Delete) : DeleteRecord {
+internal class DeleteRecordImpl(private val delete: Delete) : DeleteRecord {
     override suspend fun invoke(recordType: KClass<*>, metadataId: String) {
         @Suppress("UNCHECKED_CAST")
         delete(recordType = recordType as KClass<out Model>, metadataId = metadataId)
     }
 }
 
-class RecordSummaryFactoryImpl : RecordSummaryFactory {
+internal class RecordSummaryFactoryImpl : RecordSummaryFactory {
     @Composable
     override fun Summary(record: RecordModel, modifier: Modifier) {
         unwrap(record).Summary(modifier)
