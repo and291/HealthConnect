@@ -11,6 +11,10 @@ import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProvider
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProviderImpl
+import com.example.healthconnect.record_list.api.domain.entity.RecordModel
+import com.example.healthconnect.record_list.api.navigation.RecordListNavigationEntry
+import com.example.healthconnect.record_list.api.navigation.RecordListNavigationEntryProvider
+import com.example.healthconnect.record_list.api.navigation.RecordListNavigationEntryProviderImpl
 import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.navigation.LibraryNavigation
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
@@ -48,7 +52,15 @@ object Di { //move to dagger. keep all features
 
     val utilityNav: UtilityNavigationEntryProvider = UtilityNavigationEntryProviderImpl(
         permissionOverview = PermissionNavigationEntry.Overview,
-        getEditEntry = { model: Model ->
+        getRecordsEntry = { type: KClass<out Model>, titleRes: Int ->
+            RecordListNavigationEntry.List(recordType = type, titleRes = titleRes)
+        }
+    )
+    val editorNav: EditorNavigationEntryProvider = EditorNavigationEntryProviderImpl()
+    val permissionNav: PermissionNavigationEntryProvider = PermissionNavigationEntryProviderImpl()
+    val recordListNav: RecordListNavigationEntryProvider = RecordListNavigationEntryProviderImpl(
+        getEditEntry = { record: RecordModel ->
+            val model = com.example.healthconnect.integration.record_list.unwrap(record)
             EditorNavigationEntry.EditRecordScreen(
                 model = com.example.healthconnect.integration.editor.wrapModel(model),
                 recordClass = com.example.healthconnect.utilty.impl.di.Di.modelFactory.createByModel(model)::class,
@@ -56,8 +68,6 @@ object Di { //move to dagger. keep all features
 
             //TODO get record klass from params
         },
-        getInsertEntry = { it: KClass<out Model> -> EditorNavigationEntry.Insert(it) }
+        getInsertEntry = { klass: KClass<*> -> EditorNavigationEntry.Insert(klass) }
     )
-    val editorNav: EditorNavigationEntryProvider = EditorNavigationEntryProviderImpl()
-    val permissionNav: PermissionNavigationEntryProvider = PermissionNavigationEntryProviderImpl()
 }

@@ -15,6 +15,7 @@ import com.example.healthconnect.di.Di
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntry
+import com.example.healthconnect.record_list.api.navigation.RecordListNavigationEntry
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.ProviderUpdateRequired
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Splash
 import com.example.healthconnect.ui.navigation.AppNavigationEntry.Unavailable
@@ -82,6 +83,12 @@ fun CreateNavDisplay(
             )
 
             is PermissionNavigationEntry -> Di.permissionNav.getNavEntry(
+                key = key,
+                backStack = backStack,
+                innerPadding = innerPadding,
+            )
+
+            is RecordListNavigationEntry -> Di.recordListNav.getNavEntry(
                 key = key,
                 backStack = backStack,
                 innerPadding = innerPadding,

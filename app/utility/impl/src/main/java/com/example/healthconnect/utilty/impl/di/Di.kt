@@ -30,7 +30,6 @@ import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
 import com.example.healthconnect.utilty.impl.impl.ui.editor.EditorFactory
 import com.example.healthconnect.utilty.impl.impl.ui.editor.record.factory.ModelFactoryImpl
-import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
 import com.example.healthconnect.utilty.impl.ui.mapper.DeviceMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
@@ -125,20 +124,12 @@ object Di { //TODO move to dagger. keep all features
         GetEditable(libraryRepository)
     }
 
-    private val delete by lazy {
+    val delete by lazy {
         Delete(libraryRepository, resultMapper, payloadMapper)
     }
 
-    private val readAll by lazy {
+    val readAll by lazy {
         ReadAll(libraryRepository)
-    }
-
-    val recordsViewModelFactory by lazy {
-        RecordsViewModelFactory(
-            readAll = readAll,
-            delete = delete,
-            recordTypeNameMapper = recordTypeNameMapper,
-        )
     }
 
     private val recordTypeIconMapper by lazy { RecordTypeIconMapper() }

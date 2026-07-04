@@ -1,18 +1,14 @@
-package com.example.healthconnect.utilty.impl.ui.screen.records
+package com.example.healthconnect.record_list.ui.screen.records
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.utilty.api.record.Model
-import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper
-import com.example.healthconnect.utilty.impl.domain.entity.Page
-import com.example.healthconnect.utilty.impl.domain.entity.Pager
-import com.example.healthconnect.utilty.impl.domain.usecase.Delete
-import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
-import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
-import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Effect.OpenRecordScreen
-import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.State.DisplayPage
+import com.example.healthconnect.record_list.api.domain.entity.RecordModel
+import com.example.healthconnect.record_list.api.domain.entity.RecordPage
+import com.example.healthconnect.record_list.api.domain.entity.RecordPager
+import com.example.healthconnect.record_list.api.domain.usecase.DeleteRecord
+import com.example.healthconnect.record_list.api.domain.usecase.LoadRecords
+import com.example.healthconnect.record_list.ui.screen.records.RecordsViewModel.Effect.OpenRecordScreen
+import com.example.healthconnect.record_list.ui.screen.records.RecordsViewModel.State.DisplayPage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -26,17 +22,16 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class RecordsViewModel(
-    private val modelType: KClass<out Model>,
-    private val readAll: ReadAll,
-    private val delete: Delete,
-    private val recordTypeNameMapper: RecordTypeNameMapper,
+    private val modelType: KClass<*>,
+    private val loadRecords: LoadRecords,
+    private val deleteRecord: DeleteRecord,
 ) : ViewModel() {
 
     private val _effect = Channel<Effect>(Channel.BUFFERED)
     val effect: Flow<Effect> = _effect.receiveAsFlow()
 
     private val refreshChannel = Channel<Unit>(Channel.CONFLATED)
-    private var currentPager: Pager? = null
+    private var currentPager: RecordPager? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val stateFlow: StateFlow<State> = refreshChannel.receiveAsFlow()
@@ -52,26 +47,24 @@ class RecordsViewModel(
     }
 
     private fun pagedFlow(): Flow<State> {
-        val pager = readAll(modelType)
+        val pager = loadRecords(modelType)
         currentPager = pager
 
         return pager.pages
             .runningFold(State(emptyList(), isRefreshing = true, hasMorePages = false)) { previousState, page ->
                 val displayPage = when (page) {
-                    is FlowResult.Data<Page> -> DisplayPage.Record(page.item.items)
+                    is RecordPage.Records -> DisplayPage.Record(page.records)
 
-                    is FlowResult.Terminal.UnpermittedAccess -> {
+                    is RecordPage.PermissionDenied -> {
                         requestPermissionAndRefreshOnGrant()
-                        DisplayPage.PermissionDenied(
-                            dataTypeNameRes = recordTypeNameMapper.nameRes(modelType),
-                        )
+                        DisplayPage.PermissionDenied
                     }
 
-                    is FlowResult.Terminal -> DisplayPage.Error(page.toString())
+                    is RecordPage.Error -> DisplayPage.Error(page.message)
                 }
                 State(
                     pages = previousState.pages + displayPage,
-                    hasMorePages = (page as? FlowResult.Data<Page>)?.item?.hasNextPage ?: false,
+                    hasMorePages = (page as? RecordPage.Records)?.hasNextPage ?: false,
                     isRefreshing = false,
                 )
             }
@@ -84,7 +77,7 @@ class RecordsViewModel(
     fun onEvent(event: Event) {
         when (event) {
             is Event.DeleteRecord -> viewModelScope.launch {
-                delete(recordType = event.recordType, metadataId = event.metadataId)
+                deleteRecord(recordType = event.recordType, metadataId = event.metadataId)
                 onEvent(Event.Refresh)
             }
 
@@ -104,36 +97,30 @@ class RecordsViewModel(
         sealed class DisplayPage {
 
             data class Record(
-                val records: List<Model>,
+                val records: List<RecordModel>,
             ) : DisplayPage()
 
             data class Error(
                 val message: String,
             ) : DisplayPage()
 
-            data class PermissionDenied(
-                @StringRes val dataTypeNameRes: Int,
-            ) : DisplayPage()
+            data object PermissionDenied : DisplayPage()
         }
     }
 
     sealed class Effect {
         data class OpenRecordScreen(
-            val record: Model,
+            val record: RecordModel,
         ) : Effect()
     }
 
     sealed class Event {
-        data class OnRecordClick(val record: Model) : Event()
+        data class OnRecordClick(val record: RecordModel) : Event()
         data class DeleteRecord(
-            val recordType: KClass<out Model>,
+            val recordType: KClass<*>,
             val metadataId: String,
         ) : Event()
         data object Refresh : Event()
         data object NextPage : Event()
-    }
-
-    companion object {
-        val RECORD_TYPE_KEY: CreationExtras.Key<KClass<out Model>> = CreationExtras.Key()
     }
 }

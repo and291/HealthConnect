@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.records
+package com.example.healthconnect.record_list.ui.screen.records
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,34 +24,41 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.utilty.api.record.Model
-import com.example.healthconnect.utilty.api.record.Steps
-import com.example.healthconnect.utilty.impl.di.Di
-import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Effect
-import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Event
-import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.State.DisplayPage
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.healthconnect.record_list.api.domain.entity.RecordModel
+import com.example.healthconnect.record_list.api.ui.RecordSummaryFactory
+import com.example.healthconnect.record_list.di.Locator
+import com.example.healthconnect.record_list.ui.screen.records.RecordsViewModel.Effect
+import com.example.healthconnect.record_list.ui.screen.records.RecordsViewModel.Event
+import com.example.healthconnect.record_list.ui.screen.records.RecordsViewModel.State
+import com.example.healthconnect.record_list.ui.screen.records.RecordsViewModel.State.DisplayPage
 import kotlin.reflect.KClass
 
 @Composable
-fun RecordsScreen(
-    onRecordClick: (Model) -> Unit,
+internal fun RecordsScreen(
+    onRecordClick: (RecordModel) -> Unit,
     onInsertRecordClick: () -> Unit,
-    recordType: KClass<out Model>,
+    recordType: KClass<*>,
     title: String,
     modifier: Modifier = Modifier,
+    summaryFactory: RecordSummaryFactory = Locator.impl.summaryFactory,
     viewModel: RecordsViewModel = viewModel(
-        factory = Di.recordsViewModelFactory,
-        extras = MutableCreationExtras().apply {
-            set(RecordsViewModel.RECORD_TYPE_KEY, recordType)
+        factory = viewModelFactory {
+            initializer {
+                RecordsViewModel(
+                    modelType = recordType,
+                    loadRecords = Locator.impl.loadRecords,
+                    deleteRecord = Locator.impl.deleteRecord,
+                )
+            }
         }
     ),
 ) {
@@ -67,15 +74,47 @@ fun RecordsScreen(
     }
 
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    RecordsList(
+        state = state,
+        title = title,
+        summaryFactory = summaryFactory,
+        onRefresh = { viewModel.onEvent(Event.Refresh) },
+        onInsertRecordClick = onInsertRecordClick,
+        onRecordClick = { viewModel.onEvent(Event.OnRecordClick(it)) },
+        onDeleteRecord = { record ->
+            viewModel.onEvent(
+                Event.DeleteRecord(
+                    recordType = recordType,
+                    metadataId = record.metadataId(),
+                )
+            )
+        },
+        onNextPage = { viewModel.onEvent(Event.NextPage) },
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun RecordsList(
+    state: State,
+    title: String,
+    summaryFactory: RecordSummaryFactory,
+    onRefresh: () -> Unit,
+    onInsertRecordClick: () -> Unit,
+    onRecordClick: (RecordModel) -> Unit,
+    onDeleteRecord: (RecordModel) -> Unit,
+    onNextPage: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     PullToRefreshBox(
         isRefreshing = state.isRefreshing,
-        onRefresh = { viewModel.onEvent(Event.Refresh) },
+        onRefresh = onRefresh,
         modifier = modifier.fillMaxSize(),
     ) {
         LazyColumn(
             contentPadding = PaddingValues(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
         ) {
             item {
                 Text(
@@ -98,24 +137,16 @@ fun RecordsScreen(
                     is DisplayPage.Record -> items(page.records) { record ->
                         RecordItem(
                             record = record,
-                            onDelete = {
-                                viewModel.onEvent(
-                                    Event.DeleteRecord(
-                                        recordType = recordType,
-                                        metadataId = record.metadata.id.value,
-                                    )
-                                )
-                            },
+                            summaryFactory = summaryFactory,
+                            onDelete = { onDeleteRecord(record) },
                             modifier = Modifier
                                 .padding(vertical = 2.dp)
-                                .clickable { viewModel.onEvent(Event.OnRecordClick(record)) },
+                                .clickable { onRecordClick(record) },
                         )
                     }
 
                     is DisplayPage.PermissionDenied -> item {
-                        PermissionDeniedMessage(
-                            dataTypeName = stringResource(page.dataTypeNameRes),
-                        )
+                        PermissionDeniedMessage(dataTypeName = title)
                     }
                 }
             }
@@ -123,7 +154,7 @@ fun RecordsScreen(
                 item {
                     CircularProgressIndicator()
                     LaunchedEffect(Unit) {
-                        viewModel.onEvent(Event.NextPage)
+                        onNextPage()
                     }
                 }
             }
@@ -158,12 +189,38 @@ private fun PermissionDeniedMessage(
 
 @Composable
 @Preview(widthDp = 480, heightDp = 720, showBackground = true)
-private fun RecordsScreenPreview() {
-    @Suppress("UNCHECKED_CAST")
-    RecordsScreen(
-        onRecordClick = {},
-        onInsertRecordClick = {},
-        recordType = Steps::class,
+private fun RecordsListPreview() {
+    val previewSummaryFactory = object : RecordSummaryFactory {
+        @Composable
+        override fun Summary(record: RecordModel, modifier: Modifier) {
+            Text(
+                text = "Steps: 8500",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = modifier,
+            )
+        }
+    }
+    RecordsList(
+        state = State(
+            pages = listOf(
+                DisplayPage.Record(
+                    records = List(3) { index ->
+                        object : RecordModel {
+                            override fun metadataId(): String = "record-$index"
+                        }
+                    },
+                ),
+                DisplayPage.PermissionDenied,
+            ),
+            hasMorePages = false,
+            isRefreshing = false,
+        ),
         title = "Steps",
+        summaryFactory = previewSummaryFactory,
+        onRefresh = {},
+        onInsertRecordClick = {},
+        onRecordClick = {},
+        onDeleteRecord = {},
+        onNextPage = {},
     )
 }

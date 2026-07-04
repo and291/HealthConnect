@@ -76,6 +76,7 @@ dependencies {
     implementation(project(":app:navigation:api"))
     implementation(project(":app:feature:permission-overview"))
     implementation(project(":app:feature:editor"))
+    implementation(project(":app:feature:record-list"))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //viewmodel

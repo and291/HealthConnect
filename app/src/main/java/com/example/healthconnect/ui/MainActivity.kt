@@ -25,8 +25,12 @@ import com.example.healthconnect.integration.editor.UpdateImpl
 import com.example.healthconnect.integration.permission_overview.data.PermissionEntryMapper
 import com.example.healthconnect.integration.permission_overview.data.PermissionResolverImpl
 import com.example.healthconnect.integration.permission_overview.ui.PermissionContractProviderImpl
+import com.example.healthconnect.integration.record_list.DeleteRecordImpl
+import com.example.healthconnect.integration.record_list.LoadRecordsImpl
+import com.example.healthconnect.integration.record_list.RecordSummaryFactoryImpl
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.permission_overview.api.di.PermissionOverviewFeatureScope
+import com.example.healthconnect.record_list.api.di.RecordListFeatureScope
 import com.example.healthconnect.ui.navigation.AppNavigationEntry
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
 import com.example.healthconnect.ui.theme.HealthConnectTheme
@@ -63,6 +67,12 @@ class MainActivity : ComponentActivity() {
             editableFactory = EditableFactoryImpl(),
             createEditable = CreateEditableImpl(),
             insert = InsertImpl()
+        ).apply { init() }
+
+        val recordListFeatureScope = RecordListFeatureScope(
+            loadRecords = LoadRecordsImpl(com.example.healthconnect.utilty.impl.di.Di.readAll),
+            deleteRecord = DeleteRecordImpl(com.example.healthconnect.utilty.impl.di.Di.delete),
+            summaryFactory = RecordSummaryFactoryImpl(),
         ).apply { init() }
 
         //injects for current activity below

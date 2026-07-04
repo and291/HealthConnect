@@ -1,4 +1,4 @@
-package com.example.healthconnect.utilty.impl.ui.screen.records
+package com.example.healthconnect.record_list.ui.screen.records
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
