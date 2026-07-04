@@ -4,13 +4,14 @@ import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.editor.api.domain.entity.EditEvent
 import com.example.healthconnect.editor.api.domain.entity.Editable
 import com.example.healthconnect.editor.api.domain.entity.EditableField
-import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Model
+import com.example.healthconnect.utilty.impl.di.Di as UtilityDi
+import com.example.healthconnect.utilty.impl.domain.model.FieldModificationEvent
+import com.example.healthconnect.utilty.impl.ui.editor.record.Editor
 import java.util.UUID
 import androidx.health.connect.client.records.Record
-import com.example.healthconnect.utilty.impl.domain.model.FieldModificationEvent
-import com.example.healthconnect.utilty.impl.impl.ui.editor.record.Editor
 
-class ModelEditableAdapter(
+internal class ModelEditableAdapter(
     val model: Model,
     val editor: Editor<Record, Model>
 ) : Editable {
@@ -32,12 +33,12 @@ class ModelEditableAdapter(
     override fun getUuid(): UUID = UUID.fromString(model.metadata.id.value) //TODO fix
 }
 
-class FieldEditableAdapter(val field: Field) : EditableField {
+internal class FieldEditableAdapter(val field: Field) : EditableField {
     override val priority: Int = field.priority
 }
 
-fun wrapModel(model: Model): Editable {
-    val editor = com.example.healthconnect.utilty.impl.di.Di.editorFactory.createByModel(model::class)
+internal fun wrapModel(model: Model): Editable {
+    val editor = UtilityDi.editorFactory.createByModel(model::class)
     val editable = ModelEditableAdapter(model, editor)
     return editable
 }

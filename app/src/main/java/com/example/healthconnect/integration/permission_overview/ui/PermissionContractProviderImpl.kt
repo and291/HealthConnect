@@ -5,7 +5,7 @@ import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
 import com.example.healthconnect.permission_overview.api.ui.PermissionContractProvider
 
-class PermissionContractProviderImpl : PermissionContractProvider {
+internal class PermissionContractProviderImpl : PermissionContractProvider {
 
     override fun getLibraryContract(): ActivityResultContract<Set<String>, Set<String>> {
         return PermissionController.createRequestPermissionResultContract()

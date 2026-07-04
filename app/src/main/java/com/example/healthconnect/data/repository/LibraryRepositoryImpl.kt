@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import com.example.healthconnect.domain.LibraryRepository
 
-class LibraryRepositoryImpl(
+internal class LibraryRepositoryImpl(
     private val applicationContext: Context
 ) : LibraryRepository {
 

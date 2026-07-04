@@ -10,7 +10,7 @@ import androidx.health.connect.client.HealthConnectClient
  *
  * Single entry point into HealtConnect related navigation
  */
-class LibraryNavigation(
+internal class LibraryNavigation(
     private val applicationContext: Context
 ) {
     private val providerPackageName: String = "com.google.android.apps.healthdata"

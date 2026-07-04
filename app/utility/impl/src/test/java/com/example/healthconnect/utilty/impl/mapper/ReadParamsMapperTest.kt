@@ -2,7 +2,7 @@ package com.example.healthconnect.utilty.impl.mapper
 
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.metadata.DataOrigin
-import com.example.healthconnect.utilty.api.record.Steps
+import com.example.healthconnect.utilty.api.domain.record.Steps
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams

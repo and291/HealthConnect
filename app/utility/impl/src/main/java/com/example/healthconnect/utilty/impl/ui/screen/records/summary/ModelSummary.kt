@@ -10,8 +10,8 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Strin
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
-import com.example.healthconnect.utilty.api.record.Model
-import com.example.healthconnect.utilty.api.record.Steps
+import com.example.healthconnect.utilty.api.domain.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Steps
 import java.time.Instant
 import java.time.ZoneOffset
 

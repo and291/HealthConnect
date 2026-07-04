@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.healthconnect.ui.theme.HealthConnectTheme
 
 @Composable
-fun SdkUpdateRequiredScreen(
+internal fun SdkUpdateRequiredScreen(
     startUpdateActivity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

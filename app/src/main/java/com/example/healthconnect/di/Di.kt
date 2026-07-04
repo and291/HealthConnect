@@ -20,7 +20,7 @@ import com.example.healthconnect.ui.ParameterlessViewModelFactory
 import com.example.healthconnect.ui.navigation.LibraryNavigation
 import kotlin.reflect.KClass
 
-object Di { //move to dagger. keep all features
+internal object Di { //move to dagger. keep all features
     var isPreview = true
 
     lateinit var applicationContext: Context

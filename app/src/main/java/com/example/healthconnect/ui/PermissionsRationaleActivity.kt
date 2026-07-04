@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.example.healthconnect.ui.theme.HealthConnectTheme
 
-class PermissionsRationaleActivity : ComponentActivity() {
+internal class PermissionsRationaleActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
