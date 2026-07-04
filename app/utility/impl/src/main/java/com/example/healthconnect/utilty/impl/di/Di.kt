@@ -2,6 +2,8 @@ package com.example.healthconnect.utilty.impl.di
 
 import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.response.ReadRecordResponse
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.data.PermissionRepository
@@ -23,6 +25,7 @@ import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
+import com.example.healthconnect.utilty.impl.domain.usecase.GetEditable
 import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
@@ -75,6 +78,11 @@ object Di { //TODO move to dagger. keep all features
                 override fun <M : Model> pager(params: ReadParams<M>): Pager = error("No impl")
 
                 override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("No impl")
+
+                override suspend fun <R : Record> fetchRecordById(
+                    kClass: KClass<R>,
+                    recordId: String,
+                ): ReadRecordResponse<R> = error("No impl")
             }
         } else {
             LibraryRepositoryImpl(
@@ -99,6 +107,10 @@ object Di { //TODO move to dagger. keep all features
 
     val update: Update by lazy {
         UpdateImpl(libraryRepository, resultMapper, payloadMapper)
+    }
+
+    val getEditable by lazy {
+        GetEditable(libraryRepository)
     }
 
     private val delete by lazy {

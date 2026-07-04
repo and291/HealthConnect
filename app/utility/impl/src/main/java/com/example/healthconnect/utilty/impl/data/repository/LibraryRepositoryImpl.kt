@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.response.ReadRecordResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
 import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.models.api.domain.record.Model
@@ -102,6 +103,13 @@ class LibraryRepositoryImpl(
     ): ReadRecordsResponse<R> {
         val readRecordsRequest = readParamsMapper.map<R, M>(params, continuationToken)
         return healthConnectClient.readRecords(readRecordsRequest)
+    }
+
+    override suspend fun <R : Record> fetchRecordById(
+        kClass: KClass<R>,
+        recordId: String
+    ): ReadRecordResponse<R> {
+        return healthConnectClient.readRecord(kClass, recordId)
     }
 
 }

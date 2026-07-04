@@ -7,15 +7,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
-import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
+import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntryProvider
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardScreen
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsScreen
+import kotlin.reflect.KClass
 
 class UtilityNavigationEntryProviderImpl(
-    private val permissionOverview: NavigationEntry
+    private val permissionOverview: NavigationEntry,
+    private val getEditEntry: (model: Model) -> NavigationEntry,
+    private val getInsertEntry: (klass: KClass<out Model>) -> NavigationEntry,
 ) : UtilityNavigationEntryProvider {
 
     override fun getNavEntry(
@@ -47,10 +50,10 @@ class UtilityNavigationEntryProviderImpl(
             is UtilityNavigationEntry.Records -> NavEntry(key) {
                 RecordsScreen(
                     onRecordClick = {
-                        backStack.add(EditorNavigationEntry.EditRecordScreen(it))
+                        backStack.add(getEditEntry(it))
                     },
                     onInsertRecordClick = {
-                        backStack.add(EditorNavigationEntry.Insert(key.recordType))
+                        backStack.add(getInsertEntry(key.recordType))
                     },
                     recordType = key.recordType,
                     title = stringResource(key.titleRes),

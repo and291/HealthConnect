@@ -1,42 +1,31 @@
-package com.example.healthconnect.editor.impl.ui.screen.record
+package com.example.healthconnect.editor.ui.edit
 
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.health.connect.client.records.Record
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.healthconnect.editor.impl.ui.editor.record.Editor
-import com.example.healthconnect.editor.impl.ui.editor.EditorFactory
-import com.example.healthconnect.editor.api.ui.mapper.MetadataMapper
-import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
-import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.utilty.api.domain.entity.Result
-import com.example.healthconnect.utilty.api.domain.usecase.Insert
+import com.example.healthconnect.editor.api.domain.entity.EditEvent
+import com.example.healthconnect.editor.api.domain.entity.Editable
+import com.example.healthconnect.editor.api.domain.entity.Result
+import com.example.healthconnect.editor.api.domain.usecase.CreateEditable
+import com.example.healthconnect.editor.api.domain.usecase.Insert
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
-class InsertRecordViewModel(
-    recordClass: KClass<out Model>,
-    editorFactory: EditorFactory,
-    metadataMapper: MetadataMapper,
+internal class InsertRecordViewModel(
+    recordClass: KClass<*>,
+    createEditable: CreateEditable,
     private val insert: Insert,
 ) : ViewModel() {
 
-    private val editor: Editor<Record, Model> = editorFactory.createByModel(recordClass)
+    private val editor: Editable = createEditable(recordClass)
 
-    private var _state: State<Model> by mutableStateOf(
-        State.Edition(
-            model = editor.toModel(
-                record = editor.createDefault(),
-                mapper = metadataMapper,
-            )
-        )
-    )
-    val state: State<Model>
+    private var _state: State<Editable> by mutableStateOf(State.Edition(editor))
+    val state: State<Editable>
         get() = _state
 
     val sortedFields
@@ -44,8 +33,8 @@ class InsertRecordViewModel(
 
     private var insertJob: Job? = null
 
-    fun onEvent(event: FieldModificationEvent) {
-        (_state as? State.Edition<Model>)?.also {
+    fun onEvent(event: EditEvent) {
+        (_state as? State.Edition<Editable>)?.also {
             _state = State.Edition(editor.update(it.model, event))
         }
     }
@@ -87,14 +76,14 @@ class InsertRecordViewModel(
         data object OnInsert : Event()
     }
 
-    sealed class State<T : Model> {
+    sealed class State<T : Editable> {
 
         abstract val model: T
 
         /**
          * User able to modify values
          */
-        data class Edition<T : Model>(
+        data class Edition<T : Editable>(
             override val model: T,
             val errorCreatingEntity: String? = null,
             //validation and so on
@@ -103,7 +92,7 @@ class InsertRecordViewModel(
         /**
          * Show progress bar and stuff
          */
-        data class InsertInProgress<T : Model>(
+        data class InsertInProgress<T : Editable>(
             override val model: T,
         ) : State<T>()
 
@@ -111,7 +100,7 @@ class InsertRecordViewModel(
          * Display result of the update attempt
          * Allow to retry in case of failed attempt
          */
-        data class InsertResult<T : Model>(
+        data class InsertResult<T : Editable>(
             override val model: T,
             val result: Result, //result of interaction with lib
         ) : State<T>()
@@ -119,6 +108,6 @@ class InsertRecordViewModel(
 
     companion object {
 
-        val RECORD_CLASS_KEY: CreationExtras.Key<KClass<out Model>> = CreationExtras.Key()
+        val RECORD_CLASS_KEY: CreationExtras.Key<KClass<*>> = CreationExtras.Key()
     }
 }

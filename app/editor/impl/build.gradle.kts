@@ -46,9 +46,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":app:components:api"))
-    implementation(project(":app:utility:api"))
     implementation(project(":app:editor:api"))
-    implementation(project(":app:navigation:api"))
     implementation(project(":app:models:api"))
 
     // reflection

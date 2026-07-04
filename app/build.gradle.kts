@@ -78,6 +78,7 @@ dependencies {
     implementation(project(":app:editor:impl"))
     implementation(project(":app:navigation:api"))
     implementation(project(":app:feature:permission-overview"))
+    implementation(project(":app:feature:editor"))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //viewmodel

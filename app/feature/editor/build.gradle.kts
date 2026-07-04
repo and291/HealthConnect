@@ -3,10 +3,11 @@ import org.gradle.kotlin.dsl.configure
 
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.compose)
 }
 
 extensions.configure<LibraryExtension> {
-    namespace = "com.example.healthconnect.editor.api"
+    namespace = "com.example.healthconnect.editor"
     compileSdk = 36
     compileSdkExtension = 19
 
@@ -31,6 +32,7 @@ extensions.configure<LibraryExtension> {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
 kotlin {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
@@ -38,20 +40,14 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":app:navigation:api"))
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
 
-    implementation(project(":app:components:api"))
-    implementation(project(":app:models:api"))
-
-    // Use to implement health connects
-    implementation(libs.androidx.connect.client)
-
-    //compose
-    implementation(libs.androidx.compose.foundation.layout)
-
-    //compose navigation v3
     implementation(libs.androidx.navigation3.runtime)
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 }
