@@ -1,7 +1,9 @@
 package com.example.healthconnect.utilty.impl.domain.usecase
 
-import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.models.api.domain.record.Steps
+import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.response.ReadRecordResponse
+import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.record.Steps
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.Page
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
@@ -32,6 +34,12 @@ class ReadAllTest {
             }
         }
         override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("not expected")
+        override suspend fun <R : Record> fetchRecordById(
+            kClass: KClass<R>,
+            recordId: String,
+        ): ReadRecordResponse<R> {
+            TODO("Not yet implemented")
+        }
     })
 
     @Test

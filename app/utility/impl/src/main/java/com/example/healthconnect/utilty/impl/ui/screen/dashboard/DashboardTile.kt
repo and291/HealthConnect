@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.healthconnect.models.api.domain.record.Steps
+import com.example.healthconnect.utilty.api.record.Steps
 import com.example.healthconnect.utilty.impl.R
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.model.DashboardItem
 

@@ -6,14 +6,14 @@ import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
-import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.data.mapper.ReadParamsMapper
 import com.example.healthconnect.utilty.impl.data.mapper.TypeMapper
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
+import com.example.healthconnect.utilty.impl.domain.record.factory.ModelFactory
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

@@ -7,7 +7,7 @@ import com.example.healthconnect.domain.LibraryRepository
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntry
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProvider
 import com.example.healthconnect.editor.api.navigation.EditorNavigationEntryProviderImpl
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntry
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProvider
 import com.example.healthconnect.permission_overview.api.navigation.PermissionNavigationEntryProviderImpl
@@ -51,7 +51,7 @@ object Di { //move to dagger. keep all features
         getEditEntry = { model: Model ->
             EditorNavigationEntry.EditRecordScreen(
                 model = com.example.healthconnect.integration.editor.wrapModel(model),
-                recordClass = com.example.healthconnect.editor.impl.di.Di.modelFactory.createByModel(model)::class,
+                recordClass = com.example.healthconnect.utilty.impl.di.Di.modelFactory.createByModel(model)::class,
             )
 
             //TODO get record klass from params

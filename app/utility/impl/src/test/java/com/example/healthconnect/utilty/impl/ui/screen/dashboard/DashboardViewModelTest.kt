@@ -1,7 +1,9 @@
 package com.example.healthconnect.utilty.impl.ui.screen.dashboard
 
-import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.models.api.domain.record.Steps
+import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.response.ReadRecordResponse
+import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.record.Steps
 import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
@@ -66,6 +68,12 @@ class DashboardViewModelTest {
             override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = Unit
             override fun <M : Model> pager(params: ReadParams<M>): Pager = error("not expected")
             override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = countForType(params.modelType)
+            override suspend fun <R : Record> fetchRecordById(
+                kClass: KClass<R>,
+                recordId: String,
+            ): ReadRecordResponse<R> {
+                TODO("Not yet implemented")
+            }
         }
         return DashboardViewModel(
             count = Count(repository),

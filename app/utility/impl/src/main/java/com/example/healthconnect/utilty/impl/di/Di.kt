@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.response.ReadRecordResponse
-import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
-import com.example.healthconnect.models.api.domain.record.Model
 import com.example.healthconnect.utilty.api.data.PermissionRepository
 import com.example.healthconnect.utilty.api.domain.usecase.Insert
 import com.example.healthconnect.utilty.api.domain.usecase.Update
@@ -22,6 +20,7 @@ import com.example.healthconnect.utilty.impl.domain.LibraryRepository
 import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.entity.Pager
 import com.example.healthconnect.utilty.impl.domain.entity.ReadParams
+import com.example.healthconnect.utilty.impl.domain.record.factory.ModelFactory
 import com.example.healthconnect.utilty.impl.domain.usecase.Count
 import com.example.healthconnect.utilty.impl.domain.usecase.Delete
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
@@ -29,8 +28,12 @@ import com.example.healthconnect.utilty.impl.domain.usecase.GetEditable
 import com.example.healthconnect.utilty.impl.domain.usecase.InsertImpl
 import com.example.healthconnect.utilty.impl.domain.usecase.ReadAll
 import com.example.healthconnect.utilty.impl.domain.usecase.UpdateImpl
+import com.example.healthconnect.utilty.impl.impl.ui.editor.EditorFactory
+import com.example.healthconnect.utilty.impl.impl.ui.editor.record.factory.ModelFactoryImpl
 import com.example.healthconnect.utilty.impl.ui.RecordsViewModelFactory
+import com.example.healthconnect.utilty.impl.ui.mapper.DeviceMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.FlowResultTerminalIconMapper
+import com.example.healthconnect.utilty.impl.ui.mapper.MetadataMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeIconMapper
 import com.example.healthconnect.utilty.impl.ui.mapper.RecordTypeNameMapperImpl
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModelFactory
@@ -41,7 +44,16 @@ object Di { //TODO move to dagger. keep all features
     var isPreview = true
 
     lateinit var applicationContext: Context
-    lateinit var modelFactory: ModelFactory
+
+    val modelFactory: ModelFactory by lazy {
+        ModelFactoryImpl(metadataMapper, editorFactory)
+    }
+
+    val editorFactory = EditorFactory()
+
+    private val metadataMapper = MetadataMapper(
+        deviceMapper = DeviceMapper()
+    )
 
     val permissionRepository: PermissionRepository by lazy {
         PermissionRepositoryImpl(
@@ -69,15 +81,15 @@ object Di { //TODO move to dagger. keep all features
                     return setOf("sdk:permission")
                 }
 
-                override suspend fun updateRecords(records: List<Model>) = error("No impl")
+                override suspend fun updateRecords(records: List<com.example.healthconnect.utilty.api.record.Model>) = error("No impl")
 
-                override suspend fun insertRecords(records: List<Model>): List<String> = error("No impl")
+                override suspend fun insertRecords(records: List<com.example.healthconnect.utilty.api.record.Model>): List<String> = error("No impl")
 
-                override suspend fun removeRecord(recordType: KClass<out Model>, metadataId: String) = error("No impl")
+                override suspend fun removeRecord(recordType: KClass<out com.example.healthconnect.utilty.api.record.Model>, metadataId: String) = error("No impl")
 
-                override fun <M : Model> pager(params: ReadParams<M>): Pager = error("No impl")
+                override fun <M : com.example.healthconnect.utilty.api.record.Model> pager(params: ReadParams<M>): Pager = error("No impl")
 
-                override fun <M : Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("No impl")
+                override fun <M : com.example.healthconnect.utilty.api.record.Model> count(params: ReadParams<M>): Flow<FlowResult<Int>> = error("No impl")
 
                 override suspend fun <R : Record> fetchRecordById(
                     kClass: KClass<R>,

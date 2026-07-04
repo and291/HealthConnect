@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
         com.example.healthconnect.utilty.impl.di.Di.also {
             it.isPreview = false
             it.applicationContext = this.application
-            it.modelFactory = com.example.healthconnect.editor.impl.di.Di.modelFactory
         }
         val permissionOverviewScope = PermissionOverviewFeatureScope(
             application = application,
@@ -57,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
         val editorFeatureScope = EditorFeatureScope(
             getEditable = GetEditableImpl(
-                modelFactory = com.example.healthconnect.editor.impl.di.Di.modelFactory,
+                modelFactory = com.example.healthconnect.utilty.impl.di.Di.modelFactory,
             ),
             update = UpdateImpl(),
             componentFactory = ComponentFactoryImpl(),

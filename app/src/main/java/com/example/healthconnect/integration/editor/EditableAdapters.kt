@@ -4,11 +4,11 @@ import com.example.healthconnect.components.api.domain.entity.Field
 import com.example.healthconnect.editor.api.domain.entity.EditEvent
 import com.example.healthconnect.editor.api.domain.entity.Editable
 import com.example.healthconnect.editor.api.domain.entity.EditableField
-import com.example.healthconnect.editor.api.domain.model.FieldModificationEvent
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import java.util.UUID
 import androidx.health.connect.client.records.Record
-import com.example.healthconnect.editor.impl.ui.editor.record.Editor
+import com.example.healthconnect.utilty.impl.domain.model.FieldModificationEvent
+import com.example.healthconnect.utilty.impl.impl.ui.editor.record.Editor
 
 class ModelEditableAdapter(
     val model: Model,
@@ -37,7 +37,7 @@ class FieldEditableAdapter(val field: Field) : EditableField {
 }
 
 fun wrapModel(model: Model): Editable {
-    val editor = com.example.healthconnect.editor.impl.di.Di.editorFactory.createByModel(model::class)
+    val editor = com.example.healthconnect.utilty.impl.di.Di.editorFactory.createByModel(model::class)
     val editable = ModelEditableAdapter(model, editor)
     return editable
 }

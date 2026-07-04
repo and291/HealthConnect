@@ -3,7 +3,7 @@ package com.example.healthconnect.utilty.impl.ui.screen.dashboard
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.utilty.impl.R
 import com.example.healthconnect.utilty.impl.domain.SupportedModels
 import com.example.healthconnect.utilty.impl.domain.usecase.Count

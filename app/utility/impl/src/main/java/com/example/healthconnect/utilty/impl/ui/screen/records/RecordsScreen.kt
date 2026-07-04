@@ -33,8 +33,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.models.api.domain.record.Steps
+import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.record.Steps
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Effect
 import com.example.healthconnect.utilty.impl.ui.screen.records.RecordsViewModel.Event

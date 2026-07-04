@@ -1,7 +1,7 @@
 package com.example.healthconnect.utilty.api.navigation
 
 import androidx.annotation.StringRes
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.navigation.api.NavigationEntry
 import kotlin.reflect.KClass
 

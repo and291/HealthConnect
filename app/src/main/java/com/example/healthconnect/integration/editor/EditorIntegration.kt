@@ -7,17 +7,16 @@ import com.example.healthconnect.editor.api.domain.entity.EditEvent
 import com.example.healthconnect.editor.api.domain.entity.Editable
 import com.example.healthconnect.editor.api.domain.entity.EditableField
 import com.example.healthconnect.editor.api.domain.entity.Result
-import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
 import com.example.healthconnect.editor.api.domain.usecase.CreateEditable
 import com.example.healthconnect.editor.api.domain.usecase.GetEditable
 import com.example.healthconnect.editor.api.domain.usecase.Insert
 import com.example.healthconnect.editor.api.domain.usecase.Update
 import com.example.healthconnect.editor.api.ui.ComponentFactory
 import com.example.healthconnect.editor.api.ui.EditableFactory
-import com.example.healthconnect.editor.impl.di.Di as EditorDi
+import com.example.healthconnect.utilty.impl.domain.model.FieldModificationEvent
 import com.example.healthconnect.utilty.impl.di.Di as UtilityDi
 import com.example.healthconnect.components.impl.di.Di as ComponentsDi
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.impl.domain.record.factory.ModelFactory
 import java.util.UUID
 import kotlin.reflect.KClass
 
@@ -35,10 +34,10 @@ class GetEditableImpl(
 class CreateEditableImpl : CreateEditable {
     override fun invoke(klass: KClass<*>): Editable {
         @Suppress("UNCHECKED_CAST")
-        val modelKClass = klass as KClass<out Model>
-        val editor = EditorDi.editorFactory.createByModel(modelKClass)
+        val modelKClass = klass as KClass<out com.example.healthconnect.utilty.api.record.Model>
+        val editor = UtilityDi.editorFactory.createByModel(modelKClass)
         val record = editor.createDefault()
-        val model = EditorDi.modelFactory.create(record)
+        val model = UtilityDi.modelFactory.create(record)
         return ModelEditableAdapter(model, editor)
     }
 }
@@ -68,7 +67,7 @@ class InsertImpl : Insert {
 }
 
 class ComponentFactoryImpl : ComponentFactory {
-    private val internalFactory = com.example.healthconnect.editor.impl.ui.screen.record.ComponentFactory(ComponentsDi.fieldProvider)
+    private val internalFactory = com.example.healthconnect.utilty.impl.impl.ui.screen.record.ComponentFactory(ComponentsDi.fieldProvider)
 
     override fun LazyListScope.create(
         components: List<EditableField>,
@@ -79,9 +78,9 @@ class ComponentFactoryImpl : ComponentFactory {
         with(internalFactory) {
             create(fields, modifier) { internalEvent ->
                 val apiEvent = when (internalEvent) {
-                    is com.example.healthconnect.editor.api.domain.model.FieldModificationEvent.OnChanged -> 
+                    is FieldModificationEvent.OnChanged ->
                         EditEvent.OnChanged(FieldEditableAdapter(internalEvent.component))
-                    is com.example.healthconnect.editor.api.domain.model.FieldModificationEvent.RemoveListItem -> 
+                    is FieldModificationEvent.RemoveListItem ->
                         EditEvent.RemoveListItem(internalEvent.instanceId)
                 }
                 eventHandler(apiEvent)
@@ -93,8 +92,8 @@ class ComponentFactoryImpl : ComponentFactory {
 class EditableFactoryImpl : EditableFactory {
     override fun create(editable: Editable): Editable {
         val adapter = editable as ModelEditableAdapter
-        val record = EditorDi.modelFactory.createByModel(adapter.model)
-        val newModel = EditorDi.modelFactory.create(record)
+        val record = UtilityDi.modelFactory.createByModel(adapter.model)
+        val newModel = UtilityDi.modelFactory.create(record)
         return ModelEditableAdapter(newModel, adapter.editor)
     }
 }

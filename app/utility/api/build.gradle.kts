@@ -40,7 +40,10 @@ kotlin {
 dependencies {
 
     implementation(project(":app:navigation:api"))
-    implementation(project(":app:models:api"))
+    implementation(project(":app:components:api"))
+
+    //kotlin reflection
+    implementation(kotlin("reflect"))
 
     //compose
     implementation(libs.androidx.compose.runtime)

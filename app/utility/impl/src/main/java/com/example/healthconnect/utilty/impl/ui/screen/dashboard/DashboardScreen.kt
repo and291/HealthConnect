@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.utilty.impl.di.Di
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModel.Effect
 import com.example.healthconnect.utilty.impl.ui.screen.dashboard.DashboardViewModel.Event
