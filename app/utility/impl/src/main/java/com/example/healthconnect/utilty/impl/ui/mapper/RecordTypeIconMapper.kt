@@ -1,17 +1,83 @@
 package com.example.healthconnect.utilty.impl.ui.mapper
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.*
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.Accessible
+import androidx.compose.material.icons.automirrored.filled.DirectionsBike
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
+import androidx.compose.material.icons.automirrored.filled.EventNote
+import androidx.compose.material.icons.automirrored.filled.ShowChart
+import androidx.compose.material.icons.filled.Accessibility
+import androidx.compose.material.icons.filled.Air
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.Bloodtype
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Height
+import androidx.compose.material.icons.filled.LocalDrink
+import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.MonitorHeart
+import androidx.compose.material.icons.filled.Opacity
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Scale
+import androidx.compose.material.icons.filled.Science
+import androidx.compose.material.icons.filled.SelfImprovement
+import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Stairs
+import androidx.compose.material.icons.filled.Straighten
+import androidx.compose.material.icons.filled.Terrain
+import androidx.compose.material.icons.filled.Thermostat
+import androidx.compose.material.icons.filled.Water
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.healthconnect.utilty.api.domain.record.*
+import com.example.healthconnect.utilty.api.domain.record.ActiveCaloriesBurned
+import com.example.healthconnect.utilty.api.domain.record.ActivityIntensity
+import com.example.healthconnect.utilty.api.domain.record.BasalBodyTemperature
+import com.example.healthconnect.utilty.api.domain.record.BasalMetabolicRate
+import com.example.healthconnect.utilty.api.domain.record.BloodGlucoseLevel
+import com.example.healthconnect.utilty.api.domain.record.BloodPressure
+import com.example.healthconnect.utilty.api.domain.record.BodyFat
+import com.example.healthconnect.utilty.api.domain.record.BodyTemperature
+import com.example.healthconnect.utilty.api.domain.record.BodyWaterMass
+import com.example.healthconnect.utilty.api.domain.record.BoneMass
+import com.example.healthconnect.utilty.api.domain.record.CervicalMucus
+import com.example.healthconnect.utilty.api.domain.record.CyclingPedalingCadence
+import com.example.healthconnect.utilty.api.domain.record.Distance
+import com.example.healthconnect.utilty.api.domain.record.ElevationGained
+import com.example.healthconnect.utilty.api.domain.record.ExerciseSession
+import com.example.healthconnect.utilty.api.domain.record.FloorsClimbed
+import com.example.healthconnect.utilty.api.domain.record.HeartRate
+import com.example.healthconnect.utilty.api.domain.record.HeartRateVariabilityRmssd
+import com.example.healthconnect.utilty.api.domain.record.Height
+import com.example.healthconnect.utilty.api.domain.record.Hydration
+import com.example.healthconnect.utilty.api.domain.record.IntermenstrualBleeding
+import com.example.healthconnect.utilty.api.domain.record.LeanBodyMass
+import com.example.healthconnect.utilty.api.domain.record.MenstruationFlow
+import com.example.healthconnect.utilty.api.domain.record.MenstruationPeriod
+import com.example.healthconnect.utilty.api.domain.record.MindfulnessSession
+import com.example.healthconnect.utilty.api.domain.record.Model
+import com.example.healthconnect.utilty.api.domain.record.Nutrition
+import com.example.healthconnect.utilty.api.domain.record.OvulationTest
+import com.example.healthconnect.utilty.api.domain.record.OxygenSaturation
+import com.example.healthconnect.utilty.api.domain.record.PlannedExerciseSession
+import com.example.healthconnect.utilty.api.domain.record.Power
+import com.example.healthconnect.utilty.api.domain.record.RespiratoryRate
+import com.example.healthconnect.utilty.api.domain.record.RestingHeartRate
+import com.example.healthconnect.utilty.api.domain.record.SexualActivity
+import com.example.healthconnect.utilty.api.domain.record.SkinTemperature
+import com.example.healthconnect.utilty.api.domain.record.SleepSession
+import com.example.healthconnect.utilty.api.domain.record.Speed
+import com.example.healthconnect.utilty.api.domain.record.Steps
+import com.example.healthconnect.utilty.api.domain.record.StepsCadence
+import com.example.healthconnect.utilty.api.domain.record.TotalCaloriesBurned
+import com.example.healthconnect.utilty.api.domain.record.Vo2Max
+import com.example.healthconnect.utilty.api.domain.record.Weight
+import com.example.healthconnect.utilty.api.domain.record.WheelchairPushes
 import kotlin.reflect.KClass
 
 class RecordTypeIconMapper {
-
-    fun icon(type: KClass<out Model>): ImageVector = requireNotNull(icons[type]) {
-        "No icon for record type ${type.simpleName}"
-    }
 
     private val icons: Map<KClass<out Model>, ImageVector> = mapOf(
         // Instantaneous
@@ -60,4 +126,11 @@ class RecordTypeIconMapper {
         Speed::class to Icons.Default.Speed,
         StepsCadence::class to Icons.AutoMirrored.Filled.DirectionsWalk,
     )
+
+    fun icon(type: KClass<out Model>): ImageVector = requireNotNull(icons[type]) {
+        "No icon for record type ${type.simpleName}"
+    }
+
+    @Suppress("unused")
+    inline fun <reified M : Model> toIcon(): ImageVector = icon(M::class)
 }

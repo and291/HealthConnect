@@ -10,6 +10,7 @@ import com.example.healthconnect.permission_overview.api.domain.entity.Permissio
 import com.example.healthconnect.permission_overview.api.domain.entity.ReadWrite
 import com.example.healthconnect.permission_overview.api.domain.entity.Single
 import com.example.healthconnect.permission_overview.entity.PermissionStatus
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -127,9 +128,14 @@ internal class PermissionsViewModel(
     }
 
     private var refreshPermissionsJob: Job? = null
+
+    private inline fun Job?.relaunch(crossinline block: suspend CoroutineScope.() -> Unit): Job {
+        this?.cancel() //TODO(dive depper with .cancel() vs .cancelAndJoin())
+        return viewModelScope.launch { block() }
+    }
+
     private fun refreshPermissions() {
-        refreshPermissionsJob?.cancel() //TODO(dive depper with .cancel() vs .cancelAndJoin())
-        refreshPermissionsJob = viewModelScope.launch {
+        refreshPermissionsJob.relaunch {
             _state.update {
                 it.copy(isLoading = true, errorMessage = null)
             }
