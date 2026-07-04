@@ -1,6 +1,6 @@
 package com.example.healthconnect.utilty.impl.data
 
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.utilty.api.data.LibraryPermission
 import com.example.healthconnect.utilty.api.data.PermissionRepository
 import com.example.healthconnect.utilty.api.ui.mapper.RecordTypeNameMapper

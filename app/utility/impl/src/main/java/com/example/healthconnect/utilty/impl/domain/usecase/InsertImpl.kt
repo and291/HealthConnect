@@ -1,6 +1,6 @@
 package com.example.healthconnect.utilty.impl.domain.usecase
 
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import com.example.healthconnect.utilty.api.domain.entity.Payload
 import com.example.healthconnect.utilty.api.domain.entity.Result
 import com.example.healthconnect.utilty.api.domain.usecase.Insert

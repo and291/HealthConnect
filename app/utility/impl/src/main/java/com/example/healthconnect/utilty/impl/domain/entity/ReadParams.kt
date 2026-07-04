@@ -1,6 +1,6 @@
 package com.example.healthconnect.utilty.impl.domain.entity
 
-import com.example.healthconnect.models.api.domain.record.Model
+import com.example.healthconnect.utilty.api.record.Model
 import java.time.Instant
 import kotlin.reflect.KClass
 

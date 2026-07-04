@@ -8,11 +8,11 @@ import com.example.healthconnect.components.api.domain.entity.field.atomic.Strin
 import com.example.healthconnect.components.api.domain.entity.field.atomic.TimeField
 import com.example.healthconnect.components.api.domain.entity.field.atomic.ValueField
 import com.example.healthconnect.components.api.domain.entity.field.composite.MetadataField
-import com.example.healthconnect.editor.api.domain.record.factory.ModelFactory
-import com.example.healthconnect.models.api.domain.record.Model
-import com.example.healthconnect.models.api.domain.record.Steps
+import com.example.healthconnect.utilty.api.record.Model
+import com.example.healthconnect.utilty.api.record.Steps
 import com.example.healthconnect.utilty.impl.data.mapper.FlowResultMapper
 import com.example.healthconnect.utilty.impl.domain.entity.Page
+import com.example.healthconnect.utilty.impl.domain.record.factory.ModelFactory
 import com.example.healthconnect.utilty.impl.domain.usecase.FlowResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -39,23 +39,27 @@ class PageIteratorTest {
         override val metadata: Metadata get() = error("not expected in tests")
     }
 
-    private fun stepsModel(id: String = UUID.randomUUID().toString()): Steps = Steps(
-        metadata = MetadataField(
-            recordingMethod = SelectorField(0, SelectorField.Type.RecordingMethod()),
-            id = StringField(id, StringField.Type.MetadataId()),
-            dataOriginPackageName = StringField("", StringField.Type.MetadataDataOrigin()),
-            lastModifiedTime = StringField("", StringField.Type.MetadataLastModifiedTime()),
-            clientRecordId = StringField("", StringField.Type.MetadataClientRecordId()),
-            clientRecordVersion = StringField("", StringField.Type.MetadataClientRecordVersion()),
-        ),
-        time = TimeField.Interval(
-            startTime = Instant.EPOCH,
-            startZoneOffset = null,
-            endTime = Instant.EPOCH.plusSeconds(3600),
-            endZoneOffset = null,
-        ),
-        count = ValueField.Lng("1000", ValueField.Type.StepsCount()),
-    )
+    private fun stepsModel(id: String = UUID.randomUUID().toString()): Steps =
+        Steps(
+            metadata = MetadataField(
+                recordingMethod = SelectorField(0, SelectorField.Type.RecordingMethod()),
+                id = StringField(id, StringField.Type.MetadataId()),
+                dataOriginPackageName = StringField("", StringField.Type.MetadataDataOrigin()),
+                lastModifiedTime = StringField("", StringField.Type.MetadataLastModifiedTime()),
+                clientRecordId = StringField("", StringField.Type.MetadataClientRecordId()),
+                clientRecordVersion = StringField(
+                    "",
+                    StringField.Type.MetadataClientRecordVersion()
+                ),
+            ),
+            time = TimeField.Interval(
+                startTime = Instant.EPOCH,
+                startZoneOffset = null,
+                endTime = Instant.EPOCH.plusSeconds(3600),
+                endZoneOffset = null,
+            ),
+            count = ValueField.Lng("1000", ValueField.Type.StepsCount()),
+        )
 
     private fun response(
         records: List<Record> = emptyList(),
