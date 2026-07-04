@@ -3,15 +3,16 @@ import org.gradle.kotlin.dsl.configure
 
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.compose)
 }
 
 extensions.configure<LibraryExtension> {
-    namespace = "com.example.healthconnect.utilty.api"
+    namespace = "com.example.healthconnect.record_list"
     compileSdk = 36
     compileSdkExtension = 19
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -31,6 +32,7 @@ extensions.configure<LibraryExtension> {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
 kotlin {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
@@ -38,20 +40,15 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":app:navigation:api"))
 
-    implementation(project(":app:components:api"))
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
 
-    //kotlin reflection
-    implementation(kotlin("reflect"))
-
-    //compose
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.foundation.layout)
-
-    //compose navigation v3
     implementation(libs.androidx.navigation3.runtime)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 }

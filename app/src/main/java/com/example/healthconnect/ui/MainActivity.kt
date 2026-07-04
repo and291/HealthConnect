@@ -14,6 +14,8 @@ import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
+import com.example.healthconnect.dashboard.api.di.DashboardFeatureScope
+import com.example.healthconnect.dashboard.api.navigation.DashboardNavigationEntry
 import com.example.healthconnect.di.Di
 import com.example.healthconnect.editor.api.di.EditorFeatureScope
 import com.example.healthconnect.integration.editor.ComponentFactoryImpl
@@ -25,12 +27,17 @@ import com.example.healthconnect.integration.editor.UpdateImpl
 import com.example.healthconnect.integration.permission_overview.data.PermissionEntryMapper
 import com.example.healthconnect.integration.permission_overview.data.PermissionResolverImpl
 import com.example.healthconnect.integration.permission_overview.ui.PermissionContractProviderImpl
+import com.example.healthconnect.integration.record_list.DeleteRecordImpl
+import com.example.healthconnect.integration.record_list.LoadRecordsImpl
+import com.example.healthconnect.integration.dashboard.CountRecordsImpl
+import com.example.healthconnect.integration.dashboard.GetDashboardCatalogImpl
+import com.example.healthconnect.integration.record_list.RecordSummaryFactoryImpl
 import com.example.healthconnect.navigation.api.NavigationEntry
 import com.example.healthconnect.permission_overview.api.di.PermissionOverviewFeatureScope
+import com.example.healthconnect.record_list.api.di.RecordListFeatureScope
 import com.example.healthconnect.ui.navigation.AppNavigationEntry
 import com.example.healthconnect.ui.navigation.CreateNavDisplay
 import com.example.healthconnect.ui.theme.HealthConnectTheme
-import com.example.healthconnect.utilty.api.navigation.UtilityNavigationEntry
 
 class MainActivity : ComponentActivity() {
 
@@ -65,6 +72,23 @@ class MainActivity : ComponentActivity() {
             insert = InsertImpl()
         ).apply { init() }
 
+        val recordListFeatureScope = RecordListFeatureScope(
+            loadRecords = LoadRecordsImpl(com.example.healthconnect.utilty.impl.di.Di.readAll),
+            deleteRecord = DeleteRecordImpl(com.example.healthconnect.utilty.impl.di.Di.delete),
+            summaryFactory = RecordSummaryFactoryImpl(),
+        ).apply { init() }
+
+        val dashboardFeatureScope = DashboardFeatureScope(
+            getCatalog = GetDashboardCatalogImpl(
+                nameMapper = com.example.healthconnect.utilty.impl.di.Di.recordTypeNameMapper,
+                iconMapper = com.example.healthconnect.utilty.impl.di.Di.recordTypeIconMapper,
+            ),
+            countRecords = CountRecordsImpl(
+                count = com.example.healthconnect.utilty.impl.di.Di.count,
+                iconMapper = com.example.healthconnect.utilty.impl.di.Di.flowResultTerminalIconMapper,
+            ),
+        ).apply { init() }
+
         //injects for current activity below
         activityViewModel = Di.parameterlessViewModelFactory.create(ActivityViewModel::class.java)
 
@@ -86,7 +110,7 @@ class MainActivity : ComponentActivity() {
 
             val status by activityViewModel.sdkStatus
             val destination = when (status) {
-                SDK_AVAILABLE -> UtilityNavigationEntry.Dashboard
+                SDK_AVAILABLE -> DashboardNavigationEntry.Dashboard
                 SDK_UNAVAILABLE -> AppNavigationEntry.Unavailable
                 SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> AppNavigationEntry.ProviderUpdateRequired
                 else -> TODO()
